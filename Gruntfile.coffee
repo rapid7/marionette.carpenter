@@ -10,7 +10,7 @@ module.exports = (grunt) ->
           sourceMap: true
         expand: true
         cwd: 'src/'
-        src: ['**/**.js.coffee']
+        src: ['**/**.coffee']
         dest: 'dist/'
         ext: '.js'
 
@@ -19,7 +19,7 @@ module.exports = (grunt) ->
           sourceMap: true
         expand: true
         cwd: 'spec'
-        src: ['*.js.coffee']
+        src: ['*_spec.coffee']
         dest: 'dist/spec/'
         ext: '.js'
 
@@ -29,7 +29,7 @@ module.exports = (grunt) ->
           amd: true
         expand: true
         cwd: 'src/templates/'
-        src: ['**/**.jst.eco']
+        src: ['*.eco']
         dest: 'dist/templates/'
         ext: '.js'
 
@@ -44,7 +44,7 @@ module.exports = (grunt) ->
           generateSourceMaps: true
 
     watch:
-      files: '**/**.js.coffee'
+      files: ['src/**/**.coffee', 'src/**/**.eco', 'spec/**/**.coffee']
       tasks: ['jasmine']
 
     jasmine:
@@ -61,4 +61,3 @@ module.exports = (grunt) ->
   grunt.registerTask('build', ['coffee', 'eco','requirejs'])
   grunt.registerTask('spec',  ['build', 'jasmine'])
   grunt.registerTask('default', ['build'])
-
