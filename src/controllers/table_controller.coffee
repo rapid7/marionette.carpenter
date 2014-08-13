@@ -6,7 +6,6 @@ define [
   'views/table_view'
 ], ->
 
-
     class Controller extends Controllers.Application
 
       # @property [Boolean] allow the table to be searched from the header
