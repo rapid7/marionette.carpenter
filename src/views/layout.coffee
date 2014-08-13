@@ -7,7 +7,7 @@ define [
   #
   class Layout extends Marionette.LayoutView
 
-    template: @::templatePath('table/layout')
+    template: @::templatePath('layout')
 
     regions:
       headerRegion:             '.header-region'

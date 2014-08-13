@@ -5,6 +5,6 @@ define ['templates/loading'], ->
   #
   class Table.Loading extends Marionette.ItemView
 
-    template: @::templatePath 'table/loading'
+    template: @::templatePath 'loading'
 
     tagName: 'tr'

@@ -4,7 +4,7 @@ define ['templates/empty'], ->
   #
   class Empty extends Marionette.ItemView
 
-    template: @::templatePath 'table/empty'
+    template: @::templatePath 'empty'
 
     tagName: 'tr'
 

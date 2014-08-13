@@ -8,7 +8,7 @@ define ['templates/paginator'], ->
     # "max rows" variable to the server
     @ALL_MAGIC: '99999999'
 
-    template: @::templatePath 'table/paginator'
+    template: @::templatePath 'paginator'
 
     attributes:
       class: 'paginator'

@@ -7,7 +7,7 @@ define [
   #
   class SelectionIndicator extends Marionette.ItemView
 
-    template: @::templatePath 'table/selection_indicator'
+    template: @::templatePath 'selection_indicator'
 
     # @param [Object] opts the options hash
     # @option opts [Object] :tableSelections data about the current state of the table

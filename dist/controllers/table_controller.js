@@ -3,7 +3,7 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define(['controllers/application_controller', 'entities/paginated_collection', 'entities/action_buttons', 'entities/filter', 'views/table_view'], function($) {
+  define(['controllers/application_controller', 'entities/paginated_collection', 'entities/action_buttons', 'entities/filter', 'views/table_view'], function() {
     var API, Controller;
     Controller = (function(_super) {
       __extends(Controller, _super);
@@ -91,9 +91,9 @@
           this.tableSelections.selectedIDs = {};
           this.tableSelections.deselectedIDs = {};
         }
-        this.actionButtonsCollection = this.app.request('new:action_buttons:entities', opts.actionButtons);
+        this.actionButtonsCollection = new ActionButtonsCollection(opts.actionButtons);
         if (this.filterEnabled()) {
-          this.filterModel = this.app.request('new:filter:entity', this.filterAttrs);
+          this.filterModel = new Filter(this.filterAttrs);
         }
         this.header = new Table.Header(this);
         this.buttons = new Table.ControlBar(this);
@@ -323,17 +323,11 @@
       return Controller;
 
     })(Controllers.Application);
-    API = {
+    return API = {
       createTable: function(options) {
         return new Table.Controller(options);
       }
     };
-    return this.app.reqres.setHandler('table:component', function(options) {
-      if (options == null) {
-        options = {};
-      }
-      return API.createTable(options);
-    });
   });
 
 }).call(this);

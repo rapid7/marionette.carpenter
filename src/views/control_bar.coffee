@@ -7,7 +7,7 @@ define [
   #
   class ControlBar extends Marionette.CompositeView
 
-    template: @::templatePath 'table/control_bar'
+    template: @::templatePath 'control_bar'
 
     itemView: Table.ActionButton
 

@@ -4,7 +4,7 @@ define ['templates/table'], ->
   #
   class Table.RowList extends Marionette.CompositeView
 
-    template: @::templatePath 'table/table'
+    template: @::templatePath 'table'
 
     itemView: Table.Row
 

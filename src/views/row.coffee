@@ -16,7 +16,7 @@ define ['templates/row'], ->
   #   @param model [Entities.model] the row's associated model
   class Row extends Marionette.Layout
 
-    template: @::templatePath 'table/row'
+    template: @::templatePath 'row'
 
     tagName: 'tr'
 

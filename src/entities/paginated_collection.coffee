@@ -1,5 +1,4 @@
 define [
-  'backbone.pager'
 ], (BackbonePager) ->
 
   #

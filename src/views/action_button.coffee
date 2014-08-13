@@ -7,7 +7,7 @@ define [
   #
   class ActionButton extends Marionette.ItemView
 
-    template: @::templatePath 'table/action_button'
+    template: @::templatePath 'action_button'
 
     tagName: 'li'
 

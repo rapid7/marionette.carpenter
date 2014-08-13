@@ -7,7 +7,7 @@ define [
   #
   class Header extends Marionette.ItemView
 
-    template: @::templatePath 'table/header'
+    template: @::templatePath 'header'
 
     attributes:
       class: 'table-header'
