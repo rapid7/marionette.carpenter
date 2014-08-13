@@ -1,6 +1,5 @@
 define [
-  'backbone_paginator'
-  'lib/components/flash/flash_controller'
+
 ], ->
 
   @Pro.module "Entities", (Entities, App) ->

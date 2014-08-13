@@ -1,4 +1,4 @@
-define ['base_model', 'base_collection'], ->
+define [], ->
   @Pro.module "Entities", (Entities, App) ->
 
     #

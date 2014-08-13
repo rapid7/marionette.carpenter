@@ -24,5 +24,16 @@ module.exports = (grunt) ->
         dest: 'dist/templates/'
         ext: '.js'
 
+    requirejs: 
+      compile: 
+        options: 
+          baseUrl: "dist/"
+          name: "controllers/table_controller"
+          include: ["controllers/table_controller"]
+          out: "dist/marionette.carpenter.js"
+
+  
+  grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-eco')
+

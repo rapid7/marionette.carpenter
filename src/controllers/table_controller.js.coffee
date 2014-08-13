@@ -1,11 +1,9 @@
 define [
-  'jquery'
-  'base_controller'
-  'backbone_chooser'
-  'lib/components/table/entities/paginated_collection'
-  'lib/components/table/entities/action_buttons'
-  'lib/components/table/entities/filter'
-  'lib/components/table/table_view'
+  'controllers/application_controller'
+  'entities/paginated_collection'
+  'entities/action_buttons'
+  'entities/filter'
+  'views/table_view'
 ], ($) ->
 
   @Pro.module "Components.Table", (Table, App) ->
