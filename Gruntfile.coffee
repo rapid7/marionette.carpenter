@@ -1,17 +1,19 @@
 module.exports = (grunt) ->
 
-  grunt.loadNpmTasks('grunt-contrib-coffee')
-
   grunt.initConfig
 
     pkg: grunt.file.readJSON('package.json')
 
     coffee:
-
       compile:
-
         options:
           sourceMap: true
+        expand: true
+        cwd: 'src/'
+        src: ['**/**.js.coffee']
+        dest: 'dist/'
+        ext: '.js'
 
-        files:
-          'dist/controllers/table_controller.js': 'src/controllers/table_controller.js.coffee'
+    eco:
+
+  grunt.loadNpmTasks('grunt-contrib-coffee')

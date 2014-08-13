@@ -739,7 +739,7 @@ define [
       sortChanged: (e) =>
         sortIdx = $(e.currentTarget).index()
         if @selectable then sortIdx--
-        @trigger 'table:sort'
+        @trigger 'table:sort',
           attribute: @columns[sortIdx]?.attribute
 
       # Sets the sort options on the collection and adds CSS classes as necessary
