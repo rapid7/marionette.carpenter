@@ -4,7 +4,7 @@ define [
   'entities/action_buttons'
   'entities/filter'
   'views/table_view'
-], ($) ->
+], ->
 
 
     class Controller extends Controllers.Application
@@ -164,11 +164,11 @@ define [
           @tableSelections.deselectedIDs = {}
 
         # create a collection of action buttons for the control bar
-        @actionButtonsCollection = @app.request 'new:action_buttons:entities', opts.actionButtons
+        @actionButtonsCollection = new ActionButtonsCollection opts.actionButtons
 
         # create a filter for storing the search state
         if @filterEnabled()
-          @filterModel = @app.request 'new:filter:entity', @filterAttrs
+          @filterModel = new Filter(@filterAttrs)
 
         # build the new table
         @header             = new Table.Header(@)
@@ -300,7 +300,6 @@ define [
         else
           @collection.origModels.length
 
-
       # @return [Number] the total number of pages
       totalPages: =>
         Math.floor(@totalRecords() / @collection.perPage) + 1
@@ -347,7 +346,10 @@ define [
       # @return [Table.Controller] a new controller for the requested table
       createTable: (options) ->
         new Table.Controller options
+<<<<<<< HEAD
 
     # Register an Application-wide handler for rendering a table component
     @app.reqres.setHandler 'table:component', (options={}) ->
       API.createTable(options)
+=======
+>>>>>>> First stage of reworking modular patterns to use requirejs.

@@ -34,6 +34,7 @@ define ['templates/row'], ->
     # @option opts :selectable [Boolean] @see Table.Controller#selectable
     # @option opts [Object] :tableSelections data about the current state of the table
     initialize: (opts={}) ->
+      @app             =   opts.app
       @columns         =   opts.columns
       @selectable      = !!opts.selectable
       @tableSelections =   opts.tableSelections
@@ -101,18 +102,18 @@ define ['templates/row'], ->
     # Trigger events regarding the selection of the row.
     #
     # @return [void]
-    triggerSelectionEvents: ->
+    triggerSelectionEvents: =>
       @setSelectionState()
       @recordSelectionState()
 
-      App.vent.trigger 'table:row:selection_toggled', @model
+      @app.vent.trigger 'table:row:selection_toggled', @model
       @model.trigger 'selection_toggled'
 
       if !@ui.checkbox.prop 'checked'
-        App.vent.trigger 'table:row:deselected', @model
+        @app.vent.trigger 'table:row:deselected', @model
         @model.trigger 'deselected'
       else
-        App.vent.trigger 'table:row:selected', @model
+        @app.vent.trigger 'table:row:selected', @model
         @model.trigger 'selected'
 
     # Render any columns that had an associated View classes

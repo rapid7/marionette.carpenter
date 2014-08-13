@@ -5,7 +5,7 @@ define [
   #
   # The action buttons in the control bar
   #
-  class Table.ActionButton extends App.Views.ItemView
+  class ActionButton extends Marionette.ItemView
 
     template: @::templatePath 'table/action_button'
 
@@ -25,6 +25,7 @@ define [
     # @option opts [Array<Entities.AjaxPaginatedCollection>, Array<Entities.StaticPaginatedCollection>]
     #   :tableCollection the collection currently managed by the table
     initialize: (opts) ->
+      @app             =   opts.app
       @selectable      = !!opts.selectable
       @tableCollection =   opts.tableCollection
       @tableSelections =   opts.tableSelections
@@ -57,11 +58,11 @@ define [
       moreThanOneSelected = @tableSelections.selectAllState || numSelected > 1
       oneSelected         = numSelected == 1
 
-      if activateOn == 'any' && ( oneSelected || moreThanOneSelected )
+      if activateOn == 'any' && (oneSelected || moreThanOneSelected)
         @model.enable()
       else if activateOn == 'many' && moreThanOneSelected
         @model.enable()
-      else if ( activateOn == 'one' && oneSelected ) && !@tableSelections.selectAllState
+      else if (activateOn == 'one' && oneSelected) && !@tableSelections.selectAllState
         @model.enable()
       else
         @model.disable()
@@ -81,9 +82,9 @@ define [
     # Execute the global event trigger.
     #
     # @return [void]
-    executeTrigger: ->
+    executeTrigger: =>
       if @model.get 'event'
-        App.trigger @model.get('event')
+        @app.trigger @model.get('event')
 
     #
     # Execute this button's associated callback, passing the table selection data

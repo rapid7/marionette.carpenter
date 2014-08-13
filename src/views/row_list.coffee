@@ -45,6 +45,7 @@ define ['templates/table'], ->
     # @option opts :emptyView [Backbone.View] the view to display when empty
     # @option opts [Object] :tableSelections data about the current state of the table
     initialize: (opts={}) ->
+      @app             =   opts.app
       @columns         =   opts.columns
       @static          = !!opts.static
       @selectable      = !!opts.selectable
@@ -184,6 +185,7 @@ define ['templates/table'], ->
         selectable: @selectable
         tableSelections: @tableSelections
         serverAPI: @collection.server_api
+        app: @app
 
     serializeData: -> @
 

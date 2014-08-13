@@ -28,6 +28,7 @@ define [], ->
     # @option opts :filterCustomQueryEvent [String] @see {Table.Controller#filterCustomQueryEvent}
     # @option opts :collection [Entities.AjaxPaginatedCollection] @see {Table.Controller#collection}
     initialize: (opts={}) ->
+      @app      = opts.app
       @template = @templatePath(opts.filterTemplatePath)
       @model = opts.filterModel
       @filterToggleEvent = opts.filterToggleEvent
@@ -152,5 +153,5 @@ define [], ->
       if @filterAttrs
         @handleFilterOnLoad()
 
-    onClose: ->
-      App.vent.off @filterToggleEvent
+    onClose: =>
+      @app.vent.off @filterToggleEvent
