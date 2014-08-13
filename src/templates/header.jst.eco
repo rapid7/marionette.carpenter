@@ -1,0 +1,9 @@
+<% if @title and @title.length: %>
+  <h3><%= @title %></h3>
+<% end %>
+
+<div class='right'>
+  <% if @searchable: %>
+    <input type='text' name='query' />
+  <% end %>
+</div>

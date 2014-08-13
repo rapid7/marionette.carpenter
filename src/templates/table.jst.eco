@@ -1,0 +1,22 @@
+<table>
+  <thead>
+    <tr>
+      <% if @selectable: %>
+        <th class="select-all unselectable" unselectable="on">
+          <input type="checkbox" title="Selects all available records on every page">
+        </th>
+      <% end %>
+
+      <% for column in @columns: %>
+        <% sorted = column.attribute is @sortColumn %>
+        <th unselectable="on" class="unselectable <%= column.class %> <%= 'sortable' if column.sortable %> <%= if sorted then "sort #{@sortDirection}" else "not-sort" %>">
+          <span><%= column.label %></span>
+        </th>
+      <% end %>
+    </tr>
+  </thead>
+
+  <tbody>
+
+  </tbody>
+</table>

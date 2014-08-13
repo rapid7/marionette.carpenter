@@ -1,0 +1,27 @@
+<% if @collection.length > 0: %>
+  <div class='left'>
+    <label class='row_select'>
+      <span class='line'>Show</span>
+      <select class='rows'>
+        <% for i in @perPageOptions: %>
+          <% val = if i is 'All' then @ALL_MAGIC else i %>
+          <option value='<%= val %>' <%= if @perPage.toString() is val.toString() then 'selected' %>><%= i %></option>
+        <% end %>
+      </select>
+    </label>
+
+    <span class='page_info line'>
+      <%= (@currentPage-1)*@perPage+1 %> - <%= @lastRow %> of <%= @totalRecords %>
+    </span>
+  </div>
+
+  <div class='page_navigation'>
+    <a href='javascript:void(0)' title='First' class='first <%= 'disabled' if @isFirstPage %>'></a>
+    <a href='javascript:void(0)' title='Previous' class='previous <%= 'disabled' if @isFirstPage %>'></a>
+
+    <input class="curr" value="<%= @currentPage %>" />
+
+    <a href='javascript:void(0)' title='Next' class='next <%= 'disabled' if @isLastPage %>'></a>
+    <a href='javascript:void(0)' title='Last' class='last <%= 'disabled' if @isLastPage %>'></a>
+  </div>
+<% end %>

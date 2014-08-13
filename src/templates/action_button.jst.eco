@@ -1,0 +1,3 @@
+<a href='javascript:void(0)' <% if @id: %>id="<%= @id %>"<% end %> class="action-button <%= @class %> <% if @disabled: %>disabled<% end %>">
+  <%= @label %>
+</a>

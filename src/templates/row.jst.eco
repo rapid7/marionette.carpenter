@@ -1,0 +1,24 @@
+<% if @selectable: %>
+  <td class="checkbox">
+    <input type="checkbox" data-id="<%= @model.id %>" <% if @model.get('selected'): %>checked<% end %>>
+  </td>
+<% end %>
+
+<% idx = 0 %>
+<% for column in @columns: %>
+  <td class='<%= column.class %> <%= _.str.underscored(column.attribute).replace(/[^\w]/g, '') %> cell<%= idx %>'>
+    <% if column.view?: %>
+
+    <% else if column.render?: %>
+      <%= column.render.call(@) %>
+    <% else: %>
+        <% if column.escape: %>
+          <span><%= @model.get column.attribute %></span>
+        <% else: %>
+          <span><%- @model.get column.attribute %></span>
+        <% end %>
+    <% end %>
+  </td>
+
+  <% idx++ %>
+<% end %>

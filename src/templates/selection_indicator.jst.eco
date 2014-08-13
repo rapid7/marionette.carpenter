@@ -1,0 +1,1 @@
+<div class="selection-indicator"><span class="num-selected"><%= @numSelected %></span> of <%= @totalRecords %> selected</div>

@@ -1,0 +1,28 @@
+<%# contains the header (optional) %>
+<div class='header-region'>
+</div>
+
+<%# contains the "number selected" indicator %>
+<div class='selection-indicator-region'>
+</div>
+
+<%# contains the actionButtons %>
+<div class='buttons-region'>
+</div>
+
+<div class='filter-region'>
+</div>
+
+<div class='table-container'>
+  <%# contains the table (rendered as a CollectionView) %>
+  <div class='table-region'>
+  </div>
+
+  <%# contains any hovers/overlays %>
+  <div class='overlay-region'>
+  </div>
+</div>
+
+<%# contains the pagination %>
+<div class='pagination-region'>
+</div>
