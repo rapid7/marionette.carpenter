@@ -40,6 +40,8 @@ module.exports = (grunt) ->
           name: "controllers/table_controller"
           include: ["controllers/table_controller"]
           out: "dist/marionette.carpenter.js"
+          optimize: "none"
+          generateSourceMaps: true
 
     watch:
       files: '**/**.js.coffee'
@@ -56,7 +58,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-jasmine')
   grunt.loadNpmTasks('grunt-contrib-watch')
 
-  grunt.registerTask('build', ['coffee', 'eco'])
+  grunt.registerTask('build', ['coffee', 'eco','requirejs'])
   grunt.registerTask('spec',  ['build', 'jasmine'])
   grunt.registerTask('default', ['build'])
 
