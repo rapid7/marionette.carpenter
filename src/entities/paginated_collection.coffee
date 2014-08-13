@@ -1,5 +1,6 @@
-define [
-], (BackbonePager) ->
+
+define [], ->
+
 
   #
   # Used for collections that call out to the network

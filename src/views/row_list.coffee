@@ -1,4 +1,9 @@
-define ['templates/table'], ->
+define [
+  'views/row'
+  'views/empty'
+  'views/loading'
+  'templates/table'
+], (Row, Empty, Loading) ->
   #
   # Render the table rows and columns
   #
@@ -6,7 +11,7 @@ define ['templates/table'], ->
 
     template: @::templatePath 'table'
 
-    itemView: Table.Row
+    itemView: Row
 
     collectionEvents:
       sync: 'fetched'
@@ -50,8 +55,8 @@ define ['templates/table'], ->
       @static          = !!opts.static
       @selectable      = !!opts.selectable
       @tableSelections =   opts.tableSelections
-      @emptyView       =   opts.emptyView || Table.Empty
-      @loadingView     =   opts.loadingView || Table.Loading
+      @emptyView       =   opts.emptyView || Empty
+      @loadingView     =   opts.loadingView || Loading
 
       @setSort(@collection.sortColumn, @collection.sortDirection, noReload: true)
 
@@ -190,8 +195,6 @@ define ['templates/table'], ->
     serializeData: -> @
 
     onRender: ->
-      @ui.table.resizableColumns()
-
       # Add a tooltip to the select all checkbox, if the table is selectable.
       if @selectable
         @ui.selectAllCheckbox.tooltip
