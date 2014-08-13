@@ -346,10 +346,3 @@ define [
       # @return [Table.Controller] a new controller for the requested table
       createTable: (options) ->
         new Table.Controller options
-<<<<<<< HEAD
-
-    # Register an Application-wide handler for rendering a table component
-    @app.reqres.setHandler 'table:component', (options={}) ->
-      API.createTable(options)
-=======
->>>>>>> First stage of reworking modular patterns to use requirejs.
