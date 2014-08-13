@@ -14,5 +14,4 @@ module.exports = (grunt) ->
           sourceMap: true
 
         files:
-          'dist/controllers/table_controller.js': 'src/controllers/table_controller.js'
-
+          'dist/controllers/table_controller.js': 'src/controllers/table_controller.js.coffee'
