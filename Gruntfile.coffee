@@ -15,5 +15,14 @@ module.exports = (grunt) ->
         ext: '.js'
 
     eco:
+      compile:
+        options:
+          amd: true
+        expand: true
+        cwd: 'src/templates/'
+        src: ['**/**.jst.eco']
+        dest: 'dist/templates/'
+        ext: '.js'
 
   grunt.loadNpmTasks('grunt-contrib-coffee')
+  grunt.loadNpmTasks('grunt-eco')
