@@ -7,7 +7,7 @@ define [
 ], ($) ->
 
 
-    class Controller extends @app.Controllers.Application
+    class Controller extends Controllers.Application
 
       # @property [Boolean] allow the table to be searched from the header
       searchable: true

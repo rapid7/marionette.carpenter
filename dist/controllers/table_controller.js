@@ -322,7 +322,7 @@
 
       return Controller;
 
-    })(this.app.Controllers.Application);
+    })(Controllers.Application);
     API = {
       createTable: function(options) {
         return new Table.Controller(options);

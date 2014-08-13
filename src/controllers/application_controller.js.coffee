@@ -1,6 +1,4 @@
 define [], ->
-  Marionette.Carpenter.App.module "Controllers", (Controllers, App) ->
-
     # This is the base controller class that all other Marionette
     # controllers should inherit from. It provides some convenience
     # methods that most controllers would implement, like unbinding

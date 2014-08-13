@@ -1,6 +1,6 @@
-# This file is included in application.js, to prevent having to include it 8000 times.
-Marionette.Carpenter.App.module "Utilities", (Utilities, App) ->
+define [
 
+],->
   mixinKeywords = ["beforeIncluded", "afterIncluded"]
 
   include = (objs...) ->
