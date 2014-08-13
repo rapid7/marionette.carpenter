@@ -8,5 +8,9 @@
     "grunt-eco": "~0.1.2",
     "grunt-contrib-requirejs": "~0.4.0",	
     "grunt-contrib-jasmine": "~0.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rapid7/marionette.carpenter.git"
   }
 }
