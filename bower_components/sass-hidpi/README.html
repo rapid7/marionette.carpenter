@@ -1,0 +1,180 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width, initial-scale=1.0" name="viewport" /><title>Carpenter: It builds tables</title><link href="../../assets/stylesheets/app-63059c4c.css" rel="stylesheet" type="text/css" /><script src="../../assets/javascripts/before-53f614ca.js" type="text/javascript"></script></head><body class="bower_components bower_components_sass-hidpi bower_components_sass-hidpi_README"><h1 id="retinafy-your-website-with-sass--compass">Retinafy your website with Sass &amp; Compass</h1>
+
+<p><code>hidpi()</code> is a <a title="Sass - Syntactically Awesome Stylesheets" href="http://sass-lang.com/">Sass</a> mixin that seamlessly serves high resolution
+background images to high density (Retina-like) displays. It comes with a
+debug mode to test Retina graphics on a regular display.</p>
+
+<p><strong><a title="HiDPI Examples" href="http://www.kaelig.fr/hidpi/examples/">Demonstration</a></strong></p>
+
+<h2 id="how-to-use-it">How to Use It</h2>
+
+<ol>
+  <li>Install with <a title="BOWER: A package manager for the web" href="http://bower.io/">Bower</a>: <code>bower install sass-hidpi</code><br />
+OR <a href="https://raw.github.com/kaelig/hidpi/master/_hidpi.scss">Download _hidpi.scss</a>
+to your Sass project (preferably with <a title="Compass Home | Compass Documentation" href="http://compass-style.org/">Compass</a> enabled).</li>
+  <li>Import the partial in your Sass files: <code>@import 'path/to/hidpi';</code></li>
+</ol>
+
+<p>Perfect, you can now use the mixin in your Sass project.</p>
+
+<h3 id="passing-content-to-the-mixin">Passing Content to the Mixin</h3>
+
+<p>You can virtually pass anything to the mixin and it will be displayed on high
+density displays.</p>
+
+<p>In this example, the border color of the <code>#logo</code> element is:</p>
+
+<ul>
+  <li><strong>blue</strong> on regular displays</li>
+  <li><strong>red</strong> on HiDPI (Retina-like) displays</li>
+</ul>
+
+<p>```scss
+#logo {
+  background: url('../images/logo.png') no-repeat;
+  border: 1px solid blue;</p>
+
+<p>@include hidpi {
+    background-image: url('../images/logo_x2.png');
+    background-size: 250px 188px;
+    border-color: red;
+  }
+}
+```</p>
+
+<p>Compiles to:</p>
+
+<p><code>css
+#logo {
+  background: url("../images/logo.png") no-repeat;
+  border: 1px solid blue;
+}
+@media (-webkit-min-device-pixel-ratio: 1.3),
+       (min-resolution: 124.8dpi),
+       (min-resolution: 1.3dppx) {
+  #logo {
+    background-image: url("../images/logo_x2.png");
+    background-size: 250px 188px;
+    border-color: red;
+  }
+}
+</code></p>
+
+<h3 id="image-only">Image Only</h3>
+
+<p>When passing the name of an image as an argument, <code>hidpi()</code> serves the
+equivalent high-resolution image on high-definition displays.</p>
+
+<p>Image files should be named as follows, placed in the <code>images</code> folder
+of your Compass project:</p>
+
+<ul>
+  <li><code>image.png</code>: default image</li>
+  <li><code>image_x2.png</code>: high-resolution image</li>
+</ul>
+
+<p><code>scss
+#logo-auto {
+  @include hidpi(logo);
+}
+</code></p>
+
+<p>Compiles to:</p>
+
+<p><code>css
+#logo-auto {
+  background-image: url('../images/logo.png');
+}
+@media (-webkit-min-device-pixel-ratio: 1.3),
+       (min-resolution: 124.8dpi),
+       (min-resolution: 1.3dppx) {
+  #logo-auto {
+    background-image: url('../images/logo_x2.png');
+    background-size: 250px 188px;
+  }
+}
+</code></p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Note: this feature requires [Compass](http://compass-style.org/ "Compass Home</td>
+      <td>Compass Documentation").</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="debug-mode">Debug Mode</h3>
+
+<p>You can force <code>hidpi()</code> to always serve high-resolution graphics and test
+the rendering on a standard, non-Retina display.</p>
+
+<p>Set the <code>$hidpi-debug</code> variable to <code>true</code>:</p>
+
+<p><code>scss
+#logo-auto-debug {
+  $hidpi-debug: true; // Force high-resolution graphics on standard displays
+  @include hidpi(logo);
+}
+</code></p>
+
+<p>Compiles to:</p>
+
+<p><code>css
+#logo-auto-debug {
+  background-image: url('../images/logo_x2.png');
+  background-size: 250px 188px;
+}
+</code></p>
+
+<p>It loads <code>logo_x2.png</code> by default (no <code>@media</code> queries).</p>
+
+<h4 id="non-png-images">Non-PNG images</h4>
+
+<p><code>hidpi(image)</code> is looking by default for <code>images/image.png</code>.</p>
+
+<p>If your image is a JPEG, for example <code>image.jpg</code>, you should specify it as
+a second argument:</p>
+
+<p><code>scss
+#image-jpeg {
+  @include hidpi(image, jpg);
+}
+</code></p>
+
+<p>Same story with a GIF:</p>
+
+<p><code>scss
+#image-gif {
+  @include hidpi(image, gif);
+}
+</code></p>
+
+<h2 id="requirements">Requirements</h2>
+
+<ul>
+  <li>Sass ~&gt; 3.2 (for manual <code>@include hidpi {}</code>)</li>
+  <li>Compass ~&gt; 0.12.2 (for auto <code>@include hidpi(image);</code>)</li>
+</ul>
+
+<p>Note: Compass is only needed when passing arguments to <code>hidpi()</code> instead of
+a content-block.</p>
+
+<h2 id="also-read">Also Read</h2>
+
+<ul>
+  <li><a href="http://37signals.com/svn/posts/3271-easy-retina-ready-images-using-scss">Easy retina-ready images using SCSS by Jason Z. of 37signals</a></li>
+  <li><a href="http://retinafy.me/">Retinafy your web sites and apps — ebook by Thomas Fuchs</a></li>
+  <li><a href="http://www.brettjankord.com/2012/11/28/cross-browser-retinahigh-resolution-media-queries/">Cross Browser Retina/High Resolution Media Queries</a></li>
+</ul>
+
+<h2 id="more-hidpi-examples-and-resources">More HiDPI examples and resources</h2>
+
+<ul>
+  <li><a href="https://gist.github.com/4160546">Gist: Magically retinafy your sprites with Compass and HiDPI</a></li>
+  <li><a href="https://gist.github.com/2140082">Gist: Using Compass to generate normal and retina sprite maps</a></li>
+  <li><a href="https://github.com/pierreburel/compass-hdpi">Compass mixins for dealing with HDPI (a.k.a. Retina) sprites and images in your CSS by @pierreburel</a></li>
+  <li><a href="https://github.com/AdamBrodzinski/Retina-Sprites-for-Compass">A mixin for creating retina sprites with hover &amp; active states by @AdamBrodzinski</a></li>
+  <li><a href="https://github.com/Gaya/Retina-Sprites-for-Compass">Retina Sprites with Compass</a> — <a href="http://www.gayadesign.com/diy/retina-sprites-for-compass/">Blog post</a></li>
+</ul>
+<script src="../../assets/javascripts/all-5c965c1e.js" type="text/javascript"></script></body></html>
