@@ -11,7 +11,7 @@ define [
   'templates/loading'
 ], ($) ->
 
-  @Pro.module "Components.Table", (Table, App, Backbone, Marionette, $, _) ->
+  Marionette.Carpenter.App.module "Carpenter.Table", (Table, App, Backbone, Marionette, $, _) ->
 
     #
     # Contains the header, button bar, table, and pagination

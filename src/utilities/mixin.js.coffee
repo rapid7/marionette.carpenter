@@ -1,5 +1,5 @@
 # This file is included in application.js, to prevent having to include it 8000 times.
-@Pro.module "Utilities", (Utilities, App) ->
+Marionette.Carpenter.App.module "Utilities", (Utilities, App) ->
 
   mixinKeywords = ["beforeIncluded", "afterIncluded"]
 

@@ -1,5 +1,5 @@
 define [], ->
-  @Pro.module "Entities", (Entities, App) ->
+  Marionette.Carpenter.App.module "Entities", (Entities, App) ->
 
     #
     # ENTITY CLASSES

@@ -6,9 +6,8 @@ define [
   'views/table_view'
 ], ($) ->
 
-  @Pro.module "Components.Table", (Table, App) ->
 
-    class Table.Controller extends App.Controllers.Application
+    class Controller extends @app.Controllers.Application
 
       # @property [Boolean] allow the table to be searched from the header
       searchable: true
@@ -122,9 +121,9 @@ define [
       #                                        (default: false)
       # @option opts :filterTemplatePath     [String] the path to the template for the table filter view
       # @option opts :filterView             [Object] a custom filter view class
-      # @option opts :filterToggleEvent      [String] the event to listen to on `App.vent` which should toggle
+      # @option opts :filterToggleEvent      [String] the event to listen to on `@app.vent` which should toggle
       #                                        display of the table's filter
-      # @option opts :filterCustomQueryEvent [String] the event to listen to on `App.vent` which should toggle
+      # @option opts :filterCustomQueryEvent [String] the event to listen to on `@app.vent` which should toggle
       #                                        a custom query search
       # @option opts :filterAttrs            [Object] the attributes representing the initial state of the filter
       #                                        on table load
@@ -141,7 +140,7 @@ define [
         @static = !!@static
 
         # clone the collection into a relevant PaginatedCollection
-        PagerClass = App.Entities.CreatePaginatedCollectionClass(@collection, @)
+        PagerClass = @app.Entities.CreatePaginatedCollectionClass(@collection, @)
         @collection = new PagerClass(@collection.models)
         @collection.rebind?() # crappy workaround to my class wrapping
 
@@ -165,11 +164,11 @@ define [
           @tableSelections.deselectedIDs = {}
 
         # create a collection of action buttons for the control bar
-        @actionButtonsCollection = App.request 'new:action_buttons:entities', opts.actionButtons
+        @actionButtonsCollection = @app.request 'new:action_buttons:entities', opts.actionButtons
 
         # create a filter for storing the search state
         if @filterEnabled()
-          @filterModel = App.request 'new:filter:entity', @filterAttrs
+          @filterModel = @app.request 'new:filter:entity', @filterAttrs
 
         # build the new table
         @header             = new Table.Header(@)
@@ -265,7 +264,7 @@ define [
         else
           @collection.fetch reset: true
 
-        # calls the #show method defined App.Controllers.Application, which
+        # calls the #show method defined @app.Controllers.Application, which
         # puts the view into the (component) Application's main region
         @show @getMainView(), region: opts.region
 
@@ -325,7 +324,7 @@ define [
       # @param enabled [Boolean] enable or disable the table
       toggleInteraction: (enabled) =>
         # Trigger an update of any total records indicators.
-        App.vent.trigger 'total_records:change', @totalRecords() if enabled
+        @app.vent.trigger 'total_records:change', @totalRecords() if enabled
 
         if @isInteractionEnabled is enabled then return
 
@@ -350,5 +349,5 @@ define [
         new Table.Controller options
 
     # Register an Application-wide handler for rendering a table component
-    App.reqres.setHandler 'table:component', (options={}) ->
+    @app.reqres.setHandler 'table:component', (options={}) ->
       API.createTable(options)

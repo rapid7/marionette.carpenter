@@ -2,7 +2,7 @@ define [
 
 ], ->
 
-  @Pro.module "Entities", (Entities, App) ->
+  Marionette.Carpenter.App.module "Entities", (Entities, App) ->
 
     #
     # Used for collections that call out to the network
