@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/jvennix-r7/marionette.carpenter.svg?branch=master)](https://travis-ci.org/jvennix-r7/marionette.carpenter)
+[![Build Status](https://travis-ci.org/rapid7/marionette.carpenter.svg?branch=master)](https://travis-ci.org/rapid7/marionette.carpenter)
 
 #### Development
 
