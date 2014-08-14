@@ -1,10 +1,11 @@
-# SPEC_FILES = require('fs').readdirSync('./dist/spec/').filter (f) -> f.match(/\.js$/)
-
 module.exports = (grunt) ->
 
   grunt.initConfig
 
     pkg: grunt.file.readJSON('package.json')
+
+    clean:
+      src: ['build']
 
     coffee:
       source:
@@ -71,12 +72,27 @@ module.exports = (grunt) ->
           specs: ['dist/spec/specs.js']
           summary: true
 
+    # In order to run the compass task, you must have the compass ruby gem installed.
+    # Confirm you have Ruby installed and run: gem update --system && gem install compass
+    compass:
+      dist:
+        options:
+          sassDir: 'src/sass'
+          cssDir: 'build/css'
+          imagesPath: 'assets'
+          relativeAssets: false
+          outputStyle: 'expanded'
+          noLineComments: true
+
   grunt.loadNpmTasks('grunt-requirejs');
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-eco')
   grunt.loadNpmTasks('grunt-contrib-jasmine')
   grunt.loadNpmTasks('grunt-contrib-watch')
+  grunt.loadNpmTasks('grunt-contrib-clean')
+  grunt.loadNpmTasks('grunt-contrib-compass')
 
   grunt.registerTask('build', ['coffee', 'eco','requirejs'])
   grunt.registerTask('spec',  ['build', 'jasmine'])
-  grunt.registerTask('default', ['build'])
+  grunt.registerTask('style', ['clean', 'compass'])
+  grunt.registerTask('default', ['clean', 'build'])
