@@ -13,7 +13,8 @@
     "cocktail": "0.5.8",
     "jquery": "2.1.1",
     "backbone.marionette": "1.4.1",
-    "backbone.paginator": "1.0.0"
+    "backbone.paginator": "1.0.0",
+    "underscore.string": "2.3.3"
   },
   "devDependencies": {
     "jasmine-set": "jvennix-r7/jasmine-set"

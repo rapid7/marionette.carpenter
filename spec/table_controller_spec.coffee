@@ -1,10 +1,15 @@
 # todo: need jquer here
 define [
   'controllers/table_controller'
+  'spec/support/matchers/to_be_an_instance_of'
+  'spec/support/matchers/to_contain_node_with_text'
+  'spec/support/matchers/to_contain_text'
+  'spec/support/matchers/to_have_class'
 ], ->
 
   describe 'Components.Table.Controller', ->
 
+    set 'app',            -> new Marionette.Application()
     set 'perPageOptions', -> [20, 50]
     set 'perPage',        -> 20
     set 'collection',     -> new Backbone.Collection([])
@@ -39,6 +44,7 @@ define [
         collection: collection
         columns: columns
         defaultSort: defaultSort
+        app: app
 
       @controller = new Marionette.Carpenter.Controller(defaults)
 
@@ -117,7 +123,7 @@ define [
         set 'collection', -> new Backbone.Collection([])
 
         it 'does not render pagination', ->
-          expect(_.trim @region.$el.find('.paginator').html()).toEqual('')
+          expect(_.str.trim @region.$el.find('.paginator').html()).toEqual('')
 
     describe 'pagination', ->
 

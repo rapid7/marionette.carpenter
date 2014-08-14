@@ -30,10 +30,10 @@ define [
     Row,
     RowList,
     SelectionIndicator
-    ) ->
+  ) ->
 
     Marionette.Carpenter = {}
-    debugger
+
     class Marionette.Carpenter.Controller extends Controller
 
       # @property [Boolean] allow the table to be searched from the header
