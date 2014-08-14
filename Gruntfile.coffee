@@ -1,3 +1,5 @@
+# SPEC_FILES = require('fs').readdirSync('./dist/spec/').filter (f) -> f.match(/\.js$/)
+
 module.exports = (grunt) ->
 
   grunt.initConfig
@@ -49,18 +51,20 @@ module.exports = (grunt) ->
           almond: true
           baseUrl: "dist/"
           include: ["spec/table_controller_spec.js", "spec/table_view_spec.js"]
+          insertRequire: ["spec/table_controller_spec.js", "spec/table_view_spec.js"]
           out: "dist/spec/specs.js"
           optimize: "none"
           generateSourceMaps: true
 
     watch:
       files: ['src/**/**.coffee', 'src/**/**.eco', 'spec/**/**.coffee']
-      tasks: ['jasmine']
+      tasks: ['spec']
 
     jasmine:
       run:
         options:
-          specs: ['dist/spec/**/*.js']
+          specs: ['dist/spec/specs.js']
+          summary: true
 
   grunt.loadNpmTasks('grunt-requirejs');
   grunt.loadNpmTasks('grunt-contrib-coffee')
