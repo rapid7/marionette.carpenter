@@ -40,9 +40,9 @@ define [
         columns: columns
         defaultSort: defaultSort
 
-      @controller = Pro.request "table:component", defaults
+      @controller = new Marionette.Carpenter.Controller(defaults)
 
-    describe 'when calling App.request "table:component", view', ->
+    describe 'when calling the constructor', ->
 
       it 'renders something', ->
         expect(@region.el.children.length).toBeGreaterThan 0

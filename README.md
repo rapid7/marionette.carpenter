@@ -6,4 +6,4 @@ To build from source, just run:
 
 To run tests, run:
 
-    $ grunt test
+    $ grunt spec
