@@ -1,10 +1,5 @@
 define [
-  'jquery'
-  'lib/components/table/table_view'
-  'lib/components/table/entities/action_buttons'
-  'lib/components/table/entities/paginated_collection'
-  'apps/creds/index/templates/filter'
-], ($) ->
+], ->
 
   # TODO: Remaining to test:
   # * Table.Row.recordSelectionState

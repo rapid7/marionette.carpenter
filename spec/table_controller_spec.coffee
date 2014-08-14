@@ -1,8 +1,7 @@
+# todo: need jquer here
 define [
-  'jquery'
-  'base_itemview'
-  'lib/components/table/table_controller'
-], ($) ->
+  'controllers/table_controller'
+], ->
 
   describe 'Components.Table.Controller', ->
 

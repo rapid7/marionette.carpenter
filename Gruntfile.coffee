@@ -14,7 +14,7 @@ module.exports = (grunt) ->
         dest: 'dist/'
         ext: '.js'
 
-      specs:
+      spec:
         options:
           sourceMap: true
         expand: true
@@ -33,13 +33,23 @@ module.exports = (grunt) ->
         dest: 'dist/templates/'
         ext: '.js'
 
-    requirejs: 
-      compile: 
-        options: 
+    requirejs:
+      source:
+        options:
+          almond: true
           baseUrl: "dist/"
           name: "controllers/table_controller"
           include: ["controllers/table_controller"]
           out: "dist/marionette.carpenter.js"
+          optimize: "none"
+          generateSourceMaps: true
+
+      spec:
+        options:
+          almond: true
+          baseUrl: "dist/"
+          include: ["spec/table_controller_spec.js", "spec/table_view_spec.js"]
+          out: "dist/spec/specs.js"
           optimize: "none"
           generateSourceMaps: true
 
@@ -52,7 +62,7 @@ module.exports = (grunt) ->
         options:
           specs: ['dist/spec/**/*.js']
 
-  grunt.loadNpmTasks('grunt-contrib-requirejs');
+  grunt.loadNpmTasks('grunt-requirejs');
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-eco')
   grunt.loadNpmTasks('grunt-contrib-jasmine')
