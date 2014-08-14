@@ -1,0 +1,46 @@
+$orange: #ea5709;
+
+$base-font-stack: "roboto", "HelveticaNeue-Light", "Helvetica Neue Light",
+                  "Helvetica Neue", "Arial Narrow", Helvetica, san-serif;
+$error-red: #f00;
+
+$blue-header-background-color: #095DD0;
+
+$new-notification-color: #8FD551;
+
+// Trebuchet is still our menu font
+$menu-font-family: 'Trebuchet MS', Helvetica, Arial, sans-serif;
+
+// used to style the ? glyph at the top right
+$helvetica-neue-font-family: "HelveticaNeueMedium", "HelveticaNeue-Medium", "Helvetica Neue Medium", "HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
+
+$orange-header-background-color: #EA5709;
+$orange-strip-height: 4px;
+$top-strip-text-color: #29373F;
+$top-logo-width: 156px;
+$dropdown-menu-background-color: #fff;
+$dropdown-menu-text-color: #277da9;
+$dropdown-menu-border-color: #eee;
+
+$narrow-font-weight: 100;
+$light-font-color: #010101;
+
+$light-gray-border: #ccc;
+
+%light-font {
+  font-weight: $narrow-font-weight;
+  color: $light-font-color;
+}
+
+.sexy-font {
+  font-family: $base-font-stack;
+  font-weight: 300;
+}
+
+.small-caps-font {
+  font-family: $base-font-stack;
+  font-variant: small-caps;
+  text-transform: lowercase;
+  font-size: 20px;
+  position: relative;
+}

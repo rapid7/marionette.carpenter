@@ -1,0 +1,141 @@
+@import 'compass/css3';
+
+$border-color: #b3b3b3;
+$dark-button-text-color: #e8e8e8;
+
+@mixin button-gradient($start-color, $end-color) {
+  background-image: -webkit-gradient(
+  linear,
+  left top,
+  left bottom,
+  color-stop(0, $start-color),
+  color-stop(1, $end-color)
+  );
+  background-image: -o-linear-gradient(bottom, $start-color 0%, $end-color 100%);
+  background-image: -moz-linear-gradient(bottom, $start-color 0%, $end-color  100%);
+  background-image: -webkit-linear-gradient(bottom, $start-color 0%, $end-color  100%);
+  background-image: -ms-linear-gradient(bottom, $start-color 0%, $end-color  100%);
+  background-image: linear-gradient(to bottom, $start-color 0%, $end-color  100%);
+}
+
+%button {
+  display: inline-block;
+  @include border-radius(5px);
+  height: 20px;
+  line-height: 18px;
+  min-width: 70px;
+  margin-right: 5px;
+
+  text-align: center;
+  font-size: 11px;
+  color: #4d4d4d;
+  border: 1px solid $border-color;
+  @include button-gradient(#FCFCFC, #E7E7E7);
+
+  &:hover {
+    text-decoration: none;
+    @include button-gradient(#F0F0F0, #E6E6E6);
+    cursor: pointer;
+  }
+
+  &.disabled {
+    pointer-events: none;
+    @include opacity(0.4);
+  }
+
+  &.disabled:hover {
+    @include button-gradient(#FCFCFC, #E7E7E7);
+    cursor: default;
+  }
+}
+
+// VARIANTS
+
+%button-green {
+  @extend %button;
+  padding: 0 10px;
+
+  color: $dark-button-text-color;
+  background-image: -moz-linear-gradient( 90deg, rgb(93,154,41) 0%, rgb(101,178,1) 100%);
+  background-image: -webkit-linear-gradient( 90deg, rgb(93,154,41) 0%, rgb(101,178,1) 100%);
+  background-image: -ms-linear-gradient( 90deg, rgb(93,154,41) 0%, rgb(101,178,1) 100%);
+}
+
+%square-button {
+  &:after {
+    padding: 0 5px;
+    @include border-radius(3px);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 100;
+    font-weight: 600;
+    margin-left: 3px;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+%square-button-with-label {
+  @extend %square-button;
+
+  padding: 4px 7px;
+  color: #777;
+  text-transform: none;
+  font-size: 12px;
+
+  @include border-radius(5px);
+  &:hover {
+    text-decoration: none;
+    background: #f3f3f3;
+  }
+  &:active {
+    background: #eee
+  }
+}
+
+%toggle-button {
+  @extend %square-button-with-label;
+
+  &:after {
+    display: inline-block;
+    background-color: rgb(31, 123,163);
+    content: '\2303';
+    @include text-shadow(0, 1px, 0, rgba(0,0,0,.3));
+    font-size: 12px;
+    line-height: 16px;
+    padding-top: 1px;
+    position: relative;
+    top: 1px;
+    font-weight: bold;
+    @include single-transition(all, 0.25s, ease, 0s);
+  }
+
+  &.enabled:after {
+    @include rotate(180deg);
+  }
+}
+
+%tag-button {
+  @extend %square-button-with-label;
+
+  &:after {
+    background-color: #90da2c;
+    content: '+';
+  }
+  &:hover {
+    text-decoration: none;
+    background-color: inherit;
+    color: #666;
+    &:after {
+      background-color: darken(#90da2c, 5%);
+    }
+  }
+  &:active {
+    background-color: inherit;
+    color: #333;
+    &:after {
+      background-color: darken(#90da2c, 8%);
+    }
+  }
+}

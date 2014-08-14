@@ -1,0 +1,225 @@
+// ---- CSS3 SASS MIXINS ----
+// https://github.com/madr/css3-sass-mixins
+
+//  Should IE filters be used or not?
+//  PROS: gradients, drop shadows etc will be handled by css.
+//  CONS: will harm the site performance badly,
+//        especially on sites with heavy rendering and scripting.
+$useIEFilters: 0; // might be 0 or 1. disabled by default.
+
+@mixin border-radius ($radius: 5px) {
+  -moz-border-radius: $radius; /* Gecko */
+  -webkit-border-radius: $radius; /* Webkit */
+  -khtml-border-radius: $radius; /* Konqueror */
+  border-radius: $radius; /* CSS3 */
+}
+
+@mixin bottom-border-radius ($radius: 5px) {
+  -moz-border-radius-bottomleft: $radius; /* Gecko */
+  -moz-border-radius-bottomright: $radius;
+  -webkit-border-bottom-left-radius: $radius;  /* Webkit */
+  -webkit-border-bottom-right-radius: $radius;
+  -khtml-border-bottom-left-radius: $radius; /* Konqueror */
+  -khtml-border-bottom-right-radius: $radius;
+  border-bottom-left-radius: $radius; /* CSS3 */
+  border-bottom-right-radius: $radius;
+}
+
+@mixin top-border-radius ($radius: 5px) {
+  -moz-border-radius-topleft: $radius; /* Gecko */
+  -moz-border-radius-topright: $radius;
+  -webkit-border-top-left-radius: $radius;  /* Webkit */
+  -webkit-border-top-right-radius: $radius;
+  -khtml-border-top-left-radius: $radius; /* Konqueror */
+  -khtml-border-top-right-radius: $radius;
+  border-top-left-radius: $radius; /* CSS3 */
+  border-top-right-radius: $radius;
+}
+
+@mixin border-radius-separate ($top-left-radius: 5px, $top-right-radius: 5px, $bottom-right-radius: 5px, $bottom-left-radius: 5px) {
+  -moz-border-radius-topleft: $top-left-radius; /* Gecko */
+  -webkit-border-top-left-radius: $top-left-radius;  /* Webkit */
+  -khtml-border-top-left-radius: $top-left-radius; /* Konqueror */
+  border-top-left-radius: $top-left-radius; /* CSS3 */
+
+  -moz-border-radius-topright: $top-right-radius; /* Gecko */
+  -webkit-border-top-right-radius: $top-right-radius;  /* Webkit */
+  -khtml-border-top-right-radius: $top-right-radius; /* Konqueror */
+  border-top-right-radius: $top-right-radius; /* CSS3 */
+
+  -moz-border-radius-bottomright: $bottom-right-radius;
+  -webkit-border-bottom-right-radius: $bottom-right-radius;  /* Webkit */
+  -khtml-border-bottom-right-radius: $bottom-right-radius; /* Konqueror */
+  border-bottom-right-radius: $bottom-right-radius; /* CSS3 */
+
+  -moz-border-radius-bottomleft: $bottom-left-radius; /* Gecko */
+  -webkit-border-bottom-left-radius: $bottom-left-radius;  /* Webkit */
+  -khtml-border-bottom-left-radius: $bottom-left-radius; /* Konqueror */
+  border-bottom-left-radius: $bottom-left-radius; /* CSS3 */
+}
+
+
+@mixin box-shadow ($x: 3px, $y:3px, $offset:4px, $hex:#DDDDDD, $ie: $useIEFilters) {
+  -moz-box-shadow: $x $y $offset $hex;
+  -o-box-shadow: $x $y $offset $hex;
+  -webkit-box-shadow: $x $y $offset $hex;
+  box-shadow: $x $y $offset $hex;
+
+  @if $ie == 1 {
+    $iecolor: '#' + red($hex) + green($hex) + blue($hex);
+    filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=#{$x}, OffY=#{$y}, Color='#{$iecolor}');
+    -ms-filter: quote(progid:DXImageTransform.Microsoft.dropshadow(OffX=#{$x}, OffY=#{$y}, Color='#{$iecolor}'));
+  }
+}
+
+@mixin no-box-shadow {
+  -moz-box-shadow: none;
+  -o-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+
+@mixin box-shadow-2 ($x: 3px, $y:3px, $offset:4px, $hex:#DDDDDD, $x2: 3px, $y2:3px, $offset2:4px, $hex2:#DDDDDD) {
+  -moz-box-shadow: $x $y $offset $hex, $x2 $y2 $offset2 $hex2;
+  -o-box-shadow: $x $y $offset $hex, $x2 $y2 $offset2 $hex2;
+  -webkit-box-shadow: $x $y $offset $hex, $x2 $y2 $offset2 $hex2;
+  box-shadow: $x $y $offset $hex, $x2 $y2 $offset2 $hex2;
+
+  // @if $ie == 1 {
+  //   $iecolor: '#' + red($hex) + green($hex) + blue($hex);
+  //   filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=#{$x}, OffY=#{$y}, Color='#{$iecolor}');
+  //   -ms-filter: quote(progid:DXImageTransform.Microsoft.dropshadow(OffX=#{$x}, OffY=#{$y}, Color='#{$iecolor}'));
+  // }
+}
+
+@mixin box-sizing ($value: border-box) {
+  box-sizing: $value;
+  -moz-box-sizing: $value;
+  -webkit-box-sizing: $value;
+}
+
+@mixin linear-gradient($from, $to, $ie: $useIEFilters) {
+  @if $ie != 1 {
+    background-color: $to;
+  }
+
+  background-image: -moz-linear-gradient($from, $to);
+  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, $from),color-stop(1, $to));
+  background-image: -webkit-linear-gradient($from, $to);
+  background-image: -o-linear-gradient($from, $to);
+  background-image: -ms-linear-gradient(top, $from, $to);
+  background-image: linear-gradient(top, $from, $to);
+
+  @if $ie == 1 {
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$from}', endColorstr='#{$to}');
+    -ms-filter: quote(progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$from}', endColorstr='#{$to}'));
+  }
+}
+
+
+
+@mixin linear-gradient-horizontal($startColor: #555, $endColor: #333) {
+  background-color: $endColor;
+  background-image: -moz-linear-gradient(left, $startColor, $endColor); // FF 3.6+
+  background-image: -webkit-gradient(linear, 0 0, 100% 0, from($startColor), to($endColor)); // Safari 4+, Chrome 2+
+  background-image: -webkit-linear-gradient(left, $startColor, $endColor); // Safari 5.1+, Chrome 10+
+  background-image: -o-linear-gradient(left, $startColor, $endColor); // Opera 11.10
+  background-image: linear-gradient(to right, $startColor, $endColor); // Standard, IE10
+  background-repeat: repeat-x;
+}
+
+
+// From http://css-tricks.com/snippets/css/cross-browser-opacity/
+@mixin opacity($opacity, $ie: $useIEFilters) {
+  /* Netscape */
+  -moz-opacity: $opacity;
+
+  /* Safari 1.x */
+  -khtml-opacity: $opacity;
+
+  /* Good browsers */
+  opacity: $opacity;
+
+  @if $ie == 1 {
+    /* IE 8 */
+    -ms-filter: quote(progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$opacity*100}));
+    /* IE 5-7 */
+    filter: alpha(opacity=#{$opacity*100});
+  }
+}
+
+
+@mixin rgba($hex, $alpha, $ie: $useIEFilters) {
+  @if $ie == 1 {
+    // this formula is not accurate enough, will be fixed with sass 3.1
+    $hexopac: '#' + ceil((($alpha * 255)/16) *10) + $hex;
+    background-color: none;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#{$hexopac}',EndColorStr='#{$hexopac}}');
+    -ms-filter: quote(progid:DXImageTransform.Microsoft.gradient(startColorStr='#{$hexopac}',EndColorStr='#{$hexopac}'));
+  }
+  @else {
+    background-color: $hex;
+    background-color: rgba(red($hex), green($hex), blue($hex), $alpha);
+  }
+}
+
+@mixin rotate ($deg, $ie: $useIEFilters) {
+  -moz-transform: rotate(#{$deg}deg);
+  -o-transform: rotate(#{$deg}deg);
+  -webkit-transform: rotate(#{$deg}deg);
+  transform: rotate(#{$deg}deg);
+  -ms-transform: (#{$deg}deg);
+  // not ready, impediment: cos required!
+  //@if $ie == 1 {
+  //  filter: progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=0.99144486137381, M12=--0.130526192220052, M21=0.130526192220052, M22=0.99144486137381);
+  //  -ms-filter: quote(progid:DXImageTransform.Microsoft.Matrix(SizingMethod='auto expand', M11=0.99144486137381, M12=--0.130526192220052, M21=0.130526192220052, M22=0.99144486137381));
+  //  zoom: 1;
+  //}
+  // filter: progid:DXImageTransform.Microsoft.Matrix(/* IE6–IE9  */
+  //                    M11=0.9914448613738104, M12=-0.13052619222005157,M21=0.13052619222005157, M22=0.9914448613738104, sizingMethod='auto expand');
+  // zoom: 1;
+}
+
+@mixin text-shadow ($x: 2px, $y: 2px, $blur: 2px, $hex: #888, $ie: $useIEFilters) {
+  text-shadow: $x $y $blur $hex;
+  @if $ie == 1 {
+    filter: dropshadow(color=$hex, offx=$x, offy=$y);
+  }
+}
+
+@mixin transition($what: all, $length: 1s, $easing: ease-in-out) {
+  -moz-transition:    $what $length $easing;
+  -o-transition:      $what $length $easing;
+  -webkit-transition: $what $length $easing;
+  -ms-transition:     $what $length $easing;
+  transition:         $what $length $easing;
+}
+
+@mixin background-clip($what: border) {
+  -moz-background-clip: $what;
+  -webkit-background-clip: $what;
+  background-clip: $what + -box;
+}
+
+@mixin word-break-auto {
+ -ms-word-break: break-all;
+   word-break: break-all;
+   word-break: break-word; // Non standard for webkit
+
+  -webkit-hyphens: auto;
+     -moz-hyphens: auto;
+          hyphens: auto;
+}
+
+@mixin image-2x($image, $width, $height) {
+  @media (min--moz-device-pixel-ratio: 1.3),
+  (-o-min-device-pixel-ratio: 2.6/2),
+  (-webkit-min-device-pixel-ratio: 1.3),
+  (min-device-pixel-ratio: 1.3),
+  (min-resolution: 1.3dppx) {
+    /* on retina, use image that's scaled by 2 */
+    background-image: url($image);
+    background-size: $width $height;
+  }
+}
