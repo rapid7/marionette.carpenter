@@ -22,7 +22,7 @@ module.exports = (grunt) ->
           sourceMap: true
         expand: true
         cwd: 'spec'
-        src: ['*_spec.coffee']
+        src: ['*.coffee']
         dest: 'dist/spec/'
         ext: '.js'
 
@@ -53,10 +53,17 @@ module.exports = (grunt) ->
           almond: true
           baseUrl: "dist/"
           include: ["spec/table_controller_spec.js", "spec/table_view_spec.js"]
-          insertRequire: ["spec/table_controller_spec.js", "spec/table_view_spec.js"]
           out: "dist/spec/specs.js"
           optimize: "none"
           generateSourceMaps: true
+
+    concat:
+
+      # "Fix up" our specs to load everything synchronously
+      spec:
+        src: ["dist/spec/specs.js", "dist/spec/require_stub.js"]
+        dest: 'dist/spec/specs.js'
+
 
     watch:
       files: ['src/**/**.coffee', 'src/**/**.eco', 'spec/**/**.coffee']
@@ -72,6 +79,7 @@ module.exports = (grunt) ->
             'bower_components/backbone.marionette/lib/backbone.marionette.js'
             'bower_components/backbone.paginator/dist/backbone.paginator.js'
             'bower_components/cocktail/Cocktail.js'
+            'bower_components/jasmine-set/jasmine-set.js'
           ]
           specs: ['dist/spec/specs.js']
           summary: true
@@ -90,13 +98,14 @@ module.exports = (grunt) ->
 
   grunt.loadNpmTasks('grunt-requirejs');
   grunt.loadNpmTasks('grunt-contrib-coffee')
+  grunt.loadNpmTasks('grunt-contrib-concat')
   grunt.loadNpmTasks('grunt-eco')
   grunt.loadNpmTasks('grunt-contrib-jasmine')
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-contrib-compass')
 
-  grunt.registerTask('build', ['clean', 'coffee', 'eco','requirejs'])
+  grunt.registerTask('build', ['clean', 'coffee', 'eco', 'requirejs', 'concat'])
   grunt.registerTask('spec',  ['build', 'jasmine'])
   grunt.registerTask('style', ['clean', 'compass'])
   grunt.registerTask('default', ['build'])

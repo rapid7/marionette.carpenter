@@ -15,12 +15,14 @@
     "backbone.marionette": "1.4.1",
     "backbone.paginator": "1.0.0"
   },
+  "devDependencies": {
+    "jasmine-set": "jvennix-r7/jasmine-set"
+  },
   "license": "MIT",
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
-    "test",
-    "tests"
+    "spec"
   ]
 }
