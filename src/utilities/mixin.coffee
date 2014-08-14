@@ -1,6 +1,4 @@
-define [
-
-],->
+define [], ->
   mixinKeywords = ["beforeIncluded", "afterIncluded"]
 
   include = (objs...) ->
@@ -27,11 +25,20 @@ define [
   # the modules and klasses we are monkey patching
   modules = [
     { Backbone:   ["Collection", "Model", "View"] }
-    { Marionette: ["ItemView", "Layout", "CollectionView", "CompositeView", "Controller"] }
+    { 
+      Marionette: [
+        "ItemView"
+        "Layout" # for Marionette < 2 compatibiliy
+        "LayoutView"
+        "CollectionView"
+        "CompositeView"
+        "Controller"
+      ]
+    }
   ]
 
   for module in modules
     for key, klasses of module
       for klass in klasses
         obj = window[key]
-        obj[klass].include = include
+        obj[klass]?.include = include
