@@ -96,7 +96,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-contrib-compass')
 
-  grunt.registerTask('build', ['coffee', 'eco','requirejs'])
+  grunt.registerTask('build', ['clean', 'coffee', 'eco','requirejs'])
   grunt.registerTask('spec',  ['build', 'jasmine'])
   grunt.registerTask('style', ['clean', 'compass'])
-  grunt.registerTask('default', ['clean', 'build'])
+  grunt.registerTask('default', ['build'])
