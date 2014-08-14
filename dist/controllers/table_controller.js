@@ -3,9 +3,11 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define(['controllers/application_controller', 'entities/paginated_collection', 'entities/action_button', 'entities/filter', 'views/action_button', 'views/control_bar', 'views/empty', 'views/filter', 'views/header', 'views/layout', 'views/loading', 'views/paginator', 'views/row', 'views/row_list', 'views/selection_indicator'], function(Application) {
-    var API, Controller;
-    Controller = (function(_super) {
+  define(['controllers/application_controller', 'entities/paginated_collection', 'entities/action_button', 'entities/filter', 'views/action_button', 'views/control_bar', 'views/empty', 'views/filter', 'views/header', 'views/layout', 'views/loading', 'views/paginator', 'views/row', 'views/row_list', 'views/selection_indicator'], function(Controller, CreatePaginatedCollectionClass, ActionButtonsCollection, ActionButton, EntityFilter, ControlBar, Empty, Filter, Header, Layout, Loading, Paginator, Row, RowList, SelectionIndicator) {
+    var API;
+    Marionette.Carpenter = {};
+    debugger;
+    Marionette.Carpenter.Controller = (function(_super) {
       __extends(Controller, _super);
 
       function Controller() {
@@ -77,7 +79,7 @@
         if (typeof (_base = this.collection).rebind === "function") {
           _base.rebind();
         }
-        this.setMainView(new Table.Layout(this));
+        this.setMainView(new Layout(this));
         this.collection.perPage = this.perPage;
         this.collection.sortColumn = this.defaultSortColumn().attribute;
         this.collection.sortDirection = this.defaultSortDirection();
@@ -93,20 +95,20 @@
         }
         this.actionButtonsCollection = new ActionButtonsCollection(opts.actionButtons);
         if (this.filterEnabled()) {
-          this.filterModel = new Filter(this.filterAttrs);
+          this.filterModel = new EntityFilter(this.filterAttrs);
         }
-        this.header = new Table.Header(this);
-        this.buttons = new Table.ControlBar(this);
-        this.list = new Table.RowList(this);
-        this.paginator = new Table.Paginator(this);
+        this.header = new Header(this);
+        this.buttons = new ControlBar(this);
+        this.list = new RowList(this);
+        this.paginator = new Paginator(this);
         if (this.selectable) {
-          this.selectionIndicator = new Table.SelectionIndicator(this);
+          this.selectionIndicator = new SelectionIndicator(this);
         }
         if (this.filterEnabled()) {
           if (this.filterView) {
             this.filter = new this.filterView(this);
           } else {
-            this.filter = new Table.Filter(this);
+            this.filter = new Filter(this);
           }
         }
         this.listenTo(this.collection, 'reset', (function(_this) {
@@ -322,10 +324,10 @@
 
       return Controller;
 
-    })(Application);
+    })(Controller);
     return API = {
       createTable: function(options) {
-        return new Table.Controller(options);
+        return new Controller(options);
       }
     };
   });

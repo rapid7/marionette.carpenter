@@ -14,9 +14,27 @@ define [
   'views/row'
   'views/row_list'
   'views/selection_indicator'
-], (Application) ->
+], (
+    Controller, 
+    CreatePaginatedCollectionClass, 
+    ActionButtonsCollection,
+    ActionButton,
+    EntityFilter,
+    ControlBar,
+    Empty,
+    Filter,
+    Header,
+    Layout,
+    Loading,
+    Paginator,
+    Row,
+    RowList,
+    SelectionIndicator
+    ) ->
 
-    class Controller extends Application
+    Marionette.Carpenter = {}
+    debugger
+    class Marionette.Carpenter.Controller extends Controller
 
       # @property [Boolean] allow the table to be searched from the header
       searchable: true
@@ -154,7 +172,7 @@ define [
         @collection.rebind?() # crappy workaround to my class wrapping
 
         # container for different parts of our table
-        @setMainView(new Table.Layout(@))
+        @setMainView(new Layout(@))
 
         # set default options on the PaginatedCollection
         @collection.perPage = @perPage
@@ -177,20 +195,20 @@ define [
 
         # create a filter for storing the search state
         if @filterEnabled()
-          @filterModel = new Filter(@filterAttrs)
+          @filterModel = new EntityFilter(@filterAttrs)
 
         # build the new table
-        @header             = new Table.Header(@)
-        @buttons            = new Table.ControlBar(@)
-        @list               = new Table.RowList(@)
-        @paginator          = new Table.Paginator(@)
-        @selectionIndicator = new Table.SelectionIndicator(@) if @selectable
+        @header             = new Header(@)
+        @buttons            = new ControlBar(@)
+        @list               = new RowList(@)
+        @paginator          = new Paginator(@)
+        @selectionIndicator = new SelectionIndicator(@) if @selectable
 
         if @filterEnabled()
           if @filterView
             @filter = new @filterView(@)
           else
-            @filter = new Table.Filter(@)
+            @filter = new Filter(@)
 
         @listenTo @collection, 'reset',  => @toggleInteraction true
         @listenTo @collection, 'sync',   => @toggleInteraction true
@@ -354,4 +372,4 @@ define [
     API =
       # @return [Table.Controller] a new controller for the requested table
       createTable: (options) ->
-        new Table.Controller options
+        new Controller options

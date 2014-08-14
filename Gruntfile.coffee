@@ -43,7 +43,6 @@ module.exports = (grunt) ->
           baseUrl: "dist/"
           name: "controllers/table_controller"
           include: ["controllers/table_controller"]
-          insertRequire: ["controllers/table_controller"]
           out: "dist/marionette.carpenter.js"
           optimize: "none"
           generateSourceMaps: true

@@ -73,4 +73,4 @@ define ['templates/paginator'], (template) ->
         lastRow: lastRow
         isLastPage: lastRow is totalRecords
         isFirstPage: @collection.currentPage is 1
-        ALL_MAGIC: Table.Paginator.ALL_MAGIC
+        ALL_MAGIC: Paginator.ALL_MAGIC

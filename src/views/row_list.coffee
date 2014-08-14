@@ -194,10 +194,3 @@ define [
 
     serializeData: -> @
 
-    onRender: ->
-      # Add a tooltip to the select all checkbox, if the table is selectable.
-      if @selectable
-        @ui.selectAllCheckbox.tooltip
-          tooltipClass: 'select-all-tooltip'
-          position:
-            at: 'left+40 top-30'
