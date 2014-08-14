@@ -27,11 +27,11 @@ define [
   # the modules and klasses we are monkey patching
   modules = [
     { Backbone:   ["Collection", "Model", "View"] }
-    { Marionette: ["ItemView", "LayoutView", "CollectionView", "CompositeView", "Controller"] }
+    { Marionette: ["ItemView", "Layout", "CollectionView", "CompositeView", "Controller"] }
   ]
 
   for module in modules
     for key, klasses of module
       for klass in klasses
-        obj = window[key] or App[key]
+        obj = window[key]
         obj[klass].include = include

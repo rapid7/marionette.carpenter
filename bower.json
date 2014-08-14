@@ -1,0 +1,23 @@
+{
+  "name": "carpenter",
+  "version": "0.0.1",
+  "homepage": "https://github.com/rapid7/marionette.carpenter",
+  "authors": [
+    "joev@metasploit.com"
+  ],
+  "description": "A Backbone Marionette table component.",
+  "moduleType": [
+    "amd"
+  ],
+  "dependencies": {
+    "backbone.marionette": "1.4.1"
+  },
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

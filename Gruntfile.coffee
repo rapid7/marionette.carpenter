@@ -63,6 +63,11 @@ module.exports = (grunt) ->
     jasmine:
       run:
         options:
+          vendor: [
+            'bower_components/underscore/underscore.js'
+            'bower_components/backbone/backbone.js'
+            'bower_components/backbone.marionette/lib/backbone.marionette.js'
+          ]
           specs: ['dist/spec/specs.js']
           summary: true
 
