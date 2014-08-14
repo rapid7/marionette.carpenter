@@ -12,18 +12,24 @@ module.exports = (grunt) ->
         expand: true
         src: 'assets/**'
         dest: 'dist/'
-      source:
+      sass:
         expand: true
         nonull: true
         cwd: 'src/'
         src: ['sass/**']
         dest: 'dist/'
-      build:
+      css:
         expand: true
         nonull: false
         cwd: 'build/'
         src: ['css/**']
         dest: 'dist/'
+      js:
+        expand: true
+        nonull: false
+        cwd: 'build/'
+        src: ['marionette.carpenter.js', 'marionette.carpenter.js.map']
+        dest: 'dist/js/'
 
     coffee:
       source:
@@ -32,7 +38,7 @@ module.exports = (grunt) ->
         expand: true
         cwd: 'src/'
         src: ['**/**.coffee']
-        dest: 'dist/'
+        dest: 'build/'
         ext: '.js'
 
       spec:
@@ -41,7 +47,7 @@ module.exports = (grunt) ->
         expand: true
         cwd: 'spec'
         src: ['**/**.coffee']
-        dest: 'dist/spec/'
+        dest: 'build/spec/'
         ext: '.js'
 
     eco:
@@ -51,27 +57,27 @@ module.exports = (grunt) ->
         expand: true
         cwd: 'src/templates/'
         src: ['*.eco']
-        dest: 'dist/templates/'
+        dest: 'build/templates/'
         ext: '.js'
 
     requirejs:
       source:
         options:
           almond: true
-          baseUrl: "dist/"
+          baseUrl: "build/"
           name: "controllers/table_controller"
           include: ["controllers/table_controller"]
           insertRequire: ["controllers/table_controller"]
-          out: "dist/marionette.carpenter.js"
+          out: "build/marionette.carpenter.js"
           optimize: "none"
           generateSourceMaps: true
 
       spec:
         options:
           almond: true
-          baseUrl: "dist/"
+          baseUrl: "build/"
           include: ["spec/table_controller_spec.js", "spec/table_view_spec.js"]
-          out: "dist/spec/specs.js"
+          out: "build/spec/specs.js"
           optimize: "none"
           generateSourceMaps: true
 
@@ -79,8 +85,8 @@ module.exports = (grunt) ->
 
       # "Fix up" our specs to load everything synchronously
       spec:
-        src: ["dist/spec/specs.js", "dist/spec/require_stub.js"]
-        dest: 'dist/spec/specs.js'
+        src: ["build/spec/specs.js", "build/spec/require_stub.js"]
+        dest: 'build/spec/specs.js'
 
     watch:
       files: ['src/**/**.coffee', 'src/**/**.eco', 'spec/**/**.coffee']
@@ -99,13 +105,13 @@ module.exports = (grunt) ->
             'bower_components/cocktail/Cocktail.js'
             'bower_components/jasmine-set/jasmine-set.js'
           ]
-          specs: ['dist/spec/specs.js']
+          specs: ['build/spec/specs.js']
           summary: true
 
     # In order to run the compass task, you must have the compass ruby gem installed.
     # Confirm you have Ruby installed and run: gem update --system && gem install compass
     compass:
-      dist:
+      build:
         options:
           sassDir: 'src/sass'
           cssDir: 'build/css'
@@ -125,7 +131,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-eco')
   grunt.loadNpmTasks('grunt-requirejs')
 
-  grunt.registerTask('build', ['coffee', 'eco', 'requirejs', 'concat', 'copy'])
-  grunt.registerTask('spec',  ['build', 'jasmine'])
   grunt.registerTask('style', ['clean', 'compass'])
+  grunt.registerTask('build', ['clean', 'style', 'coffee', 'eco', 'requirejs', 'concat', 'copy'])
+  grunt.registerTask('spec',  ['build', 'jasmine'])
   grunt.registerTask('default', ['build'])
