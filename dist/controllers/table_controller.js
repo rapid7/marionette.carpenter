@@ -72,7 +72,7 @@
           };
         })(this));
         this["static"] = !!this["static"];
-        PagerClass = this.app.Entities.CreatePaginatedCollectionClass(this.collection, this);
+        PagerClass = CreatePaginatedCollectionClass(this.collection, this);
         this.collection = new PagerClass(this.collection.models);
         if (typeof (_base = this.collection).rebind === "function") {
           _base.rebind();
