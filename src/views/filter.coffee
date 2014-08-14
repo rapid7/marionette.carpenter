@@ -36,8 +36,8 @@ define [], ->
       @filterAttrs = opts.filterAttrs
       @collection = opts.collection
 
-      App.vent.on @filterToggleEvent, @toggleFilter if @filterToggleEvent
-      App.vent.on @filterCustomQueryEvent, (customQuery) => @updateModel(customQuery) if @filterCustomQueryEvent
+      @app.vent.on @filterToggleEvent, @toggleFilter if @filterToggleEvent
+      @app.vent.on @filterCustomQueryEvent, (customQuery) => @updateModel(customQuery) if @filterCustomQueryEvent
 
     #
     # Called when any activity occurs in an input field. Debounces searches to

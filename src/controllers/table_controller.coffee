@@ -139,7 +139,7 @@ define [
         @static = !!@static
 
         # clone the collection into a relevant PaginatedCollection
-        PagerClass = @app.Entities.CreatePaginatedCollectionClass(@collection, @)
+        PagerClass = CreatePaginatedCollectionClass(@collection, @)
         @collection = new PagerClass(@collection.models)
         @collection.rebind?() # crappy workaround to my class wrapping
 

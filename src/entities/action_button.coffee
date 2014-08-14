@@ -4,7 +4,7 @@ define [], ->
   # ENTITY CLASSES
   #
 
-  class Entities.ActionButton extends Backbone.Model
+  class ActionButton extends Backbone.Model
     initialize: (attributes) ->
       @set('disabled', true) if @get('activateOn')
 

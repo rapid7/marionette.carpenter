@@ -2,20 +2,21 @@ define [], ->
     # This is the base controller class that all other Marionette
     # controllers should inherit from. It provides some convenience
     # methods that most controllers would implement, like unbinding
-    # or adding views to the main region of the App.
+    # or adding views to the main region of the @app.
     class Controllers.Application extends Marionette.Controller
 
       # @param [Object] options the options hash
       # @option options [Region] the region to render in. Defaults to the
       constructor: (options = {}) ->
-        @region = options.region or App.request "default:region"
+        @region = options.region
+        @app = options.app
         super options
         @_instance_id = _.uniqueId("controller")
-        App.execute "register:instance", @, @_instance_id
+        @app.execute "register:instance", @, @_instance_id
 
       # Unregisters the Controller from the app and closes itself
       close: ->
-        App.execute "unregister:instance", @, @_instance_id
+        @app.execute "unregister:instance", @, @_instance_id
         super
 
       # Shows the specified view in the desired region. If a Controller
@@ -63,7 +64,7 @@ define [], ->
       _manageView: (view, options) ->
         if options.loading
           ## show the loading view
-          App.execute "show:loading", view, options
+          @app.execute "show:loading", view, options
         else
           options.region.show view
 
