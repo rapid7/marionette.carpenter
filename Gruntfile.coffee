@@ -66,9 +66,12 @@ module.exports = (grunt) ->
       run:
         options:
           vendor: [
+            'bower_components/jquery/dist/jquery.js'
             'bower_components/underscore/underscore.js'
             'bower_components/backbone/backbone.js'
             'bower_components/backbone.marionette/lib/backbone.marionette.js'
+            'bower_components/backbone.paginator/dist/backbone.paginator.js'
+            'bower_components/cocktail/Cocktail.js'
           ]
           specs: ['dist/spec/specs.js']
           summary: true

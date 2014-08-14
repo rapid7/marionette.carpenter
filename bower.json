@@ -10,7 +10,10 @@
     "amd"
   ],
   "dependencies": {
-    "backbone.marionette": "1.4.1"
+    "cocktail": "0.5.8",
+    "jquery": "2.1.1",
+    "backbone.marionette": "1.4.1",
+    "backbone.paginator": "1.0.0"
   },
   "license": "MIT",
   "ignore": [
