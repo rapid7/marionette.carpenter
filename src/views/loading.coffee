@@ -1,10 +1,10 @@
-define ['templates/loading'], ->
+define ['templates/loading'], (template) ->
   #
   # Show a loading animation. Used as the EmptyView for non-static collections
   # until something is fetched.
   #
-  class Table.Loading extends Marionette.ItemView
+  class Loading extends Marionette.ItemView
 
-    template: @::templatePath 'loading'
+    template: template
 
     tagName: 'tr'

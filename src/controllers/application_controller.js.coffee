@@ -5,7 +5,7 @@ define [
     # controllers should inherit from. It provides some convenience
     # methods that most controllers would implement, like unbinding
     # or adding views to the main region of the @app.
-    class Controllers.Application extends Marionette.Controller
+    class Controller extends Marionette.Controller
 
       # @param [Object] options the options hash
       # @option options [Region] the region to render in. Defaults to the

@@ -1,4 +1,4 @@
-define ['templates/row'], ->
+define ['templates/row'], (template) ->
   #
   # Render a single row (per model in the collection)
   #
@@ -16,7 +16,7 @@ define ['templates/row'], ->
   #   @param model [Entities.model] the row's associated model
   class Row extends Marionette.Layout
 
-    template: @::templatePath 'row'
+    template: template
 
     tagName: 'tr'
 

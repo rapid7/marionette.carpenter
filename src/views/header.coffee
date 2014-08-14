@@ -1,13 +1,13 @@
 define [
   'templates/header'
-], ->
+], (template)->
 
   #
   # Display a title and an optional search/filter area
   #
   class Header extends Marionette.ItemView
 
-    template: @::templatePath 'header'
+    template: template
 
     attributes:
       class: 'table-header'

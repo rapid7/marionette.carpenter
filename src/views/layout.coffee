@@ -1,13 +1,13 @@
 define [
   'templates/layout'
-], ->
+], (template) ->
 
   #
   # Contains the header, button bar, table, and pagination
   #
-  class Layout extends Marionette.LayoutView
+  class Layout extends Marionette.Layout
 
-    template: @::templatePath('layout')
+    template: template
 
     regions:
       headerRegion:             '.header-region'

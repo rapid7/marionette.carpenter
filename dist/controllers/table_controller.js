@@ -3,7 +3,7 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define(['controllers/application_controller', 'entities/paginated_collection', 'entities/action_buttons', 'entities/filter', 'views/table_view'], function() {
+  define(['controllers/application_controller', 'entities/paginated_collection', 'entities/action_button', 'entities/filter', 'views/action_button', 'views/control_bar', 'views/empty', 'views/filter', 'views/header', 'views/layout', 'views/loading', 'views/paginator', 'views/row', 'views/row_list', 'views/selection_indicator'], function(Application) {
     var API, Controller;
     Controller = (function(_super) {
       __extends(Controller, _super);
@@ -322,7 +322,7 @@
 
       return Controller;
 
-    })(Controllers.Application);
+    })(Application);
     return API = {
       createTable: function(options) {
         return new Table.Controller(options);

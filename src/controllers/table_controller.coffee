@@ -1,12 +1,22 @@
 define [
   'controllers/application_controller'
   'entities/paginated_collection'
-  'entities/action_buttons'
+  'entities/action_button'
   'entities/filter'
-  'views/table_view'
-], ->
+  'views/action_button'
+  'views/control_bar'
+  'views/empty'
+  'views/filter'
+  'views/header'
+  'views/layout'
+  'views/loading',
+  'views/paginator'
+  'views/row'
+  'views/row_list'
+  'views/selection_indicator'
+], (Application) ->
 
-    class Controller extends Controllers.Application
+    class Controller extends Application
 
       # @property [Boolean] allow the table to be searched from the header
       searchable: true

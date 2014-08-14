@@ -1,14 +1,14 @@
-define ['templates/paginator'], ->
+define ['templates/paginator'], (template) ->
   #
   # Render the pagination controls
   #
-  class Table.Paginator extends Marionette.ItemView
+  class Paginator extends Marionette.ItemView
 
     # When the 'All rows' option is selected, we pass this as the
     # "max rows" variable to the server
     @ALL_MAGIC: '99999999'
 
-    template: @::templatePath 'paginator'
+    template: template
 
     attributes:
       class: 'paginator'

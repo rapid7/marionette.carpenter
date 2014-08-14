@@ -1,10 +1,10 @@
-define ['templates/empty'], ->
+define ['templates/empty'], (template) ->
   #
   # Shown when the collection is empty
   #
   class Empty extends Marionette.ItemView
 
-    template: @::templatePath 'empty'
+    template: template
 
     tagName: 'tr'
 

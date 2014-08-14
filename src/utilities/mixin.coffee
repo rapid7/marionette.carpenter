@@ -5,7 +5,7 @@ define [], ->
     klass = @
 
     for obj in objs
-      concern = App.request "concern", obj
+      concern = obj
 
       # call the beforeIncluded method if it exists on our concern
       # the context of 'this' within beforeIncluded method will be
@@ -28,7 +28,6 @@ define [], ->
     { 
       Marionette: [
         "ItemView"
-        "Layout" # for Marionette < 2 compatibiliy
         "LayoutView"
         "CollectionView"
         "CompositeView"

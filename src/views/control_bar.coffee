@@ -1,15 +1,18 @@
 define [
+  'concerns/views/filter_toggle'
+  'concerns/views/filter_custom_query_field'
+  'views/action_button'
   'templates/control_bar'
-], ($) ->
+], (FilterToggle,FilterCustomQueryField,ActionButton,template) ->
 
   #
   # Hold the action and tag buttons
   #
   class ControlBar extends Marionette.CompositeView
 
-    template: @::templatePath 'control_bar'
+    template: template
 
-    itemView: Table.ActionButton
+    itemView: ActionButton
 
     tagName: 'ul'
 
@@ -51,5 +54,5 @@ define [
 
     serializeData: -> @
 
-    @include "FilterToggle"
-    @include "FilterCustomQueryField"
+    @include FilterToggle
+    @include FilterCustomQueryField

@@ -3,13 +3,13 @@ define [
   'views/empty'
   'views/loading'
   'templates/table'
-], (Row, Empty, Loading) ->
+], (Row, Empty, Loading, template) ->
   #
   # Render the table rows and columns
   #
-  class Table.RowList extends Marionette.CompositeView
+  class RowList extends Marionette.CompositeView
 
-    template: @::templatePath 'table'
+    template: template
 
     itemView: Row
 

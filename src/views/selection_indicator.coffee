@@ -1,13 +1,13 @@
 define [
   'templates/selection_indicator'
-], ->
+], (template) ->
 
   #
   # The indicator of the number of selected items.
   #
   class SelectionIndicator extends Marionette.ItemView
 
-    template: @::templatePath 'selection_indicator'
+    template: template
 
     # @param [Object] opts the options hash
     # @option opts [Object] :tableSelections data about the current state of the table

@@ -1,13 +1,13 @@
 define [
   'templates/action_button'
-], ->
+], (template) ->
 
   #
   # The action buttons in the control bar
   #
   class ActionButton extends Marionette.ItemView
 
-    template: @::templatePath 'action_button'
+    template: template
 
     tagName: 'li'
 
