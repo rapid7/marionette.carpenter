@@ -7,6 +7,24 @@ module.exports = (grunt) ->
     clean:
       src: ['build']
 
+    copy:
+      assets:
+        expand: true
+        src: 'assets/**'
+        dest: 'dist/'
+      source:
+        expand: true
+        nonull: true
+        cwd: 'src/'
+        src: ['sass/**']
+        dest: 'dist/'
+      build:
+        expand: true
+        nonull: false
+        cwd: 'build/'
+        src: ['css/**']
+        dest: 'dist/'
+
     coffee:
       source:
         options:
@@ -43,6 +61,7 @@ module.exports = (grunt) ->
           baseUrl: "dist/"
           name: "controllers/table_controller"
           include: ["controllers/table_controller"]
+          insertRequire: ["controllers/table_controller"]
           out: "dist/marionette.carpenter.js"
           optimize: "none"
           generateSourceMaps: true
@@ -63,7 +82,6 @@ module.exports = (grunt) ->
         src: ["dist/spec/specs.js", "dist/spec/require_stub.js"]
         dest: 'dist/spec/specs.js'
 
-
     watch:
       files: ['src/**/**.coffee', 'src/**/**.eco', 'spec/**/**.coffee']
       tasks: ['spec']
@@ -71,7 +89,6 @@ module.exports = (grunt) ->
     jasmine:
       run:
         options:
-          version: '1.3.1'
           vendor: [
             'bower_components/jquery/dist/jquery.js'
             'bower_components/underscore/underscore.js'
@@ -82,7 +99,6 @@ module.exports = (grunt) ->
             'bower_components/cocktail/Cocktail.js'
             'bower_components/jasmine-set/jasmine-set.js'
           ]
-          outfile: 'SpecRunner.html'
           specs: ['dist/spec/specs.js']
           summary: true
 
@@ -98,16 +114,18 @@ module.exports = (grunt) ->
           outputStyle: 'expanded'
           noLineComments: true
 
-  grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-contrib-coffee')
-  grunt.loadNpmTasks('grunt-contrib-compass')
   grunt.loadNpmTasks('grunt-contrib-concat')
+  grunt.loadNpmTasks('grunt-eco')
   grunt.loadNpmTasks('grunt-contrib-jasmine')
   grunt.loadNpmTasks('grunt-contrib-watch')
+  grunt.loadNpmTasks('grunt-contrib-clean')
+  grunt.loadNpmTasks('grunt-contrib-compass')
+  grunt.loadNpmTasks('grunt-contrib-copy')
   grunt.loadNpmTasks('grunt-eco')
   grunt.loadNpmTasks('grunt-requirejs')
 
-  grunt.registerTask('build', ['clean', 'coffee', 'eco', 'requirejs', 'concat'])
+  grunt.registerTask('build', ['coffee', 'eco', 'requirejs', 'concat', 'copy'])
   grunt.registerTask('spec',  ['build', 'jasmine'])
   grunt.registerTask('style', ['clean', 'compass'])
   grunt.registerTask('default', ['build'])
