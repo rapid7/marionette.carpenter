@@ -79,7 +79,7 @@ module.exports = (grunt) ->
         options:
           sassDir: 'src/sass'
           cssDir: 'build/css'
-          imagesPath: 'assets'
+          imagesDir: 'assets'
           relativeAssets: false
           outputStyle: 'expanded'
           noLineComments: true
