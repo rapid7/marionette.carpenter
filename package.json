@@ -1,18 +1,24 @@
 {
   "name": "marionette.carpenter",
   "version": "0.0.1",
+  "scripts": {
+    "bower": "bower install",
+    "test": "grunt spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rapid7/marionette.carpenter.git"
+  },
   "devDependencies": {
+    "bower": "1.3.8",
     "grunt": "~0.4.5",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-compass": "^0.9.1",
+    "grunt-cli": "0.1.13",
     "grunt-contrib-watch": "~0.2.0a",
     "grunt-contrib-coffee": "~0.11.0",
     "grunt-eco": "~0.1.2",
     "grunt-requirejs": "~0.4.0",
     "grunt-contrib-jasmine": "~0.7.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/rapid7/marionette.carpenter.git"
   }
 }
