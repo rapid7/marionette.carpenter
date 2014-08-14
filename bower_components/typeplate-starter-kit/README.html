@@ -1,0 +1,127 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width, initial-scale=1.0" name="viewport" /><title>Carpenter: It builds tables</title><link href="../../assets/stylesheets/app-14db5c00.css" rel="stylesheet" type="text/css" /><script src="../../assets/javascripts/before-53f614ca.js" type="text/javascript"></script></head><body><p><a href="//typeplate.com"><img src="http://typeplate.com/img/logo.png" alt="typeplate logo" width="216" height="216" /></a></p>
+
+<h2 id="sect-what-is-it">§ What is it?</h2>
+<p>Frameworks make decisions for you about how to organize, structure and design a site. Pattern libraries don’t separate styling and markup, making them tough to use in a truly modular fashion. We weren’t satisfied, so we made a thing that doesn’t do that.</p>
+
+<p>Typeplate is a "typographic starter kit". We don’t make aesthetic design choices, but define proper markup with extensible styling for common typographic patterns. A stripped–down Sass library concerned with the appropriate technical implementation of design patterns–not how they look.</p>
+
+<h2 id="sect-browser-tested-developer-approved">§ Browser Tested, Developer Approved</h2>
+<p><img src="https://raw.github.com/paulirish/browser-logos/master/main-desktop.png" alt="" width="375" /></p>
+
+<h2 id="sect-file-size">§ File Size</h2>
+<p>Not much goin’ on here in terms of bulk. As you can see, Typeplate is just a measely 3kb when compressed. That's really, really small.</p>
+
+<ul>
+  <li>Raw Sass = <strong>20kb</strong></li>
+  <li>Compressed Sass = <strong>3kb</strong></li>
+  <li>Raw CSS = <strong>10kb</strong></li>
+</ul>
+
+<h2 id="installation">Installation</h2>
+
+<ul>
+  <li>
+    <p>Rule #1 in Typeplate Club… Always use <code>&lt;meta charset="utf-8"&gt;</code> in your document <code>&lt;head&gt;</code>. Doing so alleviates authors need to use a charset from within a stylesheet. Anything imported into a document using <code>&lt;meta charset="utf-8"&gt;</code> is encoded as <code>utf-8</code> globally.</p>
+  </li>
+  <li>
+    <p>Based on use cases for most developers' workflow, we recommend using Typeplate just after your reset stylesheet (i.e. <a href="http://necolas.github.com/normalize.css">normalize</a>) and your compass <code>@import</code> in order to operate as we've intended, but as you'll see from our <a href="http://typeplate.com/demo">demo</a> it isn't necessary.</p>
+  </li>
+</ul>
+
+<h3 id="sect-installation-via-scss-import">§ Installation via <code>.scss @import</code></h3>
+
+<p>Simply download our <code>_typeplate.scss</code> partial file and import from your project's primary <code>.scss</code> file like so:</p>
+
+<p>```scss
+@import "compass"; // Not required. For example purposes only.
+@import "[your_project_path]/reset"; // Not required. For example purposes only.
+@import "[your_project_path]/typeplate";</p>
+
+<p>// Custom Author Styles
+// ====================================
+```</p>
+
+<p>Authors can also take this one step further and include a custom variables file from outside the _typeplate.scss partial file. This allows authors to override the default variables set within <code>_typeplate.scss</code>.</p>
+
+<p><code>scss
+@import "[your_project_path]/typeplate-vars"; // Must come first
+@import "[your_project_path]/typeplate"; // Must follow typeplate-vars
+</code></p>
+
+<h3 id="sect-installation-via-css">§ Installation via <code>.css</code></h3>
+
+<p>If the Sass version isn't your cup of tea, we've provided a CSS version. Simply place the contents of <code>typeplate.css</code> inside your project's stylesheet (reset style, typeplate, author styles).</p>
+
+<h6 id="option-1-this-method-is-not-the-best-as-it-results-in-more-http-requests">Option #1 This method is not the best as it results in more HTTP requests.</h6>
+<p>```html</p>
+<head>
+    <link rel="stylesheet" href="[project_path]/css/normalize.css" /><!-- Reset of your choice (optional). We like normalize even though it's not a reset -->
+    <link rel="stylesheet" href="[project_path]/css/typeplate.css" /><!-- typeplate styles -->
+    <link rel="stylesheet" href="[project_path]/css/main.css" /><!-- main stylesheet -->
+</head>
+<p>```</p>
+
+<h6 id="option-2-this-method-is-the-best-as-it-results-in-less-http-requests">Option #2 This method is the best as it results in less HTTP requests.</h6>
+
+<p>```html</p>
+<head>
+    <link rel="stylesheet" href="[project_path]/css/main.css" /><!-- main stylesheet with typeplate.css inside -->
+</head>
+<p>```</p>
+
+<h3 id="sect-installation-via-bower">§ Installation via Bower</h3>
+
+<p>Yup that’s right! We’re in the bower package registry. Simply run <code>bower install typeplate</code> for the CSS, Sass versions and watch the magic happen. This is an example of how to include either the CSS or Sass version in your project.</p>
+
+<p><strong>Sass</strong></p>
+
+<p><code>scss
+@import "compass";
+@import "[your_project_path]/reset";
+@import "[root_project_path]/bower_components/typeplate/scss/typeplate";
+</code></p>
+
+<p>Since bower allows authors to keep packages and dependencies updated easily it also overrides any custom changes made to the package(s) contents served from the components directory -used by bower to organize packages. To alleviate this frustration we've provided a variable file to override the packages opinionated defaults. Simply duplicate the <code>_typeplate-vars.scss</code> file and include it from your own directory (most likely your sass directory where you keep all your related sass project files.)</p>
+
+<p><strong>Sass w/custom variable overrides</strong></p>
+
+<p><code>scss
+@import "compass";
+@import "[your_project_path]/reset"; // your browser reset of choice
+@import "[your_project_path]/scss/typeplate-vars"; // duplicated var file outside bower's components directory
+@import "[root_project_path]/bower_components/typeplate/scss/typeplate"; // the bower package directory and included file
+</code></p>
+
+<p><strong>CSS</strong></p>
+
+<p>You could also use the CSS version instead (btw… we don't condone this method depicted below. In reality you should copy the contents of the CSS file and paste the contents in the top of your projects stylesheet):</p>
+
+<p>```html</p>
+<head>
+    <link rel="stylesheet" href="[root_project_path]/bower_components/normalize-css/normalize.css" />
+    <link rel="stylesheet" href="[root_project_path]/bower_components/typeplate/css/typeplate.css" />
+</head>
+<p>```
+## Bower Installation</p>
+
+<p>§ <strong>Package Management</strong> : <a href="https://github.com/bower/bower">Bower</a></p>
+
+<p>In order to install bower you must first have <a href="http://nodejs.org">Node</a> and <a href="https://npmjs.org">npm</a> installed on your machine. Once <a href="http://nodejs.org">Node</a> and <a href="https://npmjs.org">npm</a> are installed simply run the command below  (which works on both Windows/Mac and one of the reasons why we chose it).</p>
+
+<pre><code>npm install bower -g
+</code></pre>
+
+<h2 id="sect-what-else-is-there">§ What Else Is There?</h2>
+<p>With so many packages to choose from, we recommend a few libraries to use with Typeplate to compliment. Bon Appetite!</p>
+
+<ol>
+  <li><a href="http://fittextjs.com">FitText.js</a> – A jQuery plugin for inflating web type</li>
+  <li><a href="http://letteringjs.com">LETTERING.JS</a> – A jQuery plugin for radical web typography</li>
+  <li><a href="https://github.com/Wilto/Molten-Leading">MOLTEN LEADING</a> - Slingin ’ Hot Leading</li>
+  <li><a href="https://github.com/Team-Sass/modular-scale">Team Sass Modular Scale</a> - Sassy Modular Scale</li>
+</ol>
+
+<h6 id="credits">©credits</h6>
+<p>Typeplate ©2013 • A <a href="https://twitter.com/gryghostvisuals">@grayghostvisuals</a> and <a href="https://twitter.com/zakkain">@zakkain</a> Joint™
+Logo Crafting by <a href="https://twitter.com/TommyCreenan">@TommyCreenan</a>.</p>
+<div class="layout--footer"><div class="row"><div class="layout--footer-inner"><p>A <img src="../../assets/images/rapid7-logo-da9e50e3.png" /> joint. Made with ❤ in Austin, TX.</p></div></div></div><script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js" type="text/javascript"></script><script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/mode-coffee.js" type="text/javascript"></script><script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/theme-solarized_dark.js" type="text/javascript"></script><script src="../../assets/javascripts/all-df8e0ddf.js" type="text/javascript"></script></body></html>

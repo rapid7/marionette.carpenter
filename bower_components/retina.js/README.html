@@ -1,0 +1,157 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta content="width=device-width, initial-scale=1.0" name="viewport" /><title>Carpenter: It builds tables</title><link href="../../assets/stylesheets/app-14db5c00.css" rel="stylesheet" type="text/css" /><script src="../../assets/javascripts/before-53f614ca.js" type="text/javascript"></script></head><body><h1 id="retinajs-build-statushttpssecuretravis-ciorgimulusretinajspngbranchmasterhttptravis-ciorgimulusretinajs">retina.js <a href="http://travis-ci.org/imulus/retinajs"><img alt="Build Status" src="https://secure.travis-ci.org/imulus/retinajs.png?branch=master" /></a></h1>
+
+<h3 id="javascript-less-and-sass-helpers-for-rendering-high-resolution-image-variants">JavaScript, LESS and SASS helpers for rendering high-resolution image variants</h3>
+
+<p>retina.js makes it easy to serve high-resolution images to devices with retina displays</p>
+
+<p><a href="http://travis-ci.org/imulus/retinajs"><img alt="Build Status" src="https://secure.travis-ci.org/imulus/retinajs.png?branch=master" /></a></p>
+
+<h2 id="how-it-works">How it works</h2>
+
+<p>When your users load a page, retina.js checks each image on the page to see if there is a high-resolution version of that image on your server. If a high-resolution variant exists, the script will swap in that image in-place.</p>
+
+<p>The script assumes you use Apple's prescribed high-resolution modifier (@2x) to denote high-resolution image variants on your server. It is also possible to override this by manually specifying the URL for the @2x images using <code>data-at2x</code> attributes.</p>
+
+<p>For example, if you have an image on your page that looks like this:</p>
+
+<p><code>html
+&lt;img src="/images/my_image.png" /&gt;
+</code></p>
+
+<p>The script will check your server to see if an alternative image exists at <code>/images/my_image@2x.png</code></p>
+
+<p>However, if you have:</p>
+
+<p><code>html
+&lt;img src="/images/my_image.png" data-at2x="http://example.com/my_image@2x.png" /&gt;
+</code></p>
+
+<p>The script will use <code>http://example.com/my_image@2x.png</code> as the high-resolution image. No checks to the server will be performed.</p>
+
+<h2 id="how-to-use">How to use</h2>
+
+<h3 id="javascript">JavaScript</h3>
+
+<p>The JavaScript helper script automatically replaces images on your page with high-resolution variants (if they exist). To use it, download the script and include it at the bottom of your page.</p>
+
+<ol>
+  <li>Place the retina.js file on your server</li>
+  <li>Include the script on your page (put it at the bottom of your template, before your closing &lt;/body&gt; tag)</li>
+</ol>
+
+<p><code>html
+&lt;script type="text/javascript" src="/scripts/retina.js"&gt;&lt;/script&gt;
+</code></p>
+
+<p>You can also exlude an image, which has no high-res version. Simple add <code>data-no-retina</code>.</p>
+
+<p><code>html
+&lt;img src="/path/to/image" data-no-retina /&gt;
+</code></p>
+
+<h3 id="less--sass">LESS &amp; SASS</h3>
+
+<p>The LESS &amp; SASS CSS mixins are helpers for applying high-resolution background images in your stylesheet. You provide it with an image path and the dimensions of the original-resolution image. The mixin creates a media query specifically for Retina displays, changes the background image for the selector elements to use the high-resolution (@2x) variant and applies a background-size of the original image in order to maintain proper dimensions. To use it, download the mixin, import or include it in your LESS or SASS stylesheet, and apply it to elements of your choice. The SASS versions require you pass the extension separately from the path.</p>
+
+<p><em>Syntax:</em></p>
+
+<p><code>less
+.at2x(@path, [optional] @width: auto, [optional] @height: auto);
+</code></p>
+
+<p><code>scss
+@include at2x($path, [option] $ext: "jpg", [optional] $width: auto, [optional] $height: auto);
+</code></p>
+
+<p><em>Steps:</em></p>
+
+<ol>
+  <li>LESS - Add the .at2x() mixin from retina.less to your LESS stylesheet (or reference it in an @import statement)
+SASS - Add the @mixin at2x() from retina.scss or retina.sass to your SASS stylesheet (or reference it in an @import)</li>
+  <li>LESS - In your stylesheet, call the .at2x() mixin anywhere instead of using background-image
+SASS - In your stylesheet, call @include at2x() anywhere instead of using background-image</li>
+</ol>
+
+<p>This:</p>
+
+<p><code>less
+.logo {
+  .at2x('/images/my_image.png', 200px, 100px);
+}
+</code></p>
+
+<p><code>sass
+.logo {
+  @include at2x('/images/my_image', png, 200px, 100px);
+}
+</code></p>
+
+<p>Will compile to:</p>
+
+<p>``` css
+.logo {
+  background-image: url('/images/my_image.png');
+}</p>
+
+<p>@media all and (-webkit-min-device-pixel-ratio: 1.5) {
+  .logo {
+    background-image: url('/images/my_image@2x.png');
+    background-size: 200px 100px;
+  }
+}
+```</p>
+
+<h3 id="ruby-on-rails-3x">Ruby on Rails 3.x</h3>
+
+<p>…or any framework that embeds some digest/hash to the asset URLs based on the contents, e.g. <code>/images/image-{hash1}.jpg</code>.</p>
+
+<p>The problem with this is that the high-resolution version would have a different hash, and would not conform the usual pattern, i.e. <code>/images/image@2x-{hash2}.jpg</code>. So automatic detection would fail because retina.js would check the existence of <code>/images/image-{hash1}@2x.jpg</code>.</p>
+
+<p>There's no way for retina.js to know beforehand what the high-resolution image's hash would be without some sort of help from the server side. So in this case, the suggested method is to supply the high-resolution URLs using the <code>data-at2x</code> attributes as previously described in the How It Works section.</p>
+
+<p>In Rails, one way to automate this is using a helper, e.g.:</p>
+
+<p><code>ruby
+# in app/helpers/some_helper.rb or app/helpers/application_helper.rb
+def image_tag_with_at2x(name_at_1x, options={})
+  name_at_2x = name_at_1x.gsub(%r{\.\w+$}, '@2x\0')
+  image_tag(name_at_1x, options.merge("data-at2x" =&gt; asset_path(name_at_2x)))
+end
+</code></p>
+
+<p>And then in your views (templates), instead of using image_tag, you would use image_tag_with_at2x, e.g. for ERB:</p>
+
+<p><code>erb
+&lt;%= image_tag_with_at2x "logo.png" %&gt;
+</code></p>
+
+<p>It would generate something like:</p>
+
+<p><code>html
+&lt;img src="logo-{hash1}.png" data-at2x="logo@2x-{hash2}.png" /&gt;
+</code></p>
+
+<h2 id="how-to-test">How to test</h2>
+
+<p>We use <a href="http://visionmedia.github.com/mocha/">mocha</a> for unit testing with <a href="https://github.com/visionmedia/should.js">should</a> assertions. Install mocha and should by running <code>npm install</code>.</p>
+
+<p>To run the test suite:</p>
+
+<p><code>bash
+$ npm test
+</code></p>
+
+<p>Use <a href="https://github.com/nodeapps/http-server">http-server</a> for node.js to test it. To install, run <code>npm install -g http-server</code>.</p>
+
+<p>If you've updated <code>retina.js</code> be sure to copy it from <code>src/retina.js</code> to <code>test/functional/public/retina.js</code>.</p>
+
+<p>To start the server, run:</p>
+
+<p><code>bash
+$ cd test/functional &amp;&amp; http-server
+</code></p>
+
+<p>Then navigate your browser to <a href="http://localhost:8080">http://localhost:8080</a></p>
+
+<p>After that, open up <code>test/functional/public/index.html</code> in your editor, and try commenting out the line that spoofs retina support, and reloading it.</p>
+<div class="layout--footer"><div class="row"><div class="layout--footer-inner"><p>A <img src="../../assets/images/rapid7-logo-da9e50e3.png" /> joint. Made with ❤ in Austin, TX.</p></div></div></div><script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js" type="text/javascript"></script><script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/mode-coffee.js" type="text/javascript"></script><script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/theme-solarized_dark.js" type="text/javascript"></script><script src="../../assets/javascripts/all-df8e0ddf.js" type="text/javascript"></script></body></html>
