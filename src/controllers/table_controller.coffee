@@ -1,9 +1,9 @@
 define [
   'controllers/application_controller'
   'entities/paginated_collection'
+  'entities/action_buttons_collection'
   'entities/action_button'
   'entities/filter'
-  'views/action_button'
   'views/control_bar'
   'views/empty'
   'views/filter'

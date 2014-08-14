@@ -7,7 +7,6 @@ define [], ->
   class ActionButton extends Backbone.Model
     initialize: (attributes) ->
       @set('disabled', true) if @get('activateOn')
-
       super(attributes)
 
     #

@@ -3,7 +3,7 @@ define [
   'concerns/views/filter_custom_query_field'
   'views/action_button'
   'templates/control_bar'
-], (FilterToggle,FilterCustomQueryField,ActionButton,template) ->
+], (FilterToggle, FilterCustomQueryField, ActionButton, template) ->
 
   #
   # Hold the action and tag buttons
@@ -35,7 +35,6 @@ define [
       @filterCustomQueryEvent = opts.filterCustomQueryEvent
       @filterToggleEvent      = opts.filterToggleEvent
       @selectable             = !!opts.selectable
-
       super
 
     #
