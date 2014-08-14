@@ -1,0 +1,25 @@
+section#examples {
+  background: #34495e;
+
+  .content {
+    @include grid-column(12);
+    color: #eee;
+
+    .editor {
+      @include grid-row();
+
+      .code {
+        @include grid-column(6);
+
+        #table-code {
+          height: 400px;
+        }
+      }
+
+      .table {
+        @include grid-column(6);
+      }
+    }
+  }
+}
+

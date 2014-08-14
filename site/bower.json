@@ -1,0 +1,10 @@
+{
+  "name": "middleman-zurb5-basic",
+  "version": "0.0.1",
+  "license": "MIT",
+  "private": "true",
+  "dependencies": {
+    "foundation": "zurb/bower-foundation",
+    "sass-hidpi": "kaelig/hidpi"
+  }
+}

@@ -1,0 +1,40 @@
+// A pure-CSS OSX-style window
+// based on http://codepen.io/lerouxb/pen/DlJht
+
+$radius: 6px;
+
+.page {
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+  border-top-left-radius: $radius;
+  border-top-right-radius: $radius;
+
+  .titlebar {
+    background-color: #919191;
+    height: 44px;
+    border-top-left-radius: $radius;
+    border-top-right-radius: $radius;
+    padding: 8px 16px 16px 16px;
+    box-sizing: border-box;
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      background-color: #ccc;
+      display: inline-block;
+      border-radius: 50%;
+
+      &.close {
+        background-color: #ef6866;
+      }
+      &.minimise {
+        background-color: #f5ed49;
+      }
+      &.maximise {
+        background-color: #89c665;
+      }
+    }
+    .dot + .dot {
+      margin-left: 7px;
+    }
+  }
+}

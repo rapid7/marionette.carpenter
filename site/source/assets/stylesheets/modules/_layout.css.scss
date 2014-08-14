@@ -1,0 +1,31 @@
+// -----------------------------------------------------------------------------
+// The layout module is just a module like any other. According to
+// the layout rules from "Scalable and Modular Architecture for CSS"
+// "http://smacss.com/book/type-layout" this module holds only the major
+// components of the page. The minor components such as form, header or
+// navigation are located in the specialized modules.
+//
+// In general, the classes of this module only use the Foundation grid mixins
+// like e.g. grid-row() and grid-column() to create rows and columns
+// with semantic markup.
+// -----------------------------------------------------------------------------
+@import "compass/css3/box-shadow";
+
+.layout--footer {
+  @include box-shadow(0 1px 15px 0px rgba(0, 0, 0, 0.8));
+
+  .layout--footer-inner {
+    @include grid-column(12);
+
+    p {
+      text-align: center;
+      padding: 15px 0px;
+      font-size: 0.7em;
+
+      img {
+        display: inline-block;
+        margin: 0 10px;
+      }
+    }
+  }
+}

@@ -4,3 +4,18 @@ bower_components/
 dist/
 .grunt/
 SpecRunner.html
+
+# Marketing site
+# Ignore ruby version/gemset
+site/.ruby-version
+site/.ruby-gemset
+# Ignore bundler config
+site/.bundle
+# Ignore the build directory
+site/build
+# The content of this directory is maintained by bower, so don't track it.
+site/source/bower_components
+# Ignore Sass' cache
+site/.sass-cache
+# Ignore cache
+site/.cache

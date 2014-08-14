@@ -1,0 +1,22 @@
+header#hero {
+  .content {
+    @include grid-column(12);
+
+    text-align: center;
+    padding-top: 30px;
+
+    h1 {
+      position: absolute;
+      left: -100000px;
+    }
+
+    img {
+      margin-bottom: 20px;
+    }
+
+    p {
+      text-align: left;
+      margin: 40px 0;
+    }
+  }
+}
