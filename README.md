@@ -5,10 +5,16 @@
 <p align="center">It builds tables.</p>
 <p align="center">
   <a title='Build Status' href="https://travis-ci.org/rapid7/marionette.carpenter">
-    <img src='https://travis-ci.org/rapid7/marionette.carpenter.svg?branch=master' />
+    <img src='https://img.shields.io/travis/rapid7/marionette.carpenter.svg?branch=master' />
   </a>
   <a href='https://coveralls.io/r/rapid7/marionette.carpenter'>
-    <img src='https://coveralls.io/repos/rapid7/marionette.carpenter/badge.png' alt='Coverage Status' />
+    <img src='https://img.shields.io/coveralls/rapid7/marionette.carpenter.svg' alt='Coverage Status' />
+  </a>
+  <a href='https://david-dm.org/rapid7/marionette.carpenter#info=dependencies&view=table'>
+    <img src='https://img.shields.io/david/rapid7/marionette.carpenter.svg' />
+  </a>
+  <a href='https://david-dm.org/rapid7/marionette.carpenter#info=devDependencies&view=table'>
+    <img src='https://img.shields.io/david/dev/rapid7/marionette.carpenter.svg' />
   </a>
 </p>
 
