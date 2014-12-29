@@ -495,15 +495,15 @@ define("almond", function(){});
           options = {};
         }
         this.region = options.region;
-        this.app = options.app;
+        this._attachRadio();
         Controller.__super__.constructor.call(this, options);
         this._instance_id = _.uniqueId("controller");
-        this.app.execute("register:instance", this, this._instance_id);
+        this.carpenter.command("register:instance", this, this._instance_id);
       }
 
-      Controller.prototype.close = function() {
-        this.app.execute("unregister:instance", this, this._instance_id);
-        return Controller.__super__.close.apply(this, arguments);
+      Controller.prototype.destroy = function() {
+        this.carpenter.command("unregister:instance", this, this._instance_id);
+        return Controller.__super__.destroy.apply(this, arguments);
       };
 
       Controller.prototype.show = function(view, options) {
@@ -532,12 +532,12 @@ define("almond", function(){});
           return;
         }
         this._mainView = view;
-        return this.listenTo(view, "close", this.close);
+        return this.listenTo(view, "destroy", this.destroy);
       };
 
       Controller.prototype._manageView = function(view, options) {
         if (options.loading) {
-          return this.app.execute("show:loading", view, options);
+          return this.carpenter.command("show:loading", view, options);
         } else {
           return options.region.show(view);
         }
@@ -546,6 +546,10 @@ define("almond", function(){});
       Controller.prototype.mergeDefaultsInto = function(obj) {
         obj = _.isObject(obj) ? obj : {};
         return _.defaults(obj, this._getDefaults());
+      };
+
+      Controller.prototype._attachRadio = function() {
+        return this.carpenter = Backbone.Radio.channel('carpenter');
       };
 
       Controller.prototype._getDefaults = function() {
@@ -602,13 +606,20 @@ define("almond", function(){});
           reset: true,
           error: (function(_this) {
             return function(model, response, options) {
-              return _this.displayErrorMessage();
+              var _ref;
+              return _this.displayErrorMessage(response != null ? (_ref = response.responseJSON) != null ? _ref.message : void 0 : void 0);
             };
           })(this)
         });
       };
 
-      AjaxPaginatedCollection.prototype.displayErrorMessage = function() {};
+      AjaxPaginatedCollection.prototype.displayErrorMessage = function(message) {
+        return this.carpenter.command('flash:display', {
+          title: 'Error in search',
+          style: 'error',
+          message: message || 'There is an error in your search terms.'
+        });
+      };
 
       AjaxPaginatedCollection.prototype.updateSortKey = function() {
         var col;
@@ -778,7 +789,7 @@ define("almond", function(){});
       },
       triggerFilterToggle: function() {
         this.ui.filterToggle.toggleClass('enabled');
-        return this.app.vent.trigger(this.filterToggleEvent);
+        return this.carpenter.trigger(this.filterToggleEvent);
       }
     };
   });
@@ -802,7 +813,7 @@ define("almond", function(){});
         return this.debouncedTriggerCustomQuery();
       },
       triggerFilterCustomQuery: function() {
-        return this.app.vent.trigger(this.filterCustomQueryEvent, this.ui.filterCustomQueryField.val());
+        return this.carpenter.trigger(this.filterCustomQueryEvent, this.ui.filterCustomQueryField.val());
       }
     };
   });
@@ -879,8 +890,7 @@ define('templates/action_button',[],function(){
 });
 
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty,
+  var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
@@ -890,7 +900,6 @@ define('templates/action_button',[],function(){
       __extends(ActionButton, _super);
 
       function ActionButton() {
-        this.executeTrigger = __bind(this.executeTrigger, this);
         return ActionButton.__super__.constructor.apply(this, arguments);
       }
 
@@ -911,7 +920,7 @@ define('templates/action_button',[],function(){
       };
 
       ActionButton.prototype.initialize = function(opts) {
-        this.app = opts.app;
+        this.carpenter = opts.carpenter;
         this.selectable = !!opts.selectable;
         this.tableCollection = opts.tableCollection;
         this.tableSelections = opts.tableSelections;
@@ -957,7 +966,7 @@ define('templates/action_button',[],function(){
 
       ActionButton.prototype.executeTrigger = function() {
         if (this.model.get('event')) {
-          return this.app.trigger(this.model.get('event'));
+          return this.carpenter.trigger(this.model.get('event'));
         }
       };
 
@@ -1053,7 +1062,7 @@ define('templates/control_bar',[],function(){
 
       ControlBar.prototype.template = template;
 
-      ControlBar.prototype.itemView = ActionButton;
+      ControlBar.prototype.childView = ActionButton;
 
       ControlBar.prototype.tagName = 'ul';
 
@@ -1071,10 +1080,11 @@ define('templates/control_bar',[],function(){
         this.filterCustomQueryEvent = opts.filterCustomQueryEvent;
         this.filterToggleEvent = opts.filterToggleEvent;
         this.selectable = !!opts.selectable;
+        this.carpenter = opts.carpenter;
         return ControlBar.__super__.initialize.apply(this, arguments);
       };
 
-      ControlBar.prototype.buildItemView = function(item, ItemViewType, itemViewOptions) {
+      ControlBar.prototype.buildChildView = function(item, ItemViewType, itemViewOptions) {
         var defaultOptions, options;
         defaultOptions = {
           tableSelections: this.tableSelections,
@@ -1189,7 +1199,6 @@ define('templates/empty',[],function(){
       __extends(Filter, _super);
 
       function Filter() {
-        this.onClose = __bind(this.onClose, this);
         this.resetFilter = __bind(this.resetFilter, this);
         this.toggleFilter = __bind(this.toggleFilter, this);
         return Filter.__super__.constructor.apply(this, arguments);
@@ -1220,23 +1229,11 @@ define('templates/empty',[],function(){
         if (opts == null) {
           opts = {};
         }
-        this.app = opts.app;
         this.template = this.templatePath(opts.filterTemplatePath);
         this.model = opts.filterModel;
-        this.filterToggleEvent = opts.filterToggleEvent;
-        this.filterCustomQueryEvent = opts.filterCustomQueryEvent;
         this.filterAttrs = opts.filterAttrs;
         this.collection = opts.collection;
-        if (this.filterToggleEvent) {
-          this.app.vent.on(this.filterToggleEvent, this.toggleFilter);
-        }
-        return this.app.vent.on(this.filterCustomQueryEvent, (function(_this) {
-          return function(customQuery) {
-            if (_this.filterCustomQueryEvent) {
-              return _this.updateModel(customQuery);
-            }
-          };
-        })(this));
+        return this.carpenter = opts.carpenter;
       };
 
       Filter.prototype.inputActivity = function() {
@@ -1250,7 +1247,7 @@ define('templates/empty',[],function(){
           return $el.val();
         });
         return this.filterInputReaderSet.register('checkbox', function($el) {
-          if ($el.attr('checked')) {
+          if ($el.prop('checked')) {
             return $el.data('filter-value');
           }
         });
@@ -1263,7 +1260,7 @@ define('templates/empty',[],function(){
         });
         return this.filterInputWriterSet.register('checkbox', (function(_this) {
           return function($el, value) {
-            return _this.ui.checkboxes.filter("[data-filter-value='" + value + "']").attr('checked', true);
+            return _this.ui.checkboxes.filter("[data-filter-value='" + value + "']").prop('checked', true);
           };
         })(this));
       };
@@ -1315,7 +1312,7 @@ define('templates/empty',[],function(){
       Filter.prototype.resetFilter = function() {
         this.ui.textInputs.val('');
         this.ui.selectInputs.val('');
-        this.ui.checkboxes.attr('checked', false);
+        this.ui.checkboxes.prop('checked', false);
         this.ui.hideOnResetInputs.css('visibility', 'hidden');
         return this.updateModel();
       };
@@ -1325,10 +1322,6 @@ define('templates/empty',[],function(){
         if (this.filterAttrs) {
           return this.handleFilterOnLoad();
         }
-      };
-
-      Filter.prototype.onClose = function() {
-        return this.app.vent.off(this.filterToggleEvent);
       };
 
       return Filter;
@@ -1546,7 +1539,7 @@ define('templates/layout',[],function(){
       };
 
       Layout.prototype.mouseEnteredTableHeader = function(e) {
-        return this.overlayRegion.close();
+        return this.overlayRegion.reset();
       };
 
       Layout.prototype.mouseEnteredTableCell = function(e) {
@@ -1572,7 +1565,7 @@ define('templates/layout',[],function(){
           this.overlayRegion.show(hover);
           return (_ref = this.overlayRegion.$el) != null ? _ref.css(tdPosition) : void 0;
         } else {
-          return this.overlayRegion.close();
+          return this.overlayRegion.reset();
         }
       };
 
@@ -1593,7 +1586,7 @@ define('templates/layout',[],function(){
 
       return Layout;
 
-    })(Marionette.Layout);
+    })(Marionette.LayoutView);
   });
 
 }).call(this);
@@ -1963,7 +1956,6 @@ define('templates/row',[],function(){
 
       function Row() {
         this.onShow = __bind(this.onShow, this);
-        this.triggerSelectionEvents = __bind(this.triggerSelectionEvents, this);
         this.selectionStateChanged = __bind(this.selectionStateChanged, this);
         return Row.__super__.constructor.apply(this, arguments);
       }
@@ -1988,11 +1980,11 @@ define('templates/row',[],function(){
         if (opts == null) {
           opts = {};
         }
-        this.app = opts.app;
         this.columns = opts.columns;
         this.selectable = !!opts.selectable;
         this.tableSelections = opts.tableSelections;
         this.serverAPI = opts.serverAPI;
+        this.carpenter = opts.carpenter;
         this.setInitialSelectionState();
         return _.each(this.columns, (function(_this) {
           return function(column, idx) {
@@ -2053,13 +2045,13 @@ define('templates/row',[],function(){
       Row.prototype.triggerSelectionEvents = function() {
         this.setSelectionState();
         this.recordSelectionState();
-        this.app.vent.trigger('table:row:selection_toggled', this.model);
+        this.carpenter.trigger('table:row:selection_toggled', this.model);
         this.model.trigger('selection_toggled');
         if (!this.ui.checkbox.prop('checked')) {
-          this.app.vent.trigger('table:row:deselected', this.model);
+          this.carpenter.trigger('table:row:deselected', this.model);
           return this.model.trigger('deselected');
         } else {
-          this.app.vent.trigger('table:row:selected', this.model);
+          this.carpenter.trigger('table:row:selected', this.model);
           return this.model.trigger('selected');
         }
       };
@@ -2083,7 +2075,7 @@ define('templates/row',[],function(){
                 throw new Error("getMainView() did not return a view instance or " + (view != null ? (_ref = view.constructor) != null ? _ref.name : void 0 : void 0) + " is not a view instance");
               }
               if (controller != null) {
-                _this.listenTo(view, "close", controller.close);
+                _this.listenTo(view, "destroy", controller.destroy);
               }
               return _this[_this.regionName(idx)].show(view);
             }
@@ -2101,7 +2093,7 @@ define('templates/row',[],function(){
 
       return Row;
 
-    })(Marionette.Layout);
+    })(Marionette.LayoutView);
   });
 
 }).call(this);
@@ -2192,6 +2184,7 @@ define('templates/table',[],function(){
       __extends(RowList, _super);
 
       function RowList() {
+        this.updateClasses = __bind(this.updateClasses, this);
         this.fetched = __bind(this.fetched, this);
         this.setSort = __bind(this.setSort, this);
         this.sortChanged = __bind(this.sortChanged, this);
@@ -2200,7 +2193,7 @@ define('templates/table',[],function(){
 
       RowList.prototype.template = template;
 
-      RowList.prototype.itemView = Row;
+      RowList.prototype.childView = Row;
 
       RowList.prototype.collectionEvents = {
         sync: 'fetched',
@@ -2221,7 +2214,7 @@ define('templates/table',[],function(){
         'click  th.sortable': 'sortChanged'
       };
 
-      RowList.prototype.itemViewContainer = 'tbody';
+      RowList.prototype.childViewContainer = 'tbody';
 
       RowList.prototype.sortColumn = null;
 
@@ -2235,13 +2228,14 @@ define('templates/table',[],function(){
         if (opts == null) {
           opts = {};
         }
-        this.app = opts.app;
+        this.htmlID = opts.htmlID;
         this.columns = opts.columns;
         this["static"] = !!opts["static"];
         this.selectable = !!opts.selectable;
         this.tableSelections = opts.tableSelections;
-        this.emptyView = opts.emptyView || Empty;
+        this.emptyView = opts.emptyView || opts.tableEmptyView || Empty;
         this.loadingView = opts.loadingView || Loading;
+        this.carpenter = opts.carpenter;
         this.setSort(this.collection.sortColumn, this.collection.sortDirection, {
           noReload: true
         });
@@ -2329,9 +2323,9 @@ define('templates/table',[],function(){
           $subsequentRows = $(e.target).parents('tr').nextAll();
           $previouslySelectedCheckbox = $('tr').find(this.previouslySelected);
           if ($previousRows.has($previouslySelectedCheckbox).length > 0) {
-            $(e.target).parents('tr').prevUntil($('tr').has($previouslySelectedCheckbox)).find('td.checkbox input').attr('checked', newState).change();
+            $(e.target).parents('tr').prevUntil($('tr').has($previouslySelectedCheckbox)).find('td.checkbox input').prop('checked', newState).change();
           } else if ($subsequentRows.has($previouslySelectedCheckbox).length > 0) {
-            $(e.target).parents('tr').nextUntil($('tr').has($previouslySelectedCheckbox)).find('td.checkbox input').attr('checked', newState).change();
+            $(e.target).parents('tr').nextUntil($('tr').has($previouslySelectedCheckbox)).find('td.checkbox input').prop('checked', newState).change();
           }
         }
         return this.previouslySelected = $(e.target);
@@ -2339,7 +2333,7 @@ define('templates/table',[],function(){
 
       RowList.prototype.handleRemoveMultiple = function() {
         if (this.collection.length === 0) {
-          return this.ui.selectAllCheckbox.attr('checked', false);
+          return this.ui.selectAllCheckbox.prop('checked', false);
         }
       };
 
@@ -2348,22 +2342,37 @@ define('templates/table',[],function(){
           this.emptyView = this.originalEmptyView;
           this.originalEmptyView = null;
           return this.render();
+        } else {
+          return this.updateClasses();
         }
       };
 
-      RowList.prototype.buildItemView = function(item, ItemView) {
+      RowList.prototype.buildChildView = function(item, ItemView) {
         return new ItemView({
           model: item,
           columns: this.columns,
           selectable: this.selectable,
           tableSelections: this.tableSelections,
           serverAPI: this.collection.server_api,
-          app: this.app
+          carpenter: this.carpenter
         });
       };
 
       RowList.prototype.serializeData = function() {
         return this;
+      };
+
+      RowList.prototype.updateClasses = function() {
+        var totalRecords, _base, _base1;
+        totalRecords = this.collection.totalRecords || this.collection.length || 0;
+        if (typeof (_base = this.ui.table).toggleClass === "function") {
+          _base.toggleClass('loaded', true);
+        }
+        return typeof (_base1 = this.ui.table).toggleClass === "function" ? _base1.toggleClass('populated', totalRecords > 0) : void 0;
+      };
+
+      RowList.prototype.onRender = function() {
+        return this.updateClasses();
       };
 
       return RowList;
@@ -2521,7 +2530,7 @@ define('templates/selection_indicator',[],function(){
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
-      Controller.prototype.searchable = true;
+      Controller.prototype.filterable = true;
 
       Controller.prototype.selectable = false;
 
@@ -2558,7 +2567,7 @@ define('templates/selection_indicator',[],function(){
       Controller.prototype.paginator = null;
 
       Controller.prototype.initialize = function(opts) {
-        var PagerClass, _base;
+        var PagerClass, _base, _ref;
         if (opts == null) {
           opts = {};
         }
@@ -2579,7 +2588,7 @@ define('templates/selection_indicator',[],function(){
         }
         this.setMainView(new Layout(this));
         this.collection.perPage = this.perPage;
-        this.collection.sortColumn = this.defaultSortColumn().attribute;
+        this.collection.sortColumn = (_ref = this.defaultSortColumn()) != null ? _ref.attribute : void 0;
         this.collection.sortDirection = this.defaultSortDirection();
         if (!this["static"]) {
           this.collection.updateSortKey();
@@ -2592,22 +2601,13 @@ define('templates/selection_indicator',[],function(){
           this.tableSelections.deselectedIDs = {};
         }
         this.actionButtonsCollection = new ActionButtonsCollection(opts.actionButtons);
-        if (this.filterEnabled()) {
-          this.filterModel = new EntityFilter(this.filterAttrs);
-        }
+        this.listClass || (this.listClass = RowList);
         this.header = new Header(this);
         this.buttons = new ControlBar(this);
-        this.list = new RowList(this);
+        this.list = new this.listClass(this);
         this.paginator = new Paginator(this);
         if (this.selectable) {
           this.selectionIndicator = new SelectionIndicator(this);
-        }
-        if (this.filterEnabled()) {
-          if (this.filterView) {
-            this.filter = new this.filterView(this);
-          } else {
-            this.filter = new Filter(this);
-          }
         }
         this.listenTo(this.collection, 'reset', (function(_this) {
           return function() {
@@ -2620,6 +2620,11 @@ define('templates/selection_indicator',[],function(){
           };
         })(this));
         this.listenTo(this.collection, 'change', (function(_this) {
+          return function() {
+            return _this.toggleInteraction(true);
+          };
+        })(this));
+        this.listenTo(this.collection, 'error', (function(_this) {
           return function() {
             return _this.toggleInteraction(true);
           };
@@ -2648,13 +2653,9 @@ define('templates/selection_indicator',[],function(){
             region: this.getMainView().paginationRegion
           });
           if (this.selectable) {
-            this.show(this.selectionIndicator, {
-              region: this.getMainView().selectionIndicatorRegion
-            });
-          }
-          if (this.filterEnabled()) {
-            return this.show(this.filter, {
-              region: this.getMainView().filterRegion
+            return this.show(this.selectionIndicator, {
+              region: this.getMainView().selectionIndicatorRegion,
+              preventDestroy: false
             });
           }
         });
@@ -2712,18 +2713,8 @@ define('templates/selection_indicator',[],function(){
             }
           };
         })(this));
-        if (this.filter) {
-          this.listenTo(this.filter, 'table:search', (function(_this) {
-            return function(filter) {
-              _this.toggleInteraction(false);
-              return _this.list.setSearch(filter);
-            };
-          })(this));
-        }
         if (this["static"]) {
           this.collection.bootstrap();
-        } else if (this.filterAttrs) {
-          this.list.setSearch(this.filter.model);
         } else {
           this.collection.fetch({
             reset: true
@@ -2768,8 +2759,12 @@ define('templates/selection_indicator',[],function(){
       Controller.prototype.totalRecords = function() {
         if (this.collection.totalRecords != null) {
           return this.collection.totalRecords;
-        } else {
+        } else if (this.collection.origModels != null) {
           return this.collection.origModels.length;
+        } else if (this.collection.models != null) {
+          return this.collection.models.length;
+        } else {
+          return 0;
         }
       };
 
@@ -2799,7 +2794,7 @@ define('templates/selection_indicator',[],function(){
       Controller.prototype.toggleInteraction = function(enabled) {
         var $ctrlBarButtons, userInputSelector;
         if (enabled) {
-          this.app.vent.trigger('total_records:change', this.totalRecords());
+          this.carpenter.trigger('total_records:change', this.totalRecords());
         }
         if (this.isInteractionEnabled === enabled) {
           return;
@@ -2814,10 +2809,6 @@ define('templates/selection_indicator',[],function(){
         if (enabled) {
           return this.paginator.render();
         }
-      };
-
-      Controller.prototype.filterEnabled = function() {
-        return this.filterTemplatePath || this.filterView;
       };
 
       return Controller;
