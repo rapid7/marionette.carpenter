@@ -5,7 +5,7 @@ define [
   #
   # Contains the header, button bar, table, and pagination
   #
-  class Layout extends Marionette.Layout
+  class Layout extends Marionette.LayoutView
 
     template: template
 
@@ -28,9 +28,9 @@ define [
     #
     # @param opts [Object] the options hash
     # @option opts [Object]  :regions maps region names to DOM selectors
-    # @option opts [Object]  :columns @see Table.Controller#columns
-    # @option opts [Object]  :collection @see Table.Controller#collection
-    # @option opts [Boolean] :selectable @see Table.Controller#selectable
+    # @option opts [Object]  :columns @see Controller#columns
+    # @option opts [Object]  :collection @see Controller#collection
+    # @option opts [Boolean] :selectable @see Controller#selectable
     #
     initialize: (opts={}) ->
       # merge in the defaults
@@ -42,7 +42,7 @@ define [
     serializeData: -> @
 
     mouseEnteredTableHeader: (e) =>
-      @overlayRegion.close()
+      @overlayRegion.reset()
 
     # Called when the user mouses over a new table cell. If this column
     # uses the :hoverView option, a hover overlay will be rendered next
@@ -62,7 +62,7 @@ define [
         @overlayRegion.show(hover)
         @overlayRegion.$el?.css(tdPosition)
       else
-        @overlayRegion.close()
+        @overlayRegion.reset()
 
     # @return [Object] column data for the given <td> element
     _columnForTd: (td) =>

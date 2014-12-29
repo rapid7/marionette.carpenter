@@ -27,7 +27,7 @@ define [
       @region = new Backbone.Marionette.Region(el: @$el)
 
     afterEach ->
-      @region.close()
+      @region.destroy()
       @$el?.remove?()
 
     beforeEach ->

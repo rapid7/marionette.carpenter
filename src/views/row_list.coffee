@@ -11,7 +11,7 @@ define [
 
     template: template
 
-    itemView: Row
+    childView: Row
 
     collectionEvents:
       sync: 'fetched'
@@ -29,7 +29,7 @@ define [
       'click  @ui.rowCheckboxes':     'selectIntermediateCheckboxes'
       'click  th.sortable':           'sortChanged'
 
-    itemViewContainer: 'tbody'
+    childViewContainer: 'tbody'
 
     # @property [String] the attribute name of the current sort column
     sortColumn: null
@@ -41,8 +41,9 @@ define [
       class: 'wrap'
 
     # @param opts [Object] the options hash
+    # @option opts :htmlID [String] @see TableController#htmlID
     # @option opts :columns [Array<Object>] @see TableController#columns
-    # @option opts :selectable [Boolean] @see Table.Controller#selectable
+    # @option opts :selectable [Boolean] @see Controller#selectable
     # @option opts :static [Boolean] @see TableController#static
     # @option opts :collection [Backbone.Paginator.requestPager, Backbone.Paginator.clientPager]
     #   the PaginatedCollection to render in the table
@@ -50,13 +51,14 @@ define [
     # @option opts :emptyView [Backbone.View] the view to display when empty
     # @option opts [Object] :tableSelections data about the current state of the table
     initialize: (opts={}) ->
-      @app             =   opts.app
+      @htmlID          =   opts.htmlID
       @columns         =   opts.columns
       @static          = !!opts.static
       @selectable      = !!opts.selectable
       @tableSelections =   opts.tableSelections
-      @emptyView       =   opts.emptyView || Empty
+      @emptyView       =   opts.emptyView || opts.tableEmptyView || Empty
       @loadingView     =   opts.loadingView || Loading
+      @carpenter       =   opts.carpenter
 
       @setSort(@collection.sortColumn, @collection.sortDirection, noReload: true)
 
@@ -80,7 +82,7 @@ define [
     sortChanged: (e) =>
       sortIdx = $(e.currentTarget).index()
       if @selectable then sortIdx--
-      @trigger 'table:sort',
+      @trigger 'table:sort' ,
         attribute: @columns[sortIdx]?.attribute
 
     # Sets the sort options on the collection and adds CSS classes as necessary
@@ -156,10 +158,10 @@ define [
 
         if $previousRows.has($previouslySelectedCheckbox).length > 0
           $(e.target).parents('tr').prevUntil($('tr').has($previouslySelectedCheckbox))
-            .find('td.checkbox input').attr('checked', newState).change()
+            .find('td.checkbox input').prop('checked', newState).change()
         else if $subsequentRows.has($previouslySelectedCheckbox).length > 0
           $(e.target).parents('tr').nextUntil($('tr').has($previouslySelectedCheckbox))
-          .find('td.checkbox input').attr('checked', newState).change()
+          .find('td.checkbox input').prop('checked', newState).change()
 
       @previouslySelected = $(e.target)
 
@@ -169,7 +171,7 @@ define [
     #
     # @return [void]
     handleRemoveMultiple: ->
-      @ui.selectAllCheckbox.attr('checked', false) if @collection.length == 0
+      @ui.selectAllCheckbox.prop('checked', false) if @collection.length == 0
 
     #
     # If the EmptyView was replaced with a LoadingView, revert that
@@ -180,17 +182,36 @@ define [
         @emptyView = @originalEmptyView
         @originalEmptyView = null
         @render() # replace any necessary views!
+      else
+        @updateClasses()
 
     #
     # Overriden to allow passing options to the rendered ItemView
-    buildItemView: (item, ItemView) ->
+    buildChildView: (item, ItemView) ->
       new ItemView
         model: item
         columns: @columns
         selectable: @selectable
         tableSelections: @tableSelections
         serverAPI: @collection.server_api
-        app: @app
+        carpenter: @carpenter
 
     serializeData: -> @
 
+    updateClasses: =>
+      # Add a class to the table to signify that it's done loading. This is useful for cuke.
+      totalRecords = @collection.totalRecords || @collection.length || 0
+      @ui.table.toggleClass?('loaded', true)
+      @ui.table.toggleClass?('populated', totalRecords > 0)
+
+    onRender: ->
+      #@ui.table.resizableColumns()
+     #TODO: Add non-pro tooltips
+#      # Add a tooltip to the select all checkbox, if the table is selectable.
+#      if @selectable
+#        @ui.selectAllCheckbox.tooltip
+#          tooltipClass: 'select-all-tooltip'
+#          position:
+#            at: 'left+40 top-30'
+
+      @updateClasses()

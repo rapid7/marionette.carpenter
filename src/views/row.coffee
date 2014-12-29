@@ -14,7 +14,7 @@ define ['templates/row'], (template) ->
   #   Emitted when this row's checkbox is deselected. Also emitted as `deselected`
   #   on the model.
   #   @param model [Entities.model] the row's associated model
-  class Row extends Marionette.Layout
+  class Row extends Marionette.LayoutView
 
     template: template
 
@@ -31,14 +31,14 @@ define ['templates/row'], (template) ->
 
     # @param opts [Object] the options hash
     # @option opts :columns [Array<Object>] @see TableController#columns
-    # @option opts :selectable [Boolean] @see Table.Controller#selectable
+    # @option opts :selectable [Boolean] @see Controller#selectable
     # @option opts [Object] :tableSelections data about the current state of the table
     initialize: (opts={}) ->
-      @app             =   opts.app
       @columns         =   opts.columns
       @selectable      = !!opts.selectable
       @tableSelections =   opts.tableSelections
       @serverAPI       =   opts.serverAPI
+      @carpenter       =   opts.carpenter
       @setInitialSelectionState()
 
       # dynamically add regions for each column that needs a View
@@ -102,18 +102,18 @@ define ['templates/row'], (template) ->
     # Trigger events regarding the selection of the row.
     #
     # @return [void]
-    triggerSelectionEvents: =>
+    triggerSelectionEvents: ->
       @setSelectionState()
       @recordSelectionState()
 
-      @app.vent.trigger 'table:row:selection_toggled', @model
+      @carpenter.trigger 'table:row:selection_toggled', @model
       @model.trigger 'selection_toggled'
 
       if !@ui.checkbox.prop 'checked'
-        @app.vent.trigger 'table:row:deselected', @model
+        @carpenter.trigger 'table:row:deselected', @model
         @model.trigger 'deselected'
       else
-        @app.vent.trigger 'table:row:selected', @model
+        @carpenter.trigger 'table:row:selected', @model
         @model.trigger 'selected'
 
     # Render any columns that had an associated View classes
@@ -141,7 +141,7 @@ define ['templates/row'], (template) ->
 
           #Bind Controller to view close event if view passed in was a controller
           if controller?
-            @listenTo view, "close", controller.close
+            @listenTo view, "destroy", controller.destroy
 
           #Show view in region
           @[@regionName(idx)].show(view)

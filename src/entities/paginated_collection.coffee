@@ -1,7 +1,6 @@
 
 define [], ->
 
-
   #
   # Used for collections that call out to the network
   #
@@ -15,7 +14,7 @@ define [], ->
   #   Emitted after several models have successfully been removed from the collection.
   class AjaxPaginatedCollection extends Backbone.Paginator.requestPager
     server_api:
-      # so that TableResponder wraps the collection in a metadata hash
+    # so that TableResponder wraps the collection in a metadata hash
       ui: 1
 
       sort_by: null
@@ -34,21 +33,21 @@ define [], ->
       this.fetch reset: true
 
     #
-    # Run a search of the models in the table based on the state of the {Entities.Filter}.
+    # Run a search of the models in the table based on the state of the {Filter}.
     #
-    # @param filter [Entities.Filter] the table's current filter
+    # @param filter [Filter] the table's current filter
     setSearch: (filter) ->
       @server_api.search = filter.attributes
       this.fetch
         reset: true
         error: (model, response, options) =>
-          @displayErrorMessage()
+          @displayErrorMessage(response?.responseJSON?.message)
 
-    displayErrorMessage: ->
-      # App.execute 'flash:display',
-      #   title:   'Error in search'
-      #   style:   'error'
-      #   message: 'There is an error in your search terms.'
+    displayErrorMessage: (message) ->
+      @carpenter.command 'flash:display',
+        title:   'Error in search'
+        style:   'error'
+        message: message || 'There is an error in your search terms.'
 
     # Remembers the sort options for the next API call
     updateSortKey: ->
@@ -88,7 +87,7 @@ define [], ->
   # @param Collection [Backbone.Collection] a Collection to wrap
   # @param opts [Object] the options hash
   # @option opts :static [Boolean] use a static collection
-  # @return [Function] subclass of Entities.PaginatedCollection with the
+  # @return [Function] subclass of PaginatedCollection with the
   #   relevant attributes set
   #
   CreatePaginatedCollectionClass = (collection, opts={}) ->
@@ -106,41 +105,41 @@ define [], ->
 
       paginator_core:
 
-        # the type of the request (GET by default)
+      # the type of the request (GET by default)
         type: 'GET'
 
-        # the type of reply (jsonp by default)
+      # the type of reply (jsonp by default)
         dataType: 'json'
 
       paginator_ui:
 
-        # the first page we allow anyone to access
+      # the first page we allow anyone to access
         firstPage: opts.firstPage || 1
 
-        # keeps track of the current page of the collection
+      # keeps track of the current page of the collection
         currentPage: opts.currentPage || 1
 
-        # number of rows to render per page
+      # number of rows to render per page
         perPage: opts.perPage || 20
 
-      #
-      # Update the count of selected records, and fire an event.
-      #
-      # @param numSelected [Number] the number of currently selected records
+    #
+    # Update the count of selected records, and fire an event.
+    #
+    # @param numSelected [Number] the number of currently selected records
       updateNumSelected: (numSelected) ->
         @numSelected = numSelected
         @trigger 'change:numSelected'
 
-      #
-      # Remove multiple models from this collection simultaneously, and trigger a
-      # custom event. Useful when you want to bind to a 'several things have been
-      # removed' event, rather than to each 'remove' event on the collection
-      # individually.
-      #
-      # @param models [Entities.Model] an array of models to be removed from this
-      #   collection
-      #
-      # @return [void]
+    #
+    # Remove multiple models from this collection simultaneously, and trigger a
+    # custom event. Useful when you want to bind to a 'several things have been
+    # removed' event, rather than to each 'remove' event on the collection
+    # individually.
+    #
+    # @param models [Model] an array of models to be removed from this
+    #   collection
+    #
+    # @return [void]
       removeMultiple: (models) ->
         selectedIDs = models.pluck 'id'
         @trigger 'remove:multiple', selectedIDs

@@ -19,4 +19,4 @@ define [], ->
       #
       # @return [void]
       triggerFilterCustomQuery: ->
-        @app.vent.trigger @filterCustomQueryEvent, @ui.filterCustomQueryField.val()
+        @carpenter.trigger @filterCustomQueryEvent, @ui.filterCustomQueryField.val()

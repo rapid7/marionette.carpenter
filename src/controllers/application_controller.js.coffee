@@ -11,14 +11,14 @@ define [
       # @option options [Region] the region to render in. Defaults to the
       constructor: (options = {}) ->
         @region = options.region
-        @app = options.app
+        @_attachRadio()
         super options
         @_instance_id = _.uniqueId("controller")
-        @app.execute "register:instance", @, @_instance_id
+        @carpenter.command "register:instance", @, @_instance_id
 
       # Unregisters the Controller from the app and closes itself
-      close: ->
-        @app.execute "unregister:instance", @, @_instance_id
+      destroy: ->
+        @carpenter.command "unregister:instance", @, @_instance_id
         super
 
       # Shows the specified view in the desired region. If a Controller
@@ -61,18 +61,22 @@ define [
 
         return if @_mainView
         @_mainView = view
-        @listenTo view, "close", @close
+        @listenTo view, "destroy", @destroy
 
       _manageView: (view, options) ->
         if options.loading
           ## show the loading view
-          @app.execute "show:loading", view, options
+          @carpenter.command "show:loading", view, options
         else
           options.region.show view
 
       mergeDefaultsInto: (obj) ->
         obj = if _.isObject(obj) then obj else {}
         _.defaults obj, @_getDefaults()
+
+      #Bind backbone radio to the controller instead of the app
+      _attachRadio: () ->
+        @carpenter = Backbone.Radio.channel('carpenter')
 
       _getDefaults: ->
         _.clone _.result(@, "defaults")

@@ -12,19 +12,19 @@ define [
 
     template: template
 
-    itemView: ActionButton
+    childView: ActionButton
 
     tagName: 'ul'
 
     className: 'table-control-bar'
 
     # @param [Object] opts the options hash
-    # @option opts :selectable [Boolean] @see {Table.Controller#selectable}
-    # @option opts :renderFilterControls [Boolean] @see {Table.Controller#renderFilterControls}
-    # @option opts :filterCustomQueryEvent [String] @see {Table.Controller#filterCustomQueryEvent}
-    # @option opts [Entities.ActionButtonsCollection] :actionButtonsCollection
+    # @option opts :selectable [Boolean] @see {Controller#selectable}
+    # @option opts :renderFilterControls [Boolean] @see {Controller#renderFilterControls}
+    # @option opts :filterCustomQueryEvent [String] @see {Controller#filterCustomQueryEvent}
+    # @option opts [ActionButtonsCollection] :actionButtonsCollection
     # @option opts [Object] :tableSelections data about the current state of the table
-    # @option opts [Array<Entities.AjaxPaginatedCollection>, Array<Entities.StaticPaginatedCollection>]
+    # @option opts [Array<Entities.AjaxPaginatedCollection>, Array<StaticPaginatedCollection>]
     #   :tableCollection the collection currently managed by the table
     initialize: (opts={}) ->
       @collection             = opts.actionButtonsCollection
@@ -35,13 +35,15 @@ define [
       @filterCustomQueryEvent = opts.filterCustomQueryEvent
       @filterToggleEvent      = opts.filterToggleEvent
       @selectable             = !!opts.selectable
+      @carpenter              = opts.carpenter
+
       super
 
     #
     # Pass the `reqres` request event bus down to the item view.
     #
     # @return [Marionette.ItemView] the item's view
-    buildItemView: (item, ItemViewType, itemViewOptions) ->
+    buildChildView: (item, ItemViewType, itemViewOptions) ->
       defaultOptions =
         tableSelections: @tableSelections
         tableCollection: @tableCollection

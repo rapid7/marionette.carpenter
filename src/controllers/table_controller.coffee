@@ -37,12 +37,12 @@ define [
     class Marionette.Carpenter.Controller extends Controller
 
       # @property [Boolean] allow the table to be searched from the header
-      searchable: true
+      filterable: true
 
       # @property [Boolean] allow checkbox selection of table rows
       selectable: false
 
-      # @property [String] the path to the (optional) template for the Table.Filter view
+      # @property [String] the path to the (optional) template for the Filter view
       filterTemplatePath: ''
 
       # @property [Boolean] allow rows in the table to be tagged
@@ -105,7 +105,6 @@ define [
       perPageOptions: [20, 50, 100, 'All']
 
       # @property [Number] the number of rows to show per page by default.
-      # Must be an element of the #perPageOptions array.
       perPage: 20
 
       # @property [Object] of defaults that are applied to every column definition
@@ -118,16 +117,16 @@ define [
       # Layouts and Views
       #
 
-      # @property [Table.Header] the table header view
+      # @property [Header] the table header view
       header: null
 
-      # @property [Table.ControlBar] the control bar view
+      # @property [ControlBar] the control bar view
       buttons: null
 
-      # @property [Table.RowList] the row list view (contains the &lt;table&gt;)
+      # @property [RowList] the row list view (contains the &lt;table&gt;)
       list: null
 
-      # @property [Table.Paginator] the paginator view
+      # @property [Paginator] the paginator view
       paginator: null
 
       # Create a new instance of TableController and adds it to
@@ -139,6 +138,7 @@ define [
       # @option opts :regions                [Object] maps region names to DOM selectors
       # @option opts :actionButtons          [Object] @see #actionButtons
       # @option opts :columns                [Object] @see #columns
+      # @option opts :htmlID                 [String] the id attribute for the table element
       # @option opts :region                 [Marionette.Region] the region to render into
       # @option opts :currentPage            [Number] the current page to display
       # @option opts :perPage                [Number] number of rows per page
@@ -148,12 +148,10 @@ define [
       #                                        (default: false)
       # @option opts :filterTemplatePath     [String] the path to the template for the table filter view
       # @option opts :filterView             [Object] a custom filter view class
-      # @option opts :filterToggleEvent      [String] the event to listen to on `@app.vent` which should toggle
-      #                                        display of the table's filter
-      # @option opts :filterCustomQueryEvent [String] the event to listen to on `@app.vent` which should toggle
-      #                                        a custom query search
       # @option opts :filterAttrs            [Object] the attributes representing the initial state of the filter
       #                                        on table load
+      # @option opts :listClass              [App.Views.CompositeView] a custom class to use as the RowList
+      #                                        (default: RowList)
       initialize: (opts={}) ->
         # merge in any specified overrides
         _.extend @, opts
@@ -178,7 +176,7 @@ define [
         @collection.perPage = @perPage
 
         # Set default sorting/styles on the list
-        @collection.sortColumn = @defaultSortColumn().attribute
+        @collection.sortColumn = @defaultSortColumn()?.attribute
         @collection.sortDirection = @defaultSortDirection()
         @collection.updateSortKey() unless @static
 
@@ -191,28 +189,23 @@ define [
           @tableSelections.deselectedIDs = {}
 
         # create a collection of action buttons for the control bar
-        @actionButtonsCollection = new ActionButtonsCollection opts.actionButtons
+        @actionButtonsCollection = new ActionButtonsCollection(opts.actionButtons)
 
-        # create a filter for storing the search state
-        if @filterEnabled()
-          @filterModel = new EntityFilter(@filterAttrs)
+        # support custom RowList subclasses
+        @listClass ||= RowList
 
         # build the new table
         @header             = new Header(@)
         @buttons            = new ControlBar(@)
-        @list               = new RowList(@)
+        @list               = new @listClass(@)
         @paginator          = new Paginator(@)
         @selectionIndicator = new SelectionIndicator(@) if @selectable
 
-        if @filterEnabled()
-          if @filterView
-            @filter = new @filterView(@)
-          else
-            @filter = new Filter(@)
 
         @listenTo @collection, 'reset',  => @toggleInteraction true
         @listenTo @collection, 'sync',   => @toggleInteraction true
         @listenTo @collection, 'change', => @toggleInteraction true
+        @listenTo @collection, 'error',  => @toggleInteraction true
 
         # Don't listen to 'remove', as it's called for each model in the collection on
         # each page change. Listen to 'remove:multiple', instead.
@@ -232,8 +225,7 @@ define [
           @show @buttons,            region: @getMainView().buttonsRegion
           @show @list,               region: @getMainView().tableRegion
           @show @paginator,          region: @getMainView().paginationRegion
-          @show @selectionIndicator, region: @getMainView().selectionIndicatorRegion if @selectable
-          @show @filter,             region: @getMainView().filterRegion if @filterEnabled()
+          @show @selectionIndicator, region: @getMainView().selectionIndicatorRegion, preventDestroy:false if @selectable
 
         @listenTo @paginator, 'table:first', @first
         @listenTo @paginator, 'table:previous', @previous
@@ -275,23 +267,15 @@ define [
           if sortCol?.sortable
             @list.setSort(sortCol.attribute, dir, sortCol.sortAttribute)
 
-        if @filter
-          # Listen to the filter's search event.
-          @listenTo @filter, 'table:search', (filter) =>
-            @toggleInteraction false
-            @list.setSearch filter
 
         # Tell the collection NOT to fetch if we are rendering static data
         if @static
           @collection.bootstrap()
-        # If we're loading with filter attributes set via querystring, start with a search.
-        else if @filterAttrs
-          @list.setSearch @filter.model
-        # Otherwise, load the table via AJAX (w/o filtering).
+          # If we're loading with filter attributes set via querystring, start with a search.
         else
           @collection.fetch reset: true
 
-        # calls the #show method defined @app.Controllers.Application, which
+        # calls the #show method defined App.Controllers.Application, which
         # puts the view into the (component) Application's main region
         @show @getMainView(), region: opts.region
 
@@ -324,8 +308,12 @@ define [
       totalRecords: =>
         if @collection.totalRecords?
           @collection.totalRecords
-        else
+        else if @collection.origModels?
           @collection.origModels.length
+        else if @collection.models?
+          @collection.models.length
+        else
+          0
 
       # @return [Number] the total number of pages
       totalPages: =>
@@ -346,28 +334,28 @@ define [
         dir = @defaultSortColumn()?.defaultDirection
         (_.contains(['asc', 'desc'], dir) and dir) or 'desc'
 
+
       # Enables/disables user interaction on the various parts of the table views
       # @param enabled [Boolean] enable or disable the table
       toggleInteraction: (enabled) =>
-        # Trigger an update of any total records indicators.
-        @app.vent.trigger 'total_records:change', @totalRecords() if enabled
 
-        if @isInteractionEnabled is enabled then return
+        # Trigger an update of any total records indicators.
+        @carpenter.trigger 'total_records:change', @totalRecords() if enabled
+
+        return if @isInteractionEnabled is enabled
 
         unless @static
           @isInteractionEnabled = enabled
           userInputSelector = 'a,th,select,input'
           $ctrlBarButtons = @buttons.$el.find(userInputSelector)
           @getMainView().$el.find(userInputSelector)
-            .not($ctrlBarButtons)
-            .toggleClass('disabled', not enabled)
+          .not($ctrlBarButtons)
+          .toggleClass('disabled', not enabled)
           $ctrlBarButtons.toggleClass('action-disabled', not enabled)
+
         @paginator.render() if enabled
 
-      #
-      # @return [Boolean] true if the filter has been enabled for this table, false otherwise
-      filterEnabled: ->
-        @filterTemplatePath or @filterView
+
 
     API =
       # @return [Table.Controller] a new controller for the requested table

@@ -21,23 +21,16 @@ define [], ->
 
     #
     # @param [Object] opts the options hash
-    # @option opts :filterTemplatePath [String] @see {Table.Controller#filterTemplatePath}
+    # @option opts :filterTemplatePath [String] @see {Controller#filterTemplatePath}
     # @option opts :filterModel [Entities.Filter] a model to store the state of the filter
-    # @option opts :filterAttrs [Object] @see {Table.Controller#filterAttrs}
-    # @option opts :filterToggleEvent [String] @see {Table.Controller#filterToggleEvent}
-    # @option opts :filterCustomQueryEvent [String] @see {Table.Controller#filterCustomQueryEvent}
-    # @option opts :collection [Entities.AjaxPaginatedCollection] @see {Table.Controller#collection}
+    # @option opts :filterAttrs [Object] @see {Controller#filterAttrs}
+    # @option opts :collection [Entities.AjaxPaginatedCollection] @see {Controller#collection}
     initialize: (opts={}) ->
-      @app      = opts.app
       @template = @templatePath(opts.filterTemplatePath)
       @model = opts.filterModel
-      @filterToggleEvent = opts.filterToggleEvent
-      @filterCustomQueryEvent = opts.filterCustomQueryEvent
       @filterAttrs = opts.filterAttrs
       @collection = opts.collection
-
-      @app.vent.on @filterToggleEvent, @toggleFilter if @filterToggleEvent
-      @app.vent.on @filterCustomQueryEvent, (customQuery) => @updateModel(customQuery) if @filterCustomQueryEvent
+      @carpenter = opts.carpenter
 
     #
     # Called when any activity occurs in an input field. Debounces searches to
@@ -57,7 +50,7 @@ define [], ->
       @filterInputReaderSet.registerDefault ($el) ->
         $el.val()
       @filterInputReaderSet.register 'checkbox', ($el) ->
-        if $el.attr('checked')
+        if $el.prop('checked')
           $el.data 'filter-value'
 
     #
@@ -69,7 +62,7 @@ define [], ->
       @filterInputWriterSet.registerDefault ($el, value) ->
         $el.val(value)
       @filterInputWriterSet.register 'checkbox', ($el, value) =>
-        @ui.checkboxes.filter("[data-filter-value='#{value}']").attr('checked', true)
+        @ui.checkboxes.filter("[data-filter-value='#{value}']").prop('checked', true)
 
     #
     # Update the filter's model with the data from the form elements in the
@@ -142,7 +135,7 @@ define [], ->
     resetFilter: =>
       @ui.textInputs.val ''
       @ui.selectInputs.val ''
-      @ui.checkboxes.attr 'checked', false
+      @ui.checkboxes.prop 'checked', false
       @ui.hideOnResetInputs.css 'visibility', 'hidden'
 
       @updateModel()
@@ -152,6 +145,3 @@ define [], ->
 
       if @filterAttrs
         @handleFilterOnLoad()
-
-    onClose: =>
-      @app.vent.off @filterToggleEvent

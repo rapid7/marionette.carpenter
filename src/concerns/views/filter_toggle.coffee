@@ -14,4 +14,4 @@ define [], ->
     # @return [void]
     triggerFilterToggle: ->
       @ui.filterToggle.toggleClass 'enabled'
-      @app.vent.trigger @filterToggleEvent
+      @carpenter.trigger @filterToggleEvent
