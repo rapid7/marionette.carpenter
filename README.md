@@ -24,6 +24,14 @@
 
 One of the more common tasks when developing web applications is building tabular representations of resources. Carpenter aims to make the process of building robust tables as simple as possible, while giving developers the flexibility to easily extend the table's functionality.
 
+#### Dependencies
+
+Carpenter relies on the following libraries:
+
+- [Backbone.Marionette](https://github.com/onsi/cocktail)
+- [underscore.string](https://github.com/epeli/underscore.string)
+- [Cocktail](https://github.com/onsi/cocktail)
+
 #### Development
 
 To build from source, just run:
