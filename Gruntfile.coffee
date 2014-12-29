@@ -5,31 +5,26 @@ module.exports = (grunt) ->
     pkg: grunt.file.readJSON('package.json')
 
     clean:
-      src: ['build']
+      src: ['build', 'dist']
 
     copy:
-      assets:
+
+      images:
         expand: true
-        src: 'assets/**'
-        dest: 'dist/'
-      sass:
-        expand: true
-        nonull: true
-        cwd: 'src/'
-        src: ['sass/**']
-        dest: 'dist/'
+        flatten: true
+        src: 'assets/images/*'
+        dest: 'dist/images'
+
       css:
-        expand: true
-        nonull: false
-        cwd: 'build/'
-        src: ['css/**']
-        dest: 'dist/'
+        src: 'build/marionette.carpenter.css'
+        dest: 'dist/marionette.carpenter.css'
+
       js:
         expand: true
         nonull: false
         cwd: 'build/'
-        src: ['marionette.carpenter.js', 'marionette.carpenter.js.map']
-        dest: 'dist/js/'
+        src: ['marionette.carpenter.js']
+        dest: 'dist/'
 
     coffee:
       source:
@@ -86,7 +81,11 @@ module.exports = (grunt) ->
       # "Fix up" our specs to load everything synchronously
       spec:
         src: ["build/spec/specs.js", "build/spec/require_stub.js"]
-        dest: 'build/spec/specs.js'
+        dest: "build/spec/specs.js"
+
+      css:
+        src: ["build/css/**.css"]
+        dest: "dist/marionette.carpenter.css"
 
     watch:
       files: ['src/**/**.coffee', 'src/**/**.eco', 'spec/**/**.coffee']
@@ -109,17 +108,19 @@ module.exports = (grunt) ->
           specs: ['build/spec/specs.js']
           summary: true
 
-    # In order to run the compass task, you must have the compass ruby gem installed.
-    # Confirm you have Ruby installed and run: gem update --system && gem install compass
-    compass:
+    sass:
+      options:
+        includePaths: [
+          'bower_components/compass-mixins/lib'
+        ]
+        sourceMap: false
+        style: 'compact'
       build:
-        options:
-          sassDir: 'src/sass'
-          cssDir: 'build/css'
-          imagesDir: 'assets'
-          relativeAssets: false
-          outputStyle: 'expanded'
-          noLineComments: true
+        expand: true
+        flatten: true
+        src: ['./src/sass/*.scss']
+        dest: './build/css'
+        ext: '.css'
 
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-contrib-concat')
@@ -127,12 +128,12 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-jasmine')
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-contrib-clean')
-  grunt.loadNpmTasks('grunt-contrib-compass')
+  grunt.loadNpmTasks('grunt-sass')
   grunt.loadNpmTasks('grunt-contrib-copy')
   grunt.loadNpmTasks('grunt-eco')
   grunt.loadNpmTasks('grunt-requirejs')
 
-  grunt.registerTask('style', ['clean', 'compass'])
+  grunt.registerTask('style', ['clean', 'sass'])
   grunt.registerTask('build', ['clean', 'style', 'coffee', 'eco', 'requirejs', 'concat', 'copy'])
   grunt.registerTask('spec',  ['build', 'jasmine'])
   grunt.registerTask('default', ['build'])
