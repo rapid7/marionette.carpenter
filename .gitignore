@@ -4,7 +4,9 @@ bower_components/
 dist/
 .grunt/
 SpecRunner.html
-
+doc/
+build/
+.sass-cache/
 # Marketing site
 # Ignore ruby version/gemset
 site/.ruby-version
