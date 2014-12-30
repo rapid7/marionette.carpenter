@@ -1,3 +1,4 @@
+@import url(jquery.resizableColumns.css);
 .table-component .buttons-region ul li a.action-button.add, .table-component .buttons-region ul li a.action-button {
   display: inline-block;
   -webkit-border-radius: 5px;
@@ -95,16 +96,7 @@
     background-color: #7abc21; }
 
 .table-component {
-  /* jQuery Resizable Columns v0.1.0 | http://dobtco.github.io/jquery-resizable-columns/ | Licensed MIT | Built Wed Apr 30 2014 14:24:25 */
-  /*
-   * dragtable
-   *
-   * @Version 2.0.10
-   *
-   * default css
-   *
-   */
-  /*##### the dragtable stuff #####*/ }
+   }
   .table-component .header-region h3 {
     margin-bottom: 10px; }
   .table-component .header-region div.right {
@@ -423,45 +415,3 @@
         vertical-align: top; }
   .table-component .select-all-tooltip {
     width: 100px; }
-  .table-component .rc-handle-container {
-    position: relative; }
-  .table-component .rc-handle {
-    position: absolute;
-    width: 7px;
-    cursor: ew-resize;
-    margin-left: -3px;
-    z-index: 2; }
-  .table-component table.rc-table-resizing {
-    cursor: ew-resize; }
-  .table-component table.rc-table-resizing thead, .table-component table.rc-table-resizing thead > th, .table-component table.rc-table-resizing thead > th > a {
-    cursor: ew-resize; }
-  .table-component .dragtable-sortable {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    -moz-user-select: none; }
-  .table-component .dragtable-sortable li {
-    margin: 0;
-    padding: 0;
-    float: left;
-    font-size: 1em;
-    background: white; }
-  .table-component .dragtable-sortable th, .table-component .dragtable-sortable td {
-    border-left: 0px; }
-  .table-component .dragtable-sortable li:first-child th, .table-component .dragtable-sortable li:first-child td {
-    border-left: 1px solid #CCC; }
-  .table-component .ui-sortable-helper {
-    opacity: 0.7;
-    filter: alpha(opacity=70); }
-  .table-component .ui-sortable-placeholder {
-    -moz-box-shadow: 4px 5px 4px #C6C6C6 inset;
-    -webkit-box-shadow: 4px 5px 4px #C6C6C6 inset;
-    box-shadow: 4px 5px 4px #C6C6C6 inset;
-    border-bottom: 1px solid #CCCCCC;
-    border-top: 1px solid #CCCCCC;
-    visibility: visible !important;
-    background: #EFEFEF !important;
-    visibility: visible !important; }
-  .table-component .ui-sortable-placeholder * {
-    opacity: 0;
-    visibility: hidden; }
