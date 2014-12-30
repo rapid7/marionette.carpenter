@@ -29,7 +29,6 @@ One of the more common tasks when developing web applications is building tabula
 Carpenter relies on the following libraries:
 
 - [Backbone.Marionette 2.3+](https://github.com/onsi/cocktail)
-- [underscore.string](https://github.com/epeli/underscore.string)
 - [Cocktail](https://github.com/onsi/cocktail)
 
 #### Development
