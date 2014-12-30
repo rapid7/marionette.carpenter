@@ -71,7 +71,10 @@ module.exports = (grunt) ->
         options:
           almond: true
           baseUrl: "build/"
-          include: ["spec/table_controller_spec.js", "spec/table_view_spec.js"]
+          include: [
+            "spec/controllers/table_controller_spec.js"
+            "spec/views/control_bar_spec.js"
+          ]
           out: "build/spec/specs.js"
           optimize: "none"
           generateSourceMaps: true

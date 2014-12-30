@@ -36,11 +36,12 @@ Carpenter relies on the following libraries:
 
 To build from source, just run:
 
-    console
     $ grunt build
-
 
 To run tests, run:
 
-    console
     $ grunt spec
+
+To run tests on file change:
+    
+    $ grunt watch
