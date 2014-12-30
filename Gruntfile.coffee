@@ -82,6 +82,7 @@ module.exports = (grunt) ->
             "spec/views/row_spec.js"
             "spec/views/row_list_spec.js"
             "spec/views/paginator_spec.js"
+            "spec/utilities/string_utils_spec.js"
           ]
           out: "build/spec/specs.js"
           optimize: "none"

@@ -1,4 +1,7 @@
-define ['templates/row'], (template) ->
+define [
+  'templates/row'
+  'utilities/string_utils'
+], (template, StringUtils) ->
   #
   # Render a single row (per model in the collection)
   #
@@ -155,4 +158,4 @@ define ['templates/row'], (template) ->
     # Pass ourselves to the view for rendering
     #
     # @return [Object] data for rendering in the view
-    serializeData: -> @
+    serializeData: -> _.extend {StringUtils: StringUtils}, @

@@ -14,6 +14,7 @@ define [
   'views/row'
   'views/row_list'
   'views/selection_indicator'
+  'utilities/string_utils'
 ], (
     Controller, 
     CreatePaginatedCollectionClass, 
@@ -29,7 +30,8 @@ define [
     Paginator,
     Row,
     RowList,
-    SelectionIndicator
+    SelectionIndicator,
+    StringUtils
   ) ->
 
     Marionette.Carpenter = {}
@@ -162,7 +164,7 @@ define [
         # apply column defaults
         _.each @columns, (column) =>
           _.defaults(column, @columnDefaults)
-          _.defaults(column, label: _.str.humanize(column.attribute))
+          _.defaults(column, label: StringUtils.humanize(column.attribute))
 
         # ensure @static is a Boolean
         @static = !!@static

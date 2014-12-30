@@ -2962,7 +2962,7 @@ define('templates/row',[],function(){
         _print(_safe('\n  <td class=\''));
         _print(column["class"]);
         _print(_safe(' '));
-        _print(_.str.underscored(column.attribute).replace(/[^\w]/g, ''));
+        _print(this.StringUtils.underscored(column.attribute).replace(/[^\w]/g, ''));
         _print(_safe(' cell'));
         _print(idx);
         _print(_safe('\'>\n    '));
@@ -3014,11 +3014,33 @@ define('templates/row',[],function(){
 });
 
 (function() {
+  define('utilities/string_utils',[], function() {
+    var StringUtils;
+    return StringUtils = {
+      underscored: function(str) {
+        str = str === null ? '' : String(str);
+        return str.trim().replace(/([a-z\d])([A-Z]+)/g, '$1_$2').replace(/[-\s]+/g, '_').toLowerCase();
+      },
+      capitalize: function(str) {
+        str = str === null ? '' : String(str);
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      },
+      humanize: function(str) {
+        return StringUtils.capitalize(StringUtils.underscored(str).replace(/_id$/, '').replace(/_/g, ' '));
+      }
+    };
+  });
+
+}).call(this);
+
+//# sourceMappingURL=string_utils.js.map
+;
+(function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define('views/row',['templates/row'], function(template) {
+  define('views/row',['templates/row', 'utilities/string_utils'], function(template, StringUtils) {
     var Row;
     return Row = (function(_super) {
       __extends(Row, _super);
@@ -3157,7 +3179,9 @@ define('templates/row',[],function(){
       };
 
       Row.prototype.serializeData = function() {
-        return this;
+        return _.extend({
+          StringUtils: StringUtils
+        }, this);
       };
 
       return Row;
@@ -3822,7 +3846,7 @@ define('templates/selection_indicator',[],function(){
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define('controllers/table_controller',['controllers/application_controller', 'entities/paginated_collection', 'entities/action_buttons_collection', 'entities/action_button', 'entities/filter', 'views/control_bar', 'views/empty', 'views/filter', 'views/header', 'views/layout', 'views/loading', 'views/paginator', 'views/row', 'views/row_list', 'views/selection_indicator'], function(Controller, CreatePaginatedCollectionClass, ActionButtonsCollection, ActionButton, EntityFilter, ControlBar, Empty, Filter, Header, Layout, Loading, Paginator, Row, RowList, SelectionIndicator) {
+  define('controllers/table_controller',['controllers/application_controller', 'entities/paginated_collection', 'entities/action_buttons_collection', 'entities/action_button', 'entities/filter', 'views/control_bar', 'views/empty', 'views/filter', 'views/header', 'views/layout', 'views/loading', 'views/paginator', 'views/row', 'views/row_list', 'views/selection_indicator', 'utilities/string_utils'], function(Controller, CreatePaginatedCollectionClass, ActionButtonsCollection, ActionButton, EntityFilter, ControlBar, Empty, Filter, Header, Layout, Loading, Paginator, Row, RowList, SelectionIndicator, StringUtils) {
     var API;
     Marionette.Carpenter = {};
     Marionette.Carpenter.CellController = (function(_super) {
@@ -3897,7 +3921,7 @@ define('templates/selection_indicator',[],function(){
           return function(column) {
             _.defaults(column, _this.columnDefaults);
             return _.defaults(column, {
-              label: _.str.humanize(column.attribute)
+              label: StringUtils.humanize(column.attribute)
             });
           };
         })(this));

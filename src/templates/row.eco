@@ -6,7 +6,7 @@
 
 <% idx = 0 %>
 <% for column in @columns: %>
-  <td class='<%= column.class %> <%= _.str.underscored(column.attribute).replace(/[^\w]/g, '') %> cell<%= idx %>'>
+  <td class='<%= column.class %> <%= @StringUtils.underscored(column.attribute).replace(/[^\w]/g, '') %> cell<%= idx %>'>
     <% if column.view?: %>
 
     <% else if column.render?: %>
