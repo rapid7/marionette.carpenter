@@ -1,15 +1,14 @@
 @import "compass/css3";
 @import "compass/css3/user-interface";
 @import "css3-mixins";
-@import 'variables';
-@import 'buttons';
+@import "buttons";
 
 //
 // The table component displays an AJAX or static-based table
 // complete with header, control bar, and pagination controls.
 //
 
-
+$light-gray-border: #ccc;
 $table-row-hover-color: #efefef;
 
 .table-component {

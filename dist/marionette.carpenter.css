@@ -1,16 +1,5 @@
 
 
-.sexy-font {
-  font-family: "roboto", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", "Arial Narrow", Helvetica, san-serif;
-  font-weight: 300; }
-
-.small-caps-font {
-  font-family: "roboto", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", "Arial Narrow", Helvetica, san-serif;
-  font-variant: small-caps;
-  text-transform: lowercase;
-  font-size: 20px;
-  position: relative; }
-
 .table-component .buttons-region ul li a.action-button.add, .table-component .buttons-region ul li a.action-button {
   display: inline-block;
   -webkit-border-radius: 5px;
@@ -489,14 +478,3 @@ table.rc-table-resizing thead, table.rc-table-resizing thead > th, table.rc-tabl
 .ui-sortable-placeholder * {
   opacity: 0;
   visibility: hidden; }
-
-.sexy-font {
-  font-family: "roboto", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", "Arial Narrow", Helvetica, san-serif;
-  font-weight: 300; }
-
-.small-caps-font {
-  font-family: "roboto", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", "Arial Narrow", Helvetica, san-serif;
-  font-variant: small-caps;
-  text-transform: lowercase;
-  font-size: 20px;
-  position: relative; }
