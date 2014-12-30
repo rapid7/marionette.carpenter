@@ -33,6 +33,9 @@ define [
   ) ->
 
     Marionette.Carpenter = {}
+    # Used as a base controller for rendering a cell view
+    class Marionette.Carpenter.CellController extends Controller
+
 
     class Marionette.Carpenter.Controller extends Controller
 
