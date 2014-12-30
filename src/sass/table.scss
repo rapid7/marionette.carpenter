@@ -275,13 +275,13 @@ $table-row-hover-color: #efefef;
           padding-left: 3px;
           padding-right: 3px;
           background-image: image-url('icons/pagination_new.png');
-          @include image-2x(image-path('icons/pagination_new_2x.png'), 78px, 11px);
+          @include image-2x('icons/pagination_new_2x.png', 78px, 11px);
           border: 1px solid #bbb;
           background-repeat: no-repeat;
           cursor: pointer;
           &:hover {
             background-image: image-url('icons/pagination_new.png');
-            @include image-2x(image-path('icons/pagination_new_2x.png'), 78px, 11px);
+            @include image-2x('icons/pagination_new_2x.png', 78px, 11px);
             background-color: darken($bgcolor, 8%);
           }
           &.first, &.next {

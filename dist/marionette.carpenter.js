@@ -822,7 +822,7 @@ define("almond", function(){});
 
 //# sourceMappingURL=filter_custom_query_field.js.map
 ;
-define('templates/action_button',[],function(){
+define(function(){
   var template = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
@@ -888,6 +888,75 @@ define('templates/action_button',[],function(){
 };
   return template;
 });
+
+define(function(){
+  var template = function(__obj) {
+  var _safe = function(value) {
+    if (typeof value === 'undefined' && value == null)
+      value = '';
+    var result = new String(value);
+    result.ecoSafe = true;
+    return result;
+  };
+  return (function() {
+    var __out = [], __self = this, _print = function(value) {
+      if (typeof value !== 'undefined' && value != null)
+        __out.push(value.ecoSafe ? value : __self.escape(value));
+    }, _capture = function(callback) {
+      var out = __out, result;
+      __out = [];
+      callback.call(this);
+      result = __out.join('');
+      __out = out;
+      return _safe(result);
+    };
+    (function() {
+      _print(_safe('<a href=\'javascript:void(0)\' '));
+    
+      if (this.id) {
+        _print(_safe('id="'));
+        _print(this.id);
+        _print(_safe('"'));
+      }
+    
+      _print(_safe(' class="action-button '));
+    
+      _print(this["class"]);
+    
+      _print(_safe(' '));
+    
+      if (this.disabled) {
+        _print(_safe('disabled'));
+      }
+    
+      _print(_safe('">\n  '));
+    
+      _print(this.label);
+    
+      _print(_safe('\n</a>'));
+    
+    }).call(this);
+    
+    return __out.join('');
+  }).call((function() {
+    var obj = {
+      escape: function(value) {
+        return ('' + value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      },
+      safe: _safe
+    }, key;
+    for (key in __obj) obj[key] = __obj[key];
+    return obj;
+  })());
+};
+  return template;
+});
+
+define("templates/action_button", function(){});
 
 (function() {
   var __hasProp = {}.hasOwnProperty,
@@ -1703,7 +1772,7 @@ define('templates/paginator',[],function(){
           _print(i);
           _print(_safe('</option>\n        '));
         }
-        _print(_safe('\n      </select>\n    </label>\n\n    <span class=\'page_info line\'>\n      '));
+        _print(_safe('\n      </select>\n    </label>\n\n    <span class=\'page_info line\'>\n      Showing '));
         _print((this.currentPage - 1) * this.perPage + 1);
         _print(_safe(' - '));
         _print(this.lastRow);
@@ -2124,7 +2193,15 @@ define('templates/table',[],function(){
     (function() {
       var column, sorted, _i, _len, _ref;
     
-      _print(_safe('<table>\n  <thead>\n    <tr>\n      '));
+      _print(_safe('<table '));
+    
+      if (this.htmlID) {
+        _print(_safe('id="'));
+        _print(this.htmlID);
+        _print(_safe('"'));
+      }
+    
+      _print(_safe('>\n  <thead>\n    <tr>\n      '));
     
       if (this.selectable) {
         _print(_safe('\n        <th class="select-all unselectable" unselectable="on">\n          <input type="checkbox" title="Selects all available records on every page">\n        </th>\n      '));
