@@ -19,7 +19,8 @@
     "underscore.string": "2.3.3"
   },
   "devDependencies": {
-    "jasmine-set": "jvennix-r7/jasmine-set"
+    "jasmine-set": "jvennix-r7/jasmine-set",
+    "sinon": "http://sinonjs.org/releases/sinon-1.9.0.js"
   },
   "license": "MIT",
   "ignore": [

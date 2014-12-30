@@ -3,7 +3,7 @@ define [
   'spec/support/shared/examples/create_region'
 ], (ControlBar, createRegion) ->
 
-  describe 'Marionette.Carpenter.View', ->
+  describe 'ControlBar View', ->
 
     createRegion()
 
@@ -14,45 +14,39 @@ define [
           tableCollection: new Backbone.Collection [{foo: 1}]
           selectable: true
         }, controlBarOpts)
-
         new ControlBar options
 
-    ###
-    # ControlBar Specs
-    ###
-    describe 'Table.ControlBar', ->
+    describe 'when action buttons are provided', ->
 
-      describe 'when action buttons are provided', ->
+      beforeEach ->
 
-        beforeEach ->
+        @actionButtons = [
+          {
+            label: 'Add'
+            id:    'add-button'
+            click: (selectAllState, selectedIDs, deselectedIDs) =>
+              @clickFunctionExecuted = true
+              @selectAllState = selectAllState
+              @selectedIDs = selectedIDs
+              @deselectedIDs = deselectedIDs
+          }
+          {
+            label: 'Delete'
+          }
+        ]
 
-          @actionButtons = [
-            {
-              label: 'Add'
-              id:    'add-button'
-              click: (selectAllState, selectedIDs, deselectedIDs) =>
-                @clickFunctionExecuted = true
-                @selectAllState = selectAllState
-                @selectedIDs = selectedIDs
-                @deselectedIDs = deselectedIDs
-            }
-            {
-              label: 'Delete'
-            }
-          ]
+        controlBar = TestHelpers.createControlBar @actionButtons,
+          tableSelections:
+            selectAllState: true
+            selectedIDs: {}
+            deselectedIDs: {}
 
-          controlBar = TestHelpers.createControlBar @actionButtons,
-            tableSelections:
-              selectAllState: true
-              selectedIDs: {}
-              deselectedIDs: {}
+        @region.show controlBar
 
-          @region.show controlBar
+      it 'renders each of the action buttons', ->
+        expect(@region.$el.find('a.action-button').length).toEqual(@actionButtons.length)
 
-        it 'renders each of the action buttons', ->
-          expect(@region.$el.find('a.action-button').length).toEqual(@actionButtons.length)
-
-        it "executes a button's callback function on click", ->
-          @clickFunctionExecuted = false
-          @region.$el.find('#add-button').click()
-          expect(@clickFunctionExecuted).toBe(true)
+      it "executes a button's callback function on click", ->
+        @clickFunctionExecuted = false
+        @region.$el.find('#add-button').click()
+        expect(@clickFunctionExecuted).toBe(true)
