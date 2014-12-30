@@ -23,7 +23,7 @@ module.exports = (grunt) ->
     coffee:
       source:
         options:
-          sourceMap: true
+          sourceMap: false
         expand: true
         cwd: 'src/'
         src: ['**/**.coffee']
@@ -32,7 +32,7 @@ module.exports = (grunt) ->
 
       spec:
         options:
-          sourceMap: true
+          sourceMap: false
         expand: true
         cwd: 'spec'
         src: ['**/**.coffee']

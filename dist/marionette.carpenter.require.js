@@ -55,8 +55,6 @@
 
 }).call(this);
 
-//# sourceMappingURL=mixin.js.map
-;
 (function() {
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -139,8 +137,6 @@
 
 }).call(this);
 
-//# sourceMappingURL=application_controller.js.map
-;
 (function() {
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -268,8 +264,6 @@
 
 }).call(this);
 
-//# sourceMappingURL=paginated_collection.js.map
-;
 (function() {
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -305,8 +299,6 @@
 
 }).call(this);
 
-//# sourceMappingURL=action_button.js.map
-;
 (function() {
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -329,8 +321,6 @@
 
 }).call(this);
 
-//# sourceMappingURL=action_buttons_collection.js.map
-;
 (function() {
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -351,8 +341,6 @@
 
 }).call(this);
 
-//# sourceMappingURL=filter.js.map
-;
 (function() {
   define('concerns/views/filter_toggle',[], function() {
     var FilterToggle;
@@ -372,8 +360,6 @@
 
 }).call(this);
 
-//# sourceMappingURL=filter_toggle.js.map
-;
 (function() {
   define('concerns/views/filter_custom_query_field',[], function() {
     var FilterCustomQueryField;
@@ -396,8 +382,6 @@
 
 }).call(this);
 
-//# sourceMappingURL=filter_custom_query_field.js.map
-;
 define('templates/action_button',[],function(){
   var template = function(__obj) {
   var _safe = function(value) {
@@ -572,8 +556,6 @@ define('templates/action_button',[],function(){
 
 }).call(this);
 
-//# sourceMappingURL=action_button.js.map
-;
 define('templates/control_bar',[],function(){
   var template = function(__obj) {
   var _safe = function(value) {
@@ -687,8 +669,6 @@ define('templates/control_bar',[],function(){
 
 }).call(this);
 
-//# sourceMappingURL=control_bar.js.map
-;
 define('templates/empty',[],function(){
   var template = function(__obj) {
   var _safe = function(value) {
@@ -762,8 +742,6 @@ define('templates/empty',[],function(){
 
 }).call(this);
 
-//# sourceMappingURL=empty.js.map
-;
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
@@ -907,8 +885,6 @@ define('templates/empty',[],function(){
 
 }).call(this);
 
-//# sourceMappingURL=filter.js.map
-;
 define('templates/header',[],function(){
   var template = function(__obj) {
   var _safe = function(value) {
@@ -1004,8 +980,6 @@ define('templates/header',[],function(){
 
 }).call(this);
 
-//# sourceMappingURL=header.js.map
-;
 define('templates/layout',[],function(){
   var template = function(__obj) {
   var _safe = function(value) {
@@ -1167,8 +1141,6 @@ define('templates/layout',[],function(){
 
 }).call(this);
 
-//# sourceMappingURL=layout.js.map
-;
 define('templates/loading',[],function(){
   var template = function(__obj) {
   var _safe = function(value) {
@@ -1238,8 +1210,6 @@ define('templates/loading',[],function(){
 
 }).call(this);
 
-//# sourceMappingURL=loading.js.map
-;
 define('templates/paginator',[],function(){
   var template = function(__obj) {
   var _safe = function(value) {
@@ -2490,8 +2460,6 @@ define("views/../../bower_components/backbone.paginator/dist/backbone.paginator.
 
 }).call(this);
 
-//# sourceMappingURL=paginator.js.map
-;
 define('templates/row',[],function(){
   var template = function(__obj) {
   var _safe = function(value) {
@@ -2609,8 +2577,6 @@ define('templates/row',[],function(){
 
 }).call(this);
 
-//# sourceMappingURL=string_utils.js.map
-;
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
@@ -2767,8 +2733,6 @@ define('templates/row',[],function(){
 
 }).call(this);
 
-//# sourceMappingURL=row.js.map
-;
 define('templates/table',[],function(){
   var template = function(__obj) {
   var _safe = function(value) {
@@ -3293,8 +3257,6 @@ define("views/../../bower_components/jquery-resizable-columns/dist/jquery.resiza
 
 }).call(this);
 
-//# sourceMappingURL=row_list.js.map
-;
 define('templates/selection_indicator',[],function(){
   var template = function(__obj) {
   var _safe = function(value) {
@@ -3415,8 +3377,6 @@ define('templates/selection_indicator',[],function(){
 
 }).call(this);
 
-//# sourceMappingURL=selection_indicator.js.map
-;
 (function() {
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -3744,7 +3704,5 @@ define('templates/selection_indicator',[],function(){
 
 }).call(this);
 
-//# sourceMappingURL=table_controller.js.map
-;
 
 require(["controllers/table_controller"]);
