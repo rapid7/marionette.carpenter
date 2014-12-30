@@ -9,12 +9,6 @@ module.exports = (grunt) ->
 
     copy:
 
-      images:
-        expand: true
-        flatten: true
-        src: 'assets/images/*'
-        dest: 'dist/images'
-
       css:
         src: 'build/marionette.carpenter.css'
         dest: 'dist/marionette.carpenter.css'
@@ -129,6 +123,13 @@ module.exports = (grunt) ->
         dest: './build/css'
         ext: '.css'
 
+    imageEmbed:
+      dist:
+        src: [ "./dist/marionette.carpenter.css" ]
+        dest: "./dist/marionette.carpenter.css"
+        options:
+          baseDir: './assets'
+
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-contrib-concat')
   grunt.loadNpmTasks('grunt-eco')
@@ -139,8 +140,9 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-copy')
   grunt.loadNpmTasks('grunt-eco')
   grunt.loadNpmTasks('grunt-requirejs')
+  grunt.loadNpmTasks('grunt-image-embed')
 
   grunt.registerTask('style', ['clean', 'sass'])
-  grunt.registerTask('build', ['clean', 'style', 'coffee', 'eco', 'requirejs', 'concat', 'copy'])
+  grunt.registerTask('build', ['clean', 'style', 'coffee', 'eco', 'requirejs', 'concat', 'copy', 'imageEmbed'])
   grunt.registerTask('spec',  ['build', 'jasmine'])
   grunt.registerTask('default', ['build'])
