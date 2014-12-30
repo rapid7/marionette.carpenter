@@ -59,7 +59,7 @@ module.exports = (grunt) ->
           insertRequire: ["controllers/table_controller"]
           out: "build/marionette.carpenter.js"
           optimize: "none"
-          generateSourceMaps: true
+          generateSourceMaps: false
 
       rjs:
         options:
@@ -70,7 +70,7 @@ module.exports = (grunt) ->
           insertRequire: ["controllers/table_controller"]
           out: "build/marionette.carpenter.require.js"
           optimize: "none"
-          generateSourceMaps: true
+          generateSourceMaps: false
 
       spec:
         options:

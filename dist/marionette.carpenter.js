@@ -3079,5 +3079,3 @@ define('templates/selection_indicator',[],function(){
 ;
 
 require(["controllers/table_controller"]);
-
-//# sourceMappingURL=marionette.carpenter.js.map
