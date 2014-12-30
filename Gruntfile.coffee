@@ -71,7 +71,13 @@ module.exports = (grunt) ->
         options:
           almond: true
           baseUrl: "build/"
-          include: ["spec/table_controller_spec.js", "spec/table_view_spec.js"]
+          include: [
+            "spec/controllers/table_controller_spec.js"
+            "spec/views/control_bar_spec.js"
+            "spec/views/row_spec.js"
+            "spec/views/row_list_spec.js"
+            "spec/views/paginator_spec.js"
+          ]
           out: "build/spec/specs.js"
           optimize: "none"
           generateSourceMaps: true
@@ -104,6 +110,7 @@ module.exports = (grunt) ->
             'bower_components/backbone.paginator/dist/backbone.paginator.js'
             'bower_components/cocktail/Cocktail.js'
             'bower_components/jasmine-set/jasmine-set.js'
+            'bower_components/sinon/index.js'
           ]
           specs: ['build/spec/specs.js']
           summary: true

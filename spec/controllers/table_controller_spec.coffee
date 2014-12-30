@@ -7,7 +7,7 @@ define [
   'spec/support/matchers/to_have_class'
 ], ->
 
-  describe 'Components.Table.Controller', ->
+  describe 'Marionette.Carpenter.Controller', ->
 
     set 'app',            -> new Marionette.Application()
     set 'perPageOptions', -> [20, 50]

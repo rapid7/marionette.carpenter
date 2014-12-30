@@ -1,6 +1,8 @@
-define [
-], ->
-# TODO.
+# define [
+#   'jquery'
+#   'views/control_bar'
+# ], ($, ControlBar) ->
+
 #   # TODO: Remaining to test:
 #   # * Table.Row.recordSelectionState
 #   # * Table.ActionButton (especially activateOn)
@@ -16,7 +18,7 @@ define [
 #         selectable: true
 #       }, controlBarOpts)
 
-#       new Pro.Components.Table.ControlBar options
+#       new ControlBar options
 
 #     createFilter: (opts) ->
 #       defaults =
@@ -60,14 +62,14 @@ define [
 #         tableSelections: opts.tableSelections
 #         actionButtons: opts.actionButtons
 
-#   describe 'Components.Table.View', ->
+#   describe 'Marionette.Carpenter.View', ->
 
 #     beforeEach ->
 #       @$el = $("<div />", id: 'table-region').appendTo($('body'))[0]
 #       @region = new Backbone.Marionette.Region(el: @$el)
 
 #     afterEach ->
-#       @region.close()
+#       @region.reset()
 #       @$el?.remove?()
 
 #     ###
@@ -275,24 +277,48 @@ define [
 
 #         describe 'when given an empty collection', ->
 
+#           beforeEach ->
+#             @list = buildRowList(0)
+#             @region.show(@list)
+
 #           it 'displays one row containing the empty view', ->
-#             list = buildRowList(0)
-#             @region.show(list)
-#             expect(list.$el.find('tbody>tr').size()).toEqual(1)
+#             expect(@list.$el.find('tbody>tr').size()).toEqual(1)
+
+#           it 'does not add the "populated" class to the table', ->
+#             expect(@list.ui.table).not.toHaveClass('populated')
+
+#           it 'adds the "loaded" class to the table', ->
+#             expect(@list.ui.table).toHaveClass('loaded')
 
 #         describe 'when given a collection with one element', ->
 
+#           beforeEach ->
+#             @list = buildRowList(1)
+#             @region.show(@list)
+
 #           it 'displays one row', ->
-#             list = buildRowList(1)
-#             @region.show(list)
-#             expect(list.$el.find('tbody>tr').size()).toEqual(1)
+#             expect(@list.$el.find('tbody>tr').size()).toEqual(1)
+
+#           it 'adds the "populated" class to the table', ->
+#             expect(@list.ui.table).toHaveClass('populated')
+
+#           it 'adds the "loaded" class to the table', ->
+#             expect(@list.ui.table).toHaveClass('loaded')
 
 #         describe 'when given a collection with five elements', ->
 
+#           beforeEach ->
+#             @list = buildRowList(5)
+#             @region.show(@list)
+
 #           it 'displays five rows', ->
-#             list = buildRowList(5)
-#             @region.show(list)
-#             expect(list.$el.find('tbody>tr').size()).toEqual(5)
+#             expect(@list.$el.find('tbody>tr').size()).toEqual(5)
+
+#           it 'adds the "populated" class to the table', ->
+#             expect(@list.ui.table).toHaveClass('populated')
+
+#           it 'adds the "loaded" class to the table', ->
+#             expect(@list.ui.table).toHaveClass('loaded')
 
 #       describe 'when rendering a collection loaded from a URL', ->
 #         urlRoot = -> '/joe'
@@ -349,20 +375,25 @@ define [
 #             @server.respondWith(/\/joe.*/,
 #                 [200, {"Content-Type": "application/json"}, json(10)])
 #             @collection = buildCollection()
+#             @list = new Pro.Components.Table.RowList
+#               collection: @collection
+#               columns: buildColumns()
+#               static: false
+#             @collection.fetch(reset: true)
+#             @region.show(@list)
+#             @server.respond()
 
 #           afterEach ->
 #             @server.restore()
 
 #           it 'displays 10 rows', ->
-#             @list = new Pro.Components.Table.RowList
-#               collection: @collection
-#               columns: buildColumns()
-#               static: false
-
-#             @collection.fetch(reset: true)
-#             @region.show(@list)
-#             @server.respond()
 #             expect(@list.$el.find('tbody>tr').size()).toEqual(10)
+
+#           it 'adds the "loaded" class to the table', ->
+#             expect(@list.ui.table).toHaveClass('loaded')
+
+#           it 'adds the "populated" class to the table', ->
+#             expect(@list.ui.table).toHaveClass('populated')
 
 #         describe 'when the URL returns 0 items', ->
 #           beforeEach ->
@@ -370,19 +401,24 @@ define [
 #             @server.respondWith("GET", urlRoot(),
 #                 [200, {"Content-Type": "application/json"}, json(0)])
 #             @collection = buildCollection()
+#             @list = new Pro.Components.Table.RowList
+#               collection: @collection
+#               columns: buildColumns()
+#               static: false
+#             @region.show(@list)
+#             @server.respond()
 
 #           afterEach ->
 #             @server.restore()
 
 #           it 'displays 1 row containing the EmptyView', ->
-#             @list = new Pro.Components.Table.RowList
-#               collection: @collection
-#               columns: buildColumns()
-#               static: false
-
-#             @region.show(@list)
-#             @server.respond()
 #             expect(@list.$el.find('tbody>tr').size()).toEqual(1)
+
+#           it 'adds the "loaded" class to the table', ->
+#             expect(@list.ui.table).toHaveClass('loaded')
+
+#           it 'does not add the "populated" class to the table', ->
+#             expect(@list.ui.table).not.toHaveClass('populated')
 
 #       describe 'when the collection is selectable', ->
 #         beforeEach ->
