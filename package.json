@@ -1,6 +1,11 @@
 {
   "name": "marionette.carpenter",
   "version": "0.0.1",
+  "authors": [
+    "Joe Vennix",
+    "Fernando Arias",
+    "Matt Buck"
+  ],
   "scripts": {
     "bower": "bower install",
     "test": "grunt spec"
@@ -23,5 +28,6 @@
     "grunt-eco": "~0.1.2",
     "grunt-requirejs": "~0.4.0",
     "grunt-image-embed": "~0.3.3"
-  }
+  },
+  "license": "BSD-3-Clause"
 }

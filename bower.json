@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "homepage": "https://github.com/rapid7/marionette.carpenter",
   "authors": [
-    "joev@metasploit.com"
+    "Joe Vennix",
+    "Fernando Arias",
+    "Matt Buck"
   ],
   "description": "A Backbone Marionette table component.",
   "moduleType": [
@@ -23,7 +25,7 @@
     "jasmine-set": "jvennix-r7/jasmine-set",
     "sinon": "http://sinonjs.org/releases/sinon-1.9.0.js"
   },
-  "license": "MIT",
+  "license": "BSD-3-Clause",
   "ignore": [
     "**/.*",
     "node_modules",
