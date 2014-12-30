@@ -11,7 +11,7 @@
     </label>
 
     <span class='page_info line'>
-      <%= (@currentPage-1)*@perPage+1 %> - <%= @lastRow %> of <%= @totalRecords %>
+      Showing <%= (@currentPage-1)*@perPage+1 %> - <%= @lastRow %> of <%= @totalRecords %>
     </span>
   </div>
 
