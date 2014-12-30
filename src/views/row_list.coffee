@@ -3,6 +3,7 @@ define [
   'views/empty'
   'views/loading'
   'templates/table'
+  '../../bower_components/jquery-resizable-columns/dist/jquery.resizableColumns.js'
 ], (Row, Empty, Loading, template) ->
   #
   # Render the table rows and columns
@@ -205,7 +206,7 @@ define [
       @ui.table.toggleClass?('populated', totalRecords > 0)
 
     onRender: ->
-      #@ui.table.resizableColumns()
+      @ui.table.resizableColumns()
      #TODO: Add non-pro tooltips
 #      # Add a tooltip to the select all checkbox, if the table is selectable.
 #      if @selectable

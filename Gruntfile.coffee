@@ -113,6 +113,7 @@ module.exports = (grunt) ->
       options:
         includePaths: [
           'bower_components/compass-mixins/lib'
+          'bower_components/jquery-resizable-columns/dist'
         ]
         sourceMap: false
         style: 'compact'
