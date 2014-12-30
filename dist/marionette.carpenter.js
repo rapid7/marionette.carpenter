@@ -822,7 +822,7 @@ define("almond", function(){});
 
 //# sourceMappingURL=filter_custom_query_field.js.map
 ;
-define(function(){
+define('templates/action_button',[],function(){
   var template = function(__obj) {
   var _safe = function(value) {
     if (typeof value === 'undefined' && value == null)
@@ -888,75 +888,6 @@ define(function(){
 };
   return template;
 });
-
-define(function(){
-  var template = function(__obj) {
-  var _safe = function(value) {
-    if (typeof value === 'undefined' && value == null)
-      value = '';
-    var result = new String(value);
-    result.ecoSafe = true;
-    return result;
-  };
-  return (function() {
-    var __out = [], __self = this, _print = function(value) {
-      if (typeof value !== 'undefined' && value != null)
-        __out.push(value.ecoSafe ? value : __self.escape(value));
-    }, _capture = function(callback) {
-      var out = __out, result;
-      __out = [];
-      callback.call(this);
-      result = __out.join('');
-      __out = out;
-      return _safe(result);
-    };
-    (function() {
-      _print(_safe('<a href=\'javascript:void(0)\' '));
-    
-      if (this.id) {
-        _print(_safe('id="'));
-        _print(this.id);
-        _print(_safe('"'));
-      }
-    
-      _print(_safe(' class="action-button '));
-    
-      _print(this["class"]);
-    
-      _print(_safe(' '));
-    
-      if (this.disabled) {
-        _print(_safe('disabled'));
-      }
-    
-      _print(_safe('">\n  '));
-    
-      _print(this.label);
-    
-      _print(_safe('\n</a>'));
-    
-    }).call(this);
-    
-    return __out.join('');
-  }).call((function() {
-    var obj = {
-      escape: function(value) {
-        return ('' + value)
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;');
-      },
-      safe: _safe
-    }, key;
-    for (key in __obj) obj[key] = __obj[key];
-    return obj;
-  })());
-};
-  return template;
-});
-
-define("templates/action_button", function(){});
 
 (function() {
   var __hasProp = {}.hasOwnProperty,
