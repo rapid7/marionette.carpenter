@@ -1,4 +1,7 @@
-define ['templates/paginator'], (template) ->
+define [
+  'templates/paginator'
+  '../../bower_components/backbone.paginator/dist/backbone.paginator.js'
+], (template) ->
   #
   # Render the pagination controls
   #

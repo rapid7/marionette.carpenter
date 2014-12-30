@@ -112,7 +112,6 @@ module.exports = (grunt) ->
             'bower_components/backbone/backbone.js'
             'bower_components/backbone.marionette/lib/backbone.marionette.js'
             'bower_components/backbone.radio/build/backbone.radio.js'
-            'bower_components/backbone.paginator/dist/backbone.paginator.js'
             'bower_components/cocktail/Cocktail.js'
             'bower_components/jasmine-set/jasmine-set.js'
             'bower_components/sinon/index.js'
