@@ -17,7 +17,7 @@ module.exports = (grunt) ->
         expand: true
         nonull: false
         cwd: 'build/'
-        src: ['marionette.carpenter.js']
+        src: ['marionette.carpenter.js', 'marionette.carpenter.require.js',]
         dest: 'dist/'
 
     coffee:
@@ -58,6 +58,17 @@ module.exports = (grunt) ->
           include: ["controllers/table_controller"]
           insertRequire: ["controllers/table_controller"]
           out: "build/marionette.carpenter.js"
+          optimize: "none"
+          generateSourceMaps: true
+
+      rjs:
+        options:
+          almond: false
+          baseUrl: "build/"
+          name: "controllers/table_controller"
+          include: ["controllers/table_controller"]
+          insertRequire: ["controllers/table_controller"]
+          out: "build/marionette.carpenter.require.js"
           optimize: "none"
           generateSourceMaps: true
 
