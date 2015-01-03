@@ -20,28 +20,62 @@
 
 ## About Carpenter
 
-**Easily represent a collection as a sortable, paginated table.**
+**Easily represent a Backbone collection as a sortable, paginated table.**
 
 One of the more common tasks when developing web applications is building tabular representations of resources. Carpenter aims to make the process of building robust tables as simple as possible, while giving developers the flexibility to easily extend the table's functionality.
 
-#### Dependencies
+### Features
 
-Carpenter relies on the following libraries:
+* Searching
+* Sorting
+* Pagination (for both client and server-side collections)
+* Custom views for table cells
 
-- [Backbone.Marionette 2.3+](https://github.com/onsi/cocktail)
-- [underscore.string](https://github.com/epeli/underscore.string)
-- [Cocktail](https://github.com/onsi/cocktail)
+## Getting Started
 
-#### Development
+### Installation
+
+#### Installing via Bower
+
+The easiest way to get things rocking and rolling is with [Bower](http://bower.io/):
+
+```console
+$ bower install marionette.carpenter
+```
+
+That will put everything in place along with all the correct dependencies. Easy ice!
+
+#### Installing by Hand
+
+For an artisanal, hand-crafted, manual installation, you'll need to start by installing the...
+
+##### Dependencies
+
+You can find an up-to-date list of the libraries required by Carpenter in the [`bower.json` file](https://github.com/rapid7/marionette.carpenter/blob/master/bower.json) under the `dependencies` key. Install these as instructed in each project's `README`.
+
+#### Manual Installation
+
+After getting the dependencies in place, move the following files into their proper places in your project:
+
+* [`dist/marionette.carpenter.css`](https://github.com/rapid7/marionette.carpenter/blob/master/dist/marionette.carpenter.css) - The base CSS styles for Carpenter tables.
+* [`assets/images/*`](https://github.com/rapid7/marionette.carpenter/tree/master/assets/images) - All of the image assets necessary to use the base table styling.
+
+Then install only one of the following two files, depending on whether you plan to load Carpenter via AMD:
+
+* [`dist/marionette.carpenter.js`](https://github.com/rapid7/marionette.carpenter/blob/master/dist/marionette.carpenter.js) - The main Carpenter library.
+* [`dist/marionette.carpenter.require.js`](https://github.com/rapid7/marionette.carpenter/blob/master/dist/marionette.carpenter.require.js) - The main Carpenter library. **Use this file if you plan on using Carpenter with [RequireJS](http://requirejs.org/).**
+
+## Development
 
 To build from source, just run:
 
-    $ grunt build
+```console
+$ grunt build
+```
 
 To run tests, run:
 
-    $ grunt spec
 
-To run tests on file change:
-    
-    $ grunt watch
+```console
+$ grunt spec
+```
