@@ -1,2 +1,2 @@
-return require(["controllers/table_controller"]);
+  return require("controllers/table_controller");
 }));

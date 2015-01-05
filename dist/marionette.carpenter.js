@@ -4081,7 +4081,5 @@ define('controllers/table_controller',['controllers/application_controller', 'en
   };
 });
 
-
-require(["controllers/table_controller"]);
-return require(["controllers/table_controller"]);
+  return require("controllers/table_controller");
 }));
