@@ -55,8 +55,7 @@ module.exports = (grunt) ->
           almond: true
           baseUrl: "build/"
           name: "controllers/table_controller"
-          include: ["controllers/table_controller"]
-          insertRequire: ["controllers/table_controller"]
+          include: "controllers/table_controller"
           out: "build/marionette.carpenter.js"
           optimize: "none"
           generateSourceMaps: false
@@ -66,8 +65,7 @@ module.exports = (grunt) ->
           almond: false
           baseUrl: "build/"
           name: "controllers/table_controller"
-          include: ["controllers/table_controller"]
-          insertRequire: ["controllers/table_controller"]
+          include: "controllers/table_controller"
           out: "build/marionette.carpenter.require.js"
           optimize: "none"
           generateSourceMaps: false

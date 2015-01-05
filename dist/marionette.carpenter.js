@@ -4128,5 +4128,3 @@ define('templates/selection_indicator',[],function(){
 
 }).call(this);
 
-
-require(["controllers/table_controller"]);
