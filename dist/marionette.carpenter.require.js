@@ -1,386 +1,378 @@
-(function() {
-  var __slice = [].slice;
+(function(root, factory) {
+  var deps = ['cocktail', 'underscore', 'backbone.radio', 'underscore.string', 'jquery-resizable-columns', 'marionette'];
 
-  define('utilities/mixin',[], function() {
-    var include, key, klass, klasses, mixinKeywords, module, modules, obj, _i, _len, _results;
-    mixinKeywords = ["beforeIncluded", "afterIncluded"];
-    include = function() {
-      var concern, klass, obj, objs, _i, _len, _ref, _ref1, _ref2;
-      objs = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      klass = this;
-      for (_i = 0, _len = objs.length; _i < _len; _i++) {
-        obj = objs[_i];
-        concern = obj;
-        if ((_ref = concern.beforeIncluded) != null) {
-          _ref.call(klass.prototype, klass, concern);
-        }
-        Cocktail.mixin(klass, (_ref1 = _(concern)).omit.apply(_ref1, mixinKeywords));
-        if ((_ref2 = concern.afterIncluded) != null) {
-          _ref2.call(klass.prototype, klass, concern);
-        }
+  if (typeof define === 'function' && define.amd) {
+    define(deps, function(Cocktail, _) {
+      return (root.Carpenter = factory(root, Cocktail, _));
+    });
+  } else if (typeof exports !== 'undefined') {
+    var Cocktail = require('cocktail');
+    var _ = require('underscore');
+    module.exports = factory(root, Cocktail, _);
+  } else {
+    root.Carpenter = factory(root, root.Cocktail, root._);
+  }
+
+}(this, function(root, Cocktail, _) {
+var __slice = [].slice;
+
+define('utilities/mixin',[], function() {
+  var include, key, klass, klasses, mixinKeywords, module, modules, obj, _i, _len, _results;
+  mixinKeywords = ["beforeIncluded", "afterIncluded"];
+  include = function() {
+    var concern, klass, obj, objs, _i, _len, _ref, _ref1, _ref2;
+    objs = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    klass = this;
+    for (_i = 0, _len = objs.length; _i < _len; _i++) {
+      obj = objs[_i];
+      concern = obj;
+      if ((_ref = concern.beforeIncluded) != null) {
+        _ref.call(klass.prototype, klass, concern);
       }
-      return klass;
-    };
-    modules = [
-      {
-        Backbone: ["Collection", "Model", "View"]
-      }, {
-        Marionette: ["ItemView", "LayoutView", "CollectionView", "CompositeView", "Controller"]
+      Cocktail.mixin(klass, (_ref1 = _(concern)).omit.apply(_ref1, mixinKeywords));
+      if ((_ref2 = concern.afterIncluded) != null) {
+        _ref2.call(klass.prototype, klass, concern);
       }
-    ];
-    _results = [];
-    for (_i = 0, _len = modules.length; _i < _len; _i++) {
-      module = modules[_i];
-      _results.push((function() {
-        var _results1;
-        _results1 = [];
-        for (key in module) {
-          klasses = module[key];
-          _results1.push((function() {
-            var _j, _len1, _ref, _results2;
-            _results2 = [];
-            for (_j = 0, _len1 = klasses.length; _j < _len1; _j++) {
-              klass = klasses[_j];
-              obj = window[key];
-              _results2.push((_ref = obj[klass]) != null ? _ref.include = include : void 0);
-            }
-            return _results2;
-          })());
-        }
-        return _results1;
-      })());
     }
-    return _results;
-  });
-
-}).call(this);
-
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  define('controllers/application_controller',['utilities/mixin'], function() {
-    var Controller;
-    return Controller = (function(_super) {
-      __extends(Controller, _super);
-
-      function Controller(options) {
-        if (options == null) {
-          options = {};
-        }
-        this.region = options.region;
-        this._attachRadio();
-        Controller.__super__.constructor.call(this, options);
-        this._instance_id = _.uniqueId("controller");
-        this.carpenter.command("register:instance", this, this._instance_id);
+    return klass;
+  };
+  modules = [
+    {
+      Backbone: ["Collection", "Model", "View"]
+    }, {
+      Marionette: ["ItemView", "LayoutView", "CollectionView", "CompositeView", "Controller"]
+    }
+  ];
+  _results = [];
+  for (_i = 0, _len = modules.length; _i < _len; _i++) {
+    module = modules[_i];
+    _results.push((function() {
+      var _results1;
+      _results1 = [];
+      for (key in module) {
+        klasses = module[key];
+        _results1.push((function() {
+          var _j, _len1, _ref, _results2;
+          _results2 = [];
+          for (_j = 0, _len1 = klasses.length; _j < _len1; _j++) {
+            klass = klasses[_j];
+            obj = window[key];
+            _results2.push((_ref = obj[klass]) != null ? _ref.include = include : void 0);
+          }
+          return _results2;
+        })());
       }
+      return _results1;
+    })());
+  }
+  return _results;
+});
 
-      Controller.prototype.destroy = function() {
-        this.carpenter.command("unregister:instance", this, this._instance_id);
-        return Controller.__super__.destroy.apply(this, arguments);
-      };
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-      Controller.prototype.show = function(view, options) {
-        var _ref;
-        if (options == null) {
-          options = {};
-        }
-        _.defaults(options, {
-          loading: false,
-          region: this.region
-        });
-        view = view.getMainView ? view.getMainView() : view;
-        if (!view) {
-          throw new Error("getMainView() did not return a view instance or " + (view != null ? (_ref = view.constructor) != null ? _ref.name : void 0 : void 0) + " is not a view instance");
-        }
-        this.setMainView(view);
-        return this._manageView(view, options);
-      };
+define('controllers/application_controller',['utilities/mixin'], function() {
+  var Controller;
+  return Controller = (function(_super) {
+    __extends(Controller, _super);
 
-      Controller.prototype.getMainView = function() {
-        return this._mainView;
-      };
-
-      Controller.prototype.setMainView = function(view) {
-        if (this._mainView) {
-          return;
-        }
-        this._mainView = view;
-        return this.listenTo(view, "destroy", this.destroy);
-      };
-
-      Controller.prototype._manageView = function(view, options) {
-        if (options.loading) {
-          return this.carpenter.command("show:loading", view, options);
-        } else {
-          return options.region.show(view);
-        }
-      };
-
-      Controller.prototype.mergeDefaultsInto = function(obj) {
-        obj = _.isObject(obj) ? obj : {};
-        return _.defaults(obj, this._getDefaults());
-      };
-
-      Controller.prototype._attachRadio = function() {
-        return this.carpenter = Backbone.Radio.channel('carpenter');
-      };
-
-      Controller.prototype._getDefaults = function() {
-        return _.clone(_.result(this, "defaults"));
-      };
-
-      return Controller;
-
-    })(Marionette.Controller);
-  });
-
-}).call(this);
-
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  define('entities/paginated_collection',[], function() {
-    var AjaxPaginatedCollection, CreatePaginatedCollectionClass, StaticPaginatedCollection;
-    AjaxPaginatedCollection = (function(_super) {
-      __extends(AjaxPaginatedCollection, _super);
-
-      function AjaxPaginatedCollection() {
-        return AjaxPaginatedCollection.__super__.constructor.apply(this, arguments);
+    function Controller(options) {
+      if (options == null) {
+        options = {};
       }
+      this.region = options.region;
+      this._attachRadio();
+      Controller.__super__.constructor.call(this, options);
+      this._instance_id = _.uniqueId("controller");
+      this.carpenter.command("register:instance", this, this._instance_id);
+    }
 
-      AjaxPaginatedCollection.prototype.server_api = {
-        ui: 1,
-        sort_by: null,
-        format: 'json',
-        per_page: function() {
-          return this.perPage;
-        },
-        page: function() {
-          return this.currentPage;
-        }
-      };
+    Controller.prototype.destroy = function() {
+      this.carpenter.command("unregister:instance", this, this._instance_id);
+      return Controller.__super__.destroy.apply(this, arguments);
+    };
 
-      AjaxPaginatedCollection.prototype.setSort = function(sortColumn, sortDirection, renamedSortColumn) {
-        this.sortColumn = sortColumn;
-        this.sortDirection = sortDirection;
-        this.renamedSortColumn = renamedSortColumn;
-        this.updateSortKey();
-        return this.fetch({
-          reset: true
-        });
-      };
-
-      AjaxPaginatedCollection.prototype.setSearch = function(filter) {
-        this.server_api.search = filter.attributes;
-        return this.fetch({
-          reset: true,
-          error: (function(_this) {
-            return function(model, response, options) {
-              var _ref;
-              return _this.displayErrorMessage(response != null ? (_ref = response.responseJSON) != null ? _ref.message : void 0 : void 0);
-            };
-          })(this)
-        });
-      };
-
-      AjaxPaginatedCollection.prototype.displayErrorMessage = function(message) {
-        return this.carpenter.command('flash:display', {
-          title: 'Error in search',
-          style: 'error',
-          message: message || 'There is an error in your search terms.'
-        });
-      };
-
-      AjaxPaginatedCollection.prototype.updateSortKey = function() {
-        var col;
-        col = this.renamedSortColumn || this.sortColumn;
-        return this.server_api.sort_by = "" + col + " " + this.sortDirection;
-      };
-
-      AjaxPaginatedCollection.prototype.parse = function(results) {
-        this.totalRecords = results.total_count;
-        return results.collection;
-      };
-
-      AjaxPaginatedCollection.prototype.sort = function() {};
-
-      AjaxPaginatedCollection.prototype.initialize = function(models, options) {
-        this.numSelected = 0;
-        this.server_api.search = {};
-        return AjaxPaginatedCollection.__super__.initialize.call(this, models, options);
-      };
-
-      return AjaxPaginatedCollection;
-
-    })(Backbone.Paginator.requestPager);
-    StaticPaginatedCollection = (function(_super) {
-      __extends(StaticPaginatedCollection, _super);
-
-      function StaticPaginatedCollection() {
-        return StaticPaginatedCollection.__super__.constructor.apply(this, arguments);
+    Controller.prototype.show = function(view, options) {
+      var _ref;
+      if (options == null) {
+        options = {};
       }
-
-      return StaticPaginatedCollection;
-
-    })(Backbone.Paginator.clientPager);
-    return CreatePaginatedCollectionClass = function(collection, opts) {
-      var WrappedCollection, k, superclass, v, _base, _ref;
-      if (opts == null) {
-        opts = {};
-      }
-      superclass = opts["static"] ? StaticPaginatedCollection : AjaxPaginatedCollection;
-      WrappedCollection = superclass.extend({
-        model: collection.constructor.prototype.model || collection.model,
-        url: _.result(collection, 'url'),
-        paginator_core: {
-          type: 'GET',
-          dataType: 'json'
-        },
-        paginator_ui: {
-          firstPage: opts.firstPage || 1,
-          currentPage: opts.currentPage || 1,
-          perPage: opts.perPage || 20
-        },
-        updateNumSelected: function(numSelected) {
-          this.numSelected = numSelected;
-          return this.trigger('change:numSelected');
-        },
-        removeMultiple: function(models) {
-          var selectedIDs;
-          selectedIDs = models.pluck('id');
-          return this.trigger('remove:multiple', selectedIDs);
-        }
+      _.defaults(options, {
+        loading: false,
+        region: this.region
       });
-      _ref = collection.constructor.prototype;
-      for (k in _ref) {
-        v = _ref[k];
-        (_base = WrappedCollection.prototype)[k] || (_base[k] = v);
+      view = view.getMainView ? view.getMainView() : view;
+      if (!view) {
+        throw new Error("getMainView() did not return a view instance or " + (view != null ? (_ref = view.constructor) != null ? _ref.name : void 0 : void 0) + " is not a view instance");
       }
-      return WrappedCollection;
+      this.setMainView(view);
+      return this._manageView(view, options);
     };
-  });
 
-}).call(this);
+    Controller.prototype.getMainView = function() {
+      return this._mainView;
+    };
 
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  define('entities/action_button',[], function() {
-    var ActionButton;
-    return ActionButton = (function(_super) {
-      __extends(ActionButton, _super);
-
-      function ActionButton() {
-        return ActionButton.__super__.constructor.apply(this, arguments);
+    Controller.prototype.setMainView = function(view) {
+      if (this._mainView) {
+        return;
       }
+      this._mainView = view;
+      return this.listenTo(view, "destroy", this.destroy);
+    };
 
-      ActionButton.prototype.initialize = function(attributes) {
-        if (this.get('activateOn')) {
-          this.set('disabled', true);
-        }
-        return ActionButton.__super__.initialize.call(this, attributes);
-      };
-
-      ActionButton.prototype.enable = function() {
-        return this.set('disabled', false);
-      };
-
-      ActionButton.prototype.disable = function() {
-        return this.set('disabled', true);
-      };
-
-      return ActionButton;
-
-    })(Backbone.Model);
-  });
-
-}).call(this);
-
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  define('entities/action_buttons_collection',['entities/action_button'], function(ActionButton) {
-    var ActionButtonsCollection;
-    return ActionButtonsCollection = (function(_super) {
-      __extends(ActionButtonsCollection, _super);
-
-      function ActionButtonsCollection() {
-        return ActionButtonsCollection.__super__.constructor.apply(this, arguments);
-      }
-
-      ActionButtonsCollection.prototype.model = ActionButton;
-
-      return ActionButtonsCollection;
-
-    })(Backbone.Collection);
-  });
-
-}).call(this);
-
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  define('entities/filter',[], function() {
-    var Filter;
-    return Filter = (function(_super) {
-      __extends(Filter, _super);
-
-      function Filter() {
-        return Filter.__super__.constructor.apply(this, arguments);
-      }
-
-      return Filter;
-
-    })(Backbone.Model);
-  });
-
-}).call(this);
-
-(function() {
-  define('concerns/views/filter_toggle',[], function() {
-    var FilterToggle;
-    return FilterToggle = {
-      ui: {
-        filterToggle: 'a.filter-toggle'
-      },
-      events: {
-        'click @ui.filterToggle': 'triggerFilterToggle'
-      },
-      triggerFilterToggle: function() {
-        this.ui.filterToggle.toggleClass('enabled');
-        return this.carpenter.trigger(this.filterToggleEvent);
+    Controller.prototype._manageView = function(view, options) {
+      if (options.loading) {
+        return this.carpenter.command("show:loading", view, options);
+      } else {
+        return options.region.show(view);
       }
     };
-  });
 
-}).call(this);
+    Controller.prototype.mergeDefaultsInto = function(obj) {
+      obj = _.isObject(obj) ? obj : {};
+      return _.defaults(obj, this._getDefaults());
+    };
 
-(function() {
-  define('concerns/views/filter_custom_query_field',[], function() {
-    var FilterCustomQueryField;
-    return FilterCustomQueryField = {
-      ui: {
-        filterCustomQueryField: 'input.filter-custom-query-field'
+    Controller.prototype._attachRadio = function() {
+      return this.carpenter = Backbone.Radio.channel('carpenter');
+    };
+
+    Controller.prototype._getDefaults = function() {
+      return _.clone(_.result(this, "defaults"));
+    };
+
+    return Controller;
+
+  })(Marionette.Controller);
+});
+
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+define('entities/paginated_collection',[], function() {
+  var AjaxPaginatedCollection, CreatePaginatedCollectionClass, StaticPaginatedCollection;
+  AjaxPaginatedCollection = (function(_super) {
+    __extends(AjaxPaginatedCollection, _super);
+
+    function AjaxPaginatedCollection() {
+      return AjaxPaginatedCollection.__super__.constructor.apply(this, arguments);
+    }
+
+    AjaxPaginatedCollection.prototype.server_api = {
+      ui: 1,
+      sort_by: null,
+      format: 'json',
+      per_page: function() {
+        return this.perPage;
       },
-      events: {
-        'keyup @ui.filterCustomQueryField': 'inputActivity'
-      },
-      inputActivity: function() {
-        this.debouncedTriggerCustomQuery || (this.debouncedTriggerCustomQuery = _.debounce(this.triggerFilterCustomQuery, 1000));
-        return this.debouncedTriggerCustomQuery();
-      },
-      triggerFilterCustomQuery: function() {
-        return this.carpenter.trigger(this.filterCustomQueryEvent, this.ui.filterCustomQueryField.val());
+      page: function() {
+        return this.currentPage;
       }
     };
-  });
 
-}).call(this);
+    AjaxPaginatedCollection.prototype.setSort = function(sortColumn, sortDirection, renamedSortColumn) {
+      this.sortColumn = sortColumn;
+      this.sortDirection = sortDirection;
+      this.renamedSortColumn = renamedSortColumn;
+      this.updateSortKey();
+      return this.fetch({
+        reset: true
+      });
+    };
+
+    AjaxPaginatedCollection.prototype.setSearch = function(filter) {
+      this.server_api.search = filter.attributes;
+      return this.fetch({
+        reset: true,
+        error: (function(_this) {
+          return function(model, response, options) {
+            var _ref;
+            return _this.displayErrorMessage(response != null ? (_ref = response.responseJSON) != null ? _ref.message : void 0 : void 0);
+          };
+        })(this)
+      });
+    };
+
+    AjaxPaginatedCollection.prototype.displayErrorMessage = function(message) {
+      return this.carpenter.command('flash:display', {
+        title: 'Error in search',
+        style: 'error',
+        message: message || 'There is an error in your search terms.'
+      });
+    };
+
+    AjaxPaginatedCollection.prototype.updateSortKey = function() {
+      var col;
+      col = this.renamedSortColumn || this.sortColumn;
+      return this.server_api.sort_by = "" + col + " " + this.sortDirection;
+    };
+
+    AjaxPaginatedCollection.prototype.parse = function(results) {
+      this.totalRecords = results.total_count;
+      return results.collection;
+    };
+
+    AjaxPaginatedCollection.prototype.sort = function() {};
+
+    AjaxPaginatedCollection.prototype.initialize = function(models, options) {
+      this.numSelected = 0;
+      this.server_api.search = {};
+      return AjaxPaginatedCollection.__super__.initialize.call(this, models, options);
+    };
+
+    return AjaxPaginatedCollection;
+
+  })(Backbone.Paginator.requestPager);
+  StaticPaginatedCollection = (function(_super) {
+    __extends(StaticPaginatedCollection, _super);
+
+    function StaticPaginatedCollection() {
+      return StaticPaginatedCollection.__super__.constructor.apply(this, arguments);
+    }
+
+    return StaticPaginatedCollection;
+
+  })(Backbone.Paginator.clientPager);
+  return CreatePaginatedCollectionClass = function(collection, opts) {
+    var WrappedCollection, k, superclass, v, _base, _ref;
+    if (opts == null) {
+      opts = {};
+    }
+    superclass = opts["static"] ? StaticPaginatedCollection : AjaxPaginatedCollection;
+    WrappedCollection = superclass.extend({
+      model: collection.constructor.prototype.model || collection.model,
+      url: _.result(collection, 'url'),
+      paginator_core: {
+        type: 'GET',
+        dataType: 'json'
+      },
+      paginator_ui: {
+        firstPage: opts.firstPage || 1,
+        currentPage: opts.currentPage || 1,
+        perPage: opts.perPage || 20
+      },
+      updateNumSelected: function(numSelected) {
+        this.numSelected = numSelected;
+        return this.trigger('change:numSelected');
+      },
+      removeMultiple: function(models) {
+        var selectedIDs;
+        selectedIDs = models.pluck('id');
+        return this.trigger('remove:multiple', selectedIDs);
+      }
+    });
+    _ref = collection.constructor.prototype;
+    for (k in _ref) {
+      v = _ref[k];
+      (_base = WrappedCollection.prototype)[k] || (_base[k] = v);
+    }
+    return WrappedCollection;
+  };
+});
+
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+define('entities/action_button',[], function() {
+  var ActionButton;
+  return ActionButton = (function(_super) {
+    __extends(ActionButton, _super);
+
+    function ActionButton() {
+      return ActionButton.__super__.constructor.apply(this, arguments);
+    }
+
+    ActionButton.prototype.initialize = function(attributes) {
+      if (this.get('activateOn')) {
+        this.set('disabled', true);
+      }
+      return ActionButton.__super__.initialize.call(this, attributes);
+    };
+
+    ActionButton.prototype.enable = function() {
+      return this.set('disabled', false);
+    };
+
+    ActionButton.prototype.disable = function() {
+      return this.set('disabled', true);
+    };
+
+    return ActionButton;
+
+  })(Backbone.Model);
+});
+
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+define('entities/action_buttons_collection',['entities/action_button'], function(ActionButton) {
+  var ActionButtonsCollection;
+  return ActionButtonsCollection = (function(_super) {
+    __extends(ActionButtonsCollection, _super);
+
+    function ActionButtonsCollection() {
+      return ActionButtonsCollection.__super__.constructor.apply(this, arguments);
+    }
+
+    ActionButtonsCollection.prototype.model = ActionButton;
+
+    return ActionButtonsCollection;
+
+  })(Backbone.Collection);
+});
+
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+define('entities/filter',[], function() {
+  var Filter;
+  return Filter = (function(_super) {
+    __extends(Filter, _super);
+
+    function Filter() {
+      return Filter.__super__.constructor.apply(this, arguments);
+    }
+
+    return Filter;
+
+  })(Backbone.Model);
+});
+
+define('concerns/views/filter_toggle',[], function() {
+  var FilterToggle;
+  return FilterToggle = {
+    ui: {
+      filterToggle: 'a.filter-toggle'
+    },
+    events: {
+      'click @ui.filterToggle': 'triggerFilterToggle'
+    },
+    triggerFilterToggle: function() {
+      this.ui.filterToggle.toggleClass('enabled');
+      return this.carpenter.trigger(this.filterToggleEvent);
+    }
+  };
+});
+
+define('concerns/views/filter_custom_query_field',[], function() {
+  var FilterCustomQueryField;
+  return FilterCustomQueryField = {
+    ui: {
+      filterCustomQueryField: 'input.filter-custom-query-field'
+    },
+    events: {
+      'keyup @ui.filterCustomQueryField': 'inputActivity'
+    },
+    inputActivity: function() {
+      this.debouncedTriggerCustomQuery || (this.debouncedTriggerCustomQuery = _.debounce(this.triggerFilterCustomQuery, 1000));
+      return this.debouncedTriggerCustomQuery();
+    },
+    triggerFilterCustomQuery: function() {
+      return this.carpenter.trigger(this.filterCustomQueryEvent, this.ui.filterCustomQueryField.val());
+    }
+  };
+});
 
 define('templates/action_button',[],function(){
   var template = function(__obj) {
@@ -449,112 +441,109 @@ define('templates/action_button',[],function(){
   return template;
 });
 
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-  define('views/action_button',['templates/action_button'], function(template) {
-    var ActionButton;
-    return ActionButton = (function(_super) {
-      __extends(ActionButton, _super);
+define('views/action_button',['templates/action_button'], function(template) {
+  var ActionButton;
+  return ActionButton = (function(_super) {
+    __extends(ActionButton, _super);
 
-      function ActionButton() {
-        return ActionButton.__super__.constructor.apply(this, arguments);
+    function ActionButton() {
+      return ActionButton.__super__.constructor.apply(this, arguments);
+    }
+
+    ActionButton.prototype.template = template;
+
+    ActionButton.prototype.tagName = 'li';
+
+    ActionButton.prototype.className = function() {
+      return this.model.get('containerClass');
+    };
+
+    ActionButton.prototype.modelEvents = {
+      'change:disabled': 'render'
+    };
+
+    ActionButton.prototype.events = {
+      'click': 'executeClickActions'
+    };
+
+    ActionButton.prototype.initialize = function(opts) {
+      this.carpenter = opts.carpenter;
+      this.selectable = !!opts.selectable;
+      this.tableCollection = opts.tableCollection;
+      this.tableSelections = opts.tableSelections;
+      this.listenTo(this.tableCollection, 'selection_toggled', (function(_this) {
+        return function() {
+          return _this.setActivationState();
+        };
+      })(this));
+      return this.listenTo(this.tableCollection, 'select_all_toggled', (function(_this) {
+        return function() {
+          return _this.setActivationState();
+        };
+      })(this));
+    };
+
+    ActionButton.prototype.setActivationState = function(rowModel) {
+      var activateOn, moreThanOneSelected, numSelected, oneSelected;
+      activateOn = this.model.get('activateOn');
+      if (!this.selectable || !activateOn) {
+        this.model.enable();
+        return false;
       }
+      numSelected = this.tableCollection.numSelected;
+      moreThanOneSelected = this.tableSelections.selectAllState || numSelected > 1;
+      oneSelected = numSelected === 1;
+      if (activateOn === 'any' && (oneSelected || moreThanOneSelected)) {
+        return this.model.enable();
+      } else if (activateOn === 'many' && moreThanOneSelected) {
+        return this.model.enable();
+      } else if ((activateOn === 'one' && oneSelected) && !this.tableSelections.selectAllState) {
+        return this.model.enable();
+      } else {
+        return this.model.disable();
+      }
+    };
 
-      ActionButton.prototype.template = template;
+    ActionButton.prototype.executeClickActions = function() {
+      if ((this.model.get('disabled') == null) || ((this.model.get('disabled') != null) && !this.model.get('disabled'))) {
+        this.executeCallback();
+        return this.executeTrigger();
+      }
+    };
 
-      ActionButton.prototype.tagName = 'li';
+    ActionButton.prototype.executeTrigger = function() {
+      if (this.model.get('event')) {
+        return this.carpenter.trigger(this.model.get('event'));
+      }
+    };
 
-      ActionButton.prototype.className = function() {
-        return this.model.get('containerClass');
-      };
+    ActionButton.prototype.executeCallback = function() {
+      var deselectedIDs, selectAllState, selectedIDs, selectedVisibleCollection;
+      if (!this.model.get('click')) {
+        return false;
+      }
+      if (this.selectable) {
+        selectAllState = this.tableSelections.selectAllState;
+        selectedIDs = Object.keys(this.tableSelections.selectedIDs);
+        deselectedIDs = Object.keys(this.tableSelections.deselectedIDs);
+        selectedVisibleCollection = new Backbone.Collection(this.tableCollection.filter(function(model) {
+          var _ref;
+          return _ref = model.id, __indexOf.call(selectedIDs, _ref) >= 0;
+        }));
+        return this.model.get('click')(selectAllState, selectedIDs, deselectedIDs, selectedVisibleCollection, this.tableCollection);
+      } else {
+        return this.model.get('click')();
+      }
+    };
 
-      ActionButton.prototype.modelEvents = {
-        'change:disabled': 'render'
-      };
+    return ActionButton;
 
-      ActionButton.prototype.events = {
-        'click': 'executeClickActions'
-      };
-
-      ActionButton.prototype.initialize = function(opts) {
-        this.carpenter = opts.carpenter;
-        this.selectable = !!opts.selectable;
-        this.tableCollection = opts.tableCollection;
-        this.tableSelections = opts.tableSelections;
-        this.listenTo(this.tableCollection, 'selection_toggled', (function(_this) {
-          return function() {
-            return _this.setActivationState();
-          };
-        })(this));
-        return this.listenTo(this.tableCollection, 'select_all_toggled', (function(_this) {
-          return function() {
-            return _this.setActivationState();
-          };
-        })(this));
-      };
-
-      ActionButton.prototype.setActivationState = function(rowModel) {
-        var activateOn, moreThanOneSelected, numSelected, oneSelected;
-        activateOn = this.model.get('activateOn');
-        if (!this.selectable || !activateOn) {
-          this.model.enable();
-          return false;
-        }
-        numSelected = this.tableCollection.numSelected;
-        moreThanOneSelected = this.tableSelections.selectAllState || numSelected > 1;
-        oneSelected = numSelected === 1;
-        if (activateOn === 'any' && (oneSelected || moreThanOneSelected)) {
-          return this.model.enable();
-        } else if (activateOn === 'many' && moreThanOneSelected) {
-          return this.model.enable();
-        } else if ((activateOn === 'one' && oneSelected) && !this.tableSelections.selectAllState) {
-          return this.model.enable();
-        } else {
-          return this.model.disable();
-        }
-      };
-
-      ActionButton.prototype.executeClickActions = function() {
-        if ((this.model.get('disabled') == null) || ((this.model.get('disabled') != null) && !this.model.get('disabled'))) {
-          this.executeCallback();
-          return this.executeTrigger();
-        }
-      };
-
-      ActionButton.prototype.executeTrigger = function() {
-        if (this.model.get('event')) {
-          return this.carpenter.trigger(this.model.get('event'));
-        }
-      };
-
-      ActionButton.prototype.executeCallback = function() {
-        var deselectedIDs, selectAllState, selectedIDs, selectedVisibleCollection;
-        if (!this.model.get('click')) {
-          return false;
-        }
-        if (this.selectable) {
-          selectAllState = this.tableSelections.selectAllState;
-          selectedIDs = Object.keys(this.tableSelections.selectedIDs);
-          deselectedIDs = Object.keys(this.tableSelections.deselectedIDs);
-          selectedVisibleCollection = new Backbone.Collection(this.tableCollection.filter(function(model) {
-            var _ref;
-            return _ref = model.id, __indexOf.call(selectedIDs, _ref) >= 0;
-          }));
-          return this.model.get('click')(selectAllState, selectedIDs, deselectedIDs, selectedVisibleCollection, this.tableCollection);
-        } else {
-          return this.model.get('click')();
-        }
-      };
-
-      return ActionButton;
-
-    })(Marionette.ItemView);
-  });
-
-}).call(this);
+  })(Marionette.ItemView);
+});
 
 define('templates/control_bar',[],function(){
   var template = function(__obj) {
@@ -605,69 +594,66 @@ define('templates/control_bar',[],function(){
   return template;
 });
 
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define('views/control_bar',['concerns/views/filter_toggle', 'concerns/views/filter_custom_query_field', 'views/action_button', 'templates/control_bar'], function(FilterToggle, FilterCustomQueryField, ActionButton, template) {
-    var ControlBar;
-    return ControlBar = (function(_super) {
-      __extends(ControlBar, _super);
+define('views/control_bar',['concerns/views/filter_toggle', 'concerns/views/filter_custom_query_field', 'views/action_button', 'templates/control_bar'], function(FilterToggle, FilterCustomQueryField, ActionButton, template) {
+  var ControlBar;
+  return ControlBar = (function(_super) {
+    __extends(ControlBar, _super);
 
-      function ControlBar() {
-        return ControlBar.__super__.constructor.apply(this, arguments);
+    function ControlBar() {
+      return ControlBar.__super__.constructor.apply(this, arguments);
+    }
+
+    ControlBar.prototype.template = template;
+
+    ControlBar.prototype.childView = ActionButton;
+
+    ControlBar.prototype.tagName = 'ul';
+
+    ControlBar.prototype.className = 'table-control-bar';
+
+    ControlBar.prototype.initialize = function(opts) {
+      if (opts == null) {
+        opts = {};
       }
+      this.collection = opts.actionButtonsCollection;
+      this.columns = opts.columns;
+      this.tableSelections = opts.tableSelections;
+      this.tableCollection = opts.tableCollection;
+      this.renderFilterControls = !!opts.renderFilterControls;
+      this.filterCustomQueryEvent = opts.filterCustomQueryEvent;
+      this.filterToggleEvent = opts.filterToggleEvent;
+      this.selectable = !!opts.selectable;
+      this.carpenter = opts.carpenter;
+      return ControlBar.__super__.initialize.apply(this, arguments);
+    };
 
-      ControlBar.prototype.template = template;
-
-      ControlBar.prototype.childView = ActionButton;
-
-      ControlBar.prototype.tagName = 'ul';
-
-      ControlBar.prototype.className = 'table-control-bar';
-
-      ControlBar.prototype.initialize = function(opts) {
-        if (opts == null) {
-          opts = {};
-        }
-        this.collection = opts.actionButtonsCollection;
-        this.columns = opts.columns;
-        this.tableSelections = opts.tableSelections;
-        this.tableCollection = opts.tableCollection;
-        this.renderFilterControls = !!opts.renderFilterControls;
-        this.filterCustomQueryEvent = opts.filterCustomQueryEvent;
-        this.filterToggleEvent = opts.filterToggleEvent;
-        this.selectable = !!opts.selectable;
-        this.carpenter = opts.carpenter;
-        return ControlBar.__super__.initialize.apply(this, arguments);
+    ControlBar.prototype.buildChildView = function(item, ItemViewType, itemViewOptions) {
+      var defaultOptions, options;
+      defaultOptions = {
+        tableSelections: this.tableSelections,
+        tableCollection: this.tableCollection,
+        selectable: this.selectable,
+        model: item
       };
+      options = _.extend(defaultOptions, itemViewOptions);
+      return new ItemViewType(options);
+    };
 
-      ControlBar.prototype.buildChildView = function(item, ItemViewType, itemViewOptions) {
-        var defaultOptions, options;
-        defaultOptions = {
-          tableSelections: this.tableSelections,
-          tableCollection: this.tableCollection,
-          selectable: this.selectable,
-          model: item
-        };
-        options = _.extend(defaultOptions, itemViewOptions);
-        return new ItemViewType(options);
-      };
+    ControlBar.prototype.serializeData = function() {
+      return this;
+    };
 
-      ControlBar.prototype.serializeData = function() {
-        return this;
-      };
+    ControlBar.include(FilterToggle);
 
-      ControlBar.include(FilterToggle);
+    ControlBar.include(FilterCustomQueryField);
 
-      ControlBar.include(FilterCustomQueryField);
+    return ControlBar;
 
-      return ControlBar;
-
-    })(Marionette.CompositeView);
-  });
-
-}).call(this);
+  })(Marionette.CompositeView);
+});
 
 define('templates/empty',[],function(){
   var template = function(__obj) {
@@ -714,176 +700,170 @@ define('templates/empty',[],function(){
   return template;
 });
 
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define('views/empty',['templates/empty'], function(template) {
-    var Empty;
-    return Empty = (function(_super) {
-      __extends(Empty, _super);
+define('views/empty',['templates/empty'], function(template) {
+  var Empty;
+  return Empty = (function(_super) {
+    __extends(Empty, _super);
 
-      function Empty() {
-        return Empty.__super__.constructor.apply(this, arguments);
+    function Empty() {
+      return Empty.__super__.constructor.apply(this, arguments);
+    }
+
+    Empty.prototype.template = template;
+
+    Empty.prototype.tagName = 'tr';
+
+    Empty.prototype.attributes = {
+      "class": 'empty'
+    };
+
+    return Empty;
+
+  })(Marionette.ItemView);
+});
+
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+define('views/filter',[], function() {
+  var Filter;
+  return Filter = (function(_super) {
+    __extends(Filter, _super);
+
+    function Filter() {
+      this.resetFilter = __bind(this.resetFilter, this);
+      this.toggleFilter = __bind(this.toggleFilter, this);
+      return Filter.__super__.constructor.apply(this, arguments);
+    }
+
+    Filter.prototype.ui = {
+      textInputs: 'input[type=text], textarea',
+      checkboxes: 'input[type=checkbox]',
+      selectInputs: 'select',
+      filter: '.filter',
+      filterCols: '.filter-column',
+      resetLink: 'a.filter-reset',
+      hideOnResetInputs: 'input.hide-on-reset'
+    };
+
+    Filter.prototype.events = {
+      'keyup @ui.textInputs': 'inputActivity',
+      'change @ui.selectInputs': 'inputActivity',
+      'change @ui.checkboxes': 'inputActivity',
+      'click @ui.resetLink': 'resetFilter'
+    };
+
+    Filter.prototype.modelEvents = {
+      'change': 'triggerSearch'
+    };
+
+    Filter.prototype.initialize = function(opts) {
+      if (opts == null) {
+        opts = {};
       }
+      this.template = this.templatePath(opts.filterTemplatePath);
+      this.model = opts.filterModel;
+      this.filterAttrs = opts.filterAttrs;
+      this.collection = opts.collection;
+      return this.carpenter = opts.carpenter;
+    };
 
-      Empty.prototype.template = template;
+    Filter.prototype.inputActivity = function() {
+      this.debouncedUpdateModel || (this.debouncedUpdateModel = _.debounce(this.updateModel, 1000));
+      return this.debouncedUpdateModel();
+    };
 
-      Empty.prototype.tagName = 'tr';
+    Filter.prototype.prepareInputReaders = function() {
+      this.filterInputReaderSet = new Backbone.Syphon.InputReaderSet();
+      this.filterInputReaderSet.registerDefault(function($el) {
+        return $el.val();
+      });
+      return this.filterInputReaderSet.register('checkbox', function($el) {
+        if ($el.prop('checked')) {
+          return $el.data('filter-value');
+        }
+      });
+    };
 
-      Empty.prototype.attributes = {
-        "class": 'empty'
-      };
+    Filter.prototype.prepareInputWriters = function() {
+      this.filterInputWriterSet = new Backbone.Syphon.InputWriterSet;
+      this.filterInputWriterSet.registerDefault(function($el, value) {
+        return $el.val(value);
+      });
+      return this.filterInputWriterSet.register('checkbox', (function(_this) {
+        return function($el, value) {
+          return _this.ui.checkboxes.filter("[data-filter-value='" + value + "']").prop('checked', true);
+        };
+      })(this));
+    };
 
-      return Empty;
+    Filter.prototype.updateModel = function(customQuery) {
+      var data;
+      this.prepareInputReaders();
+      data = Backbone.Syphon.serialize(this, {
+        inputReaders: this.filterInputReaderSet
+      });
+      _.extend(data, {
+        custom_query: customQuery
+      });
+      this.collection.currentPage = 1;
+      return this.model.set(data);
+    };
 
-    })(Marionette.ItemView);
-  });
+    Filter.prototype.triggerSearch = function() {
+      return this.trigger('table:search', this.model);
+    };
 
-}).call(this);
+    Filter.prototype.handleFilterOnLoad = function() {
+      this.prepareInputWriters();
+      Backbone.Syphon.deserialize(this, this.model.attributes, {
+        inputWriters: this.filterInputWriterSet
+      });
+      return this.toggleFilter();
+    };
 
-(function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+    Filter.prototype.addFilterColumnClasses = function() {
+      var filterClass;
+      filterClass = (function() {
+        switch (this.ui.filterCols.length) {
+          case 5:
+            return 'columns-5';
+          case 4:
+            return 'columns-4';
+          case 3:
+            return 'columns-3';
+        }
+      }).call(this);
+      return this.ui.filterCols.addClass(filterClass);
+    };
 
-  define('views/filter',[], function() {
-    var Filter;
-    return Filter = (function(_super) {
-      __extends(Filter, _super);
+    Filter.prototype.toggleFilter = function() {
+      return this.ui.filter.toggle();
+    };
 
-      function Filter() {
-        this.resetFilter = __bind(this.resetFilter, this);
-        this.toggleFilter = __bind(this.toggleFilter, this);
-        return Filter.__super__.constructor.apply(this, arguments);
+    Filter.prototype.resetFilter = function() {
+      this.ui.textInputs.val('');
+      this.ui.selectInputs.val('');
+      this.ui.checkboxes.prop('checked', false);
+      this.ui.hideOnResetInputs.css('visibility', 'hidden');
+      return this.updateModel();
+    };
+
+    Filter.prototype.onRender = function() {
+      this.addFilterColumnClasses();
+      if (this.filterAttrs) {
+        return this.handleFilterOnLoad();
       }
+    };
 
-      Filter.prototype.ui = {
-        textInputs: 'input[type=text], textarea',
-        checkboxes: 'input[type=checkbox]',
-        selectInputs: 'select',
-        filter: '.filter',
-        filterCols: '.filter-column',
-        resetLink: 'a.filter-reset',
-        hideOnResetInputs: 'input.hide-on-reset'
-      };
+    return Filter;
 
-      Filter.prototype.events = {
-        'keyup @ui.textInputs': 'inputActivity',
-        'change @ui.selectInputs': 'inputActivity',
-        'change @ui.checkboxes': 'inputActivity',
-        'click @ui.resetLink': 'resetFilter'
-      };
-
-      Filter.prototype.modelEvents = {
-        'change': 'triggerSearch'
-      };
-
-      Filter.prototype.initialize = function(opts) {
-        if (opts == null) {
-          opts = {};
-        }
-        this.template = this.templatePath(opts.filterTemplatePath);
-        this.model = opts.filterModel;
-        this.filterAttrs = opts.filterAttrs;
-        this.collection = opts.collection;
-        return this.carpenter = opts.carpenter;
-      };
-
-      Filter.prototype.inputActivity = function() {
-        this.debouncedUpdateModel || (this.debouncedUpdateModel = _.debounce(this.updateModel, 1000));
-        return this.debouncedUpdateModel();
-      };
-
-      Filter.prototype.prepareInputReaders = function() {
-        this.filterInputReaderSet = new Backbone.Syphon.InputReaderSet();
-        this.filterInputReaderSet.registerDefault(function($el) {
-          return $el.val();
-        });
-        return this.filterInputReaderSet.register('checkbox', function($el) {
-          if ($el.prop('checked')) {
-            return $el.data('filter-value');
-          }
-        });
-      };
-
-      Filter.prototype.prepareInputWriters = function() {
-        this.filterInputWriterSet = new Backbone.Syphon.InputWriterSet;
-        this.filterInputWriterSet.registerDefault(function($el, value) {
-          return $el.val(value);
-        });
-        return this.filterInputWriterSet.register('checkbox', (function(_this) {
-          return function($el, value) {
-            return _this.ui.checkboxes.filter("[data-filter-value='" + value + "']").prop('checked', true);
-          };
-        })(this));
-      };
-
-      Filter.prototype.updateModel = function(customQuery) {
-        var data;
-        this.prepareInputReaders();
-        data = Backbone.Syphon.serialize(this, {
-          inputReaders: this.filterInputReaderSet
-        });
-        _.extend(data, {
-          custom_query: customQuery
-        });
-        this.collection.currentPage = 1;
-        return this.model.set(data);
-      };
-
-      Filter.prototype.triggerSearch = function() {
-        return this.trigger('table:search', this.model);
-      };
-
-      Filter.prototype.handleFilterOnLoad = function() {
-        this.prepareInputWriters();
-        Backbone.Syphon.deserialize(this, this.model.attributes, {
-          inputWriters: this.filterInputWriterSet
-        });
-        return this.toggleFilter();
-      };
-
-      Filter.prototype.addFilterColumnClasses = function() {
-        var filterClass;
-        filterClass = (function() {
-          switch (this.ui.filterCols.length) {
-            case 5:
-              return 'columns-5';
-            case 4:
-              return 'columns-4';
-            case 3:
-              return 'columns-3';
-          }
-        }).call(this);
-        return this.ui.filterCols.addClass(filterClass);
-      };
-
-      Filter.prototype.toggleFilter = function() {
-        return this.ui.filter.toggle();
-      };
-
-      Filter.prototype.resetFilter = function() {
-        this.ui.textInputs.val('');
-        this.ui.selectInputs.val('');
-        this.ui.checkboxes.prop('checked', false);
-        this.ui.hideOnResetInputs.css('visibility', 'hidden');
-        return this.updateModel();
-      };
-
-      Filter.prototype.onRender = function() {
-        this.addFilterColumnClasses();
-        if (this.filterAttrs) {
-          return this.handleFilterOnLoad();
-        }
-      };
-
-      return Filter;
-
-    })(Marionette.ItemView);
-  });
-
-}).call(this);
+  })(Marionette.ItemView);
+});
 
 define('templates/header',[],function(){
   var template = function(__obj) {
@@ -942,43 +922,40 @@ define('templates/header',[],function(){
   return template;
 });
 
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define('views/header',['templates/header'], function(template) {
-    var Header;
-    return Header = (function(_super) {
-      __extends(Header, _super);
+define('views/header',['templates/header'], function(template) {
+  var Header;
+  return Header = (function(_super) {
+    __extends(Header, _super);
 
-      function Header() {
-        return Header.__super__.constructor.apply(this, arguments);
+    function Header() {
+      return Header.__super__.constructor.apply(this, arguments);
+    }
+
+    Header.prototype.template = template;
+
+    Header.prototype.attributes = {
+      "class": 'table-header'
+    };
+
+    Header.prototype.initialize = function(opts) {
+      if (opts == null) {
+        opts = {};
       }
+      this.title = opts.title;
+      return this.taggable = !!opts.taggable;
+    };
 
-      Header.prototype.template = template;
+    Header.prototype.serializeData = function() {
+      return this;
+    };
 
-      Header.prototype.attributes = {
-        "class": 'table-header'
-      };
+    return Header;
 
-      Header.prototype.initialize = function(opts) {
-        if (opts == null) {
-          opts = {};
-        }
-        this.title = opts.title;
-        return this.taggable = !!opts.taggable;
-      };
-
-      Header.prototype.serializeData = function() {
-        return this;
-      };
-
-      return Header;
-
-    })(Marionette.ItemView);
-  });
-
-}).call(this);
+  })(Marionette.ItemView);
+});
 
 define('templates/layout',[],function(){
   var template = function(__obj) {
@@ -1035,111 +1012,108 @@ define('templates/layout',[],function(){
   return template;
 });
 
-(function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define('views/layout',['templates/layout'], function(template) {
-    var Layout;
-    return Layout = (function(_super) {
-      __extends(Layout, _super);
+define('views/layout',['templates/layout'], function(template) {
+  var Layout;
+  return Layout = (function(_super) {
+    __extends(Layout, _super);
 
-      function Layout() {
-        this._modelForTd = __bind(this._modelForTd, this);
-        this._columnForTd = __bind(this._columnForTd, this);
-        this.mouseEnteredTableCell = __bind(this.mouseEnteredTableCell, this);
-        this.mouseEnteredTableHeader = __bind(this.mouseEnteredTableHeader, this);
-        return Layout.__super__.constructor.apply(this, arguments);
+    function Layout() {
+      this._modelForTd = __bind(this._modelForTd, this);
+      this._columnForTd = __bind(this._columnForTd, this);
+      this.mouseEnteredTableCell = __bind(this.mouseEnteredTableCell, this);
+      this.mouseEnteredTableHeader = __bind(this.mouseEnteredTableHeader, this);
+      return Layout.__super__.constructor.apply(this, arguments);
+    }
+
+    Layout.prototype.template = template;
+
+    Layout.prototype.regions = {
+      headerRegion: '.header-region',
+      filterRegion: '.filter-region',
+      buttonsRegion: '.buttons-region',
+      tableRegion: '.table-region',
+      paginationRegion: '.pagination-region',
+      overlayRegion: '.overlay-region',
+      selectionIndicatorRegion: '.selection-indicator-region'
+    };
+
+    Layout.prototype.events = {
+      'mouseenter td': 'mouseEnteredTableCell',
+      'mouseenter th': 'mouseEnteredTableHeader'
+    };
+
+    Layout.prototype.attributes = {
+      "class": 'table-component foundation'
+    };
+
+    Layout.prototype.initialize = function(opts) {
+      if (opts == null) {
+        opts = {};
       }
+      _.extend(this.regions, opts != null ? opts.regions : void 0);
+      this.columns = opts.columns;
+      this.collection = opts.collection;
+      return this.selectable = !!opts.selectable;
+    };
 
-      Layout.prototype.template = template;
+    Layout.prototype.serializeData = function() {
+      return this;
+    };
 
-      Layout.prototype.regions = {
-        headerRegion: '.header-region',
-        filterRegion: '.filter-region',
-        buttonsRegion: '.buttons-region',
-        tableRegion: '.table-region',
-        paginationRegion: '.pagination-region',
-        overlayRegion: '.overlay-region',
-        selectionIndicatorRegion: '.selection-indicator-region'
-      };
+    Layout.prototype.mouseEnteredTableHeader = function(e) {
+      return this.overlayRegion.reset();
+    };
 
-      Layout.prototype.events = {
-        'mouseenter td': 'mouseEnteredTableCell',
-        'mouseenter th': 'mouseEnteredTableHeader'
-      };
-
-      Layout.prototype.attributes = {
-        "class": 'table-component foundation'
-      };
-
-      Layout.prototype.initialize = function(opts) {
-        if (opts == null) {
-          opts = {};
-        }
-        _.extend(this.regions, opts != null ? opts.regions : void 0);
-        this.columns = opts.columns;
-        this.collection = opts.collection;
-        return this.selectable = !!opts.selectable;
-      };
-
-      Layout.prototype.serializeData = function() {
-        return this;
-      };
-
-      Layout.prototype.mouseEnteredTableHeader = function(e) {
-        return this.overlayRegion.reset();
-      };
-
-      Layout.prototype.mouseEnteredTableCell = function(e) {
-        var column, hover, model, tdPosition, _ref;
-        column = this._columnForTd(e.currentTarget);
-        model = this._modelForTd(e.currentTarget);
-        if ((column != null ? column.hoverView : void 0) != null) {
-          if ((column != null ? column.hoverOn : void 0) != null) {
-            if (!column.hoverOn.call({
-              model: model,
-              column: column
-            })) {
-              return;
-            }
-          }
-          hover = new column.hoverView({
+    Layout.prototype.mouseEnteredTableCell = function(e) {
+      var column, hover, model, tdPosition, _ref;
+      column = this._columnForTd(e.currentTarget);
+      model = this._modelForTd(e.currentTarget);
+      if ((column != null ? column.hoverView : void 0) != null) {
+        if ((column != null ? column.hoverOn : void 0) != null) {
+          if (!column.hoverOn.call({
             model: model,
             column: column
-          });
-          tdPosition = $(e.currentTarget).position();
-          tdPosition.top += $(e.currentTarget).outerHeight() - 2;
-          tdPosition.width = $(e.currentTarget).outerWidth();
-          this.overlayRegion.show(hover);
-          return (_ref = this.overlayRegion.$el) != null ? _ref.css(tdPosition) : void 0;
-        } else {
-          return this.overlayRegion.reset();
+          })) {
+            return;
+          }
         }
-      };
+        hover = new column.hoverView({
+          model: model,
+          column: column
+        });
+        tdPosition = $(e.currentTarget).position();
+        tdPosition.top += $(e.currentTarget).outerHeight() - 2;
+        tdPosition.width = $(e.currentTarget).outerWidth();
+        this.overlayRegion.show(hover);
+        return (_ref = this.overlayRegion.$el) != null ? _ref.css(tdPosition) : void 0;
+      } else {
+        return this.overlayRegion.reset();
+      }
+    };
 
-      Layout.prototype._columnForTd = function(td) {
-        var colIdx;
-        colIdx = $(td).index();
-        if (this.selectable) {
-          colIdx--;
-        }
-        return this.columns[colIdx];
-      };
+    Layout.prototype._columnForTd = function(td) {
+      var colIdx;
+      colIdx = $(td).index();
+      if (this.selectable) {
+        colIdx--;
+      }
+      return this.columns[colIdx];
+    };
 
-      Layout.prototype._modelForTd = function(td) {
-        var rowIdx;
-        rowIdx = $(td).parent('tr').index();
-        return this.collection.models[rowIdx];
-      };
+    Layout.prototype._modelForTd = function(td) {
+      var rowIdx;
+      rowIdx = $(td).parent('tr').index();
+      return this.collection.models[rowIdx];
+    };
 
-      return Layout;
+    return Layout;
 
-    })(Marionette.LayoutView);
-  });
-
-}).call(this);
+  })(Marionette.LayoutView);
+});
 
 define('templates/loading',[],function(){
   var template = function(__obj) {
@@ -1186,29 +1160,26 @@ define('templates/loading',[],function(){
   return template;
 });
 
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define('views/loading',['templates/loading'], function(template) {
-    var Loading;
-    return Loading = (function(_super) {
-      __extends(Loading, _super);
+define('views/loading',['templates/loading'], function(template) {
+  var Loading;
+  return Loading = (function(_super) {
+    __extends(Loading, _super);
 
-      function Loading() {
-        return Loading.__super__.constructor.apply(this, arguments);
-      }
+    function Loading() {
+      return Loading.__super__.constructor.apply(this, arguments);
+    }
 
-      Loading.prototype.template = template;
+    Loading.prototype.template = template;
 
-      Loading.prototype.tagName = 'tr';
+    Loading.prototype.tagName = 'tr';
 
-      return Loading;
+    return Loading;
 
-    })(Marionette.ItemView);
-  });
-
-}).call(this);
+  })(Marionette.ItemView);
+});
 
 define('templates/paginator',[],function(){
   var template = function(__obj) {
@@ -2368,97 +2339,94 @@ Backbone.Paginator = (function ( Backbone, _, $ ) {
 
 define("views/../../bower_components/backbone.paginator/dist/backbone.paginator.js", function(){});
 
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define('views/paginator',['templates/paginator', '../../bower_components/backbone.paginator/dist/backbone.paginator.js'], function(template) {
-    var Paginator;
-    return Paginator = (function(_super) {
-      __extends(Paginator, _super);
+define('views/paginator',['templates/paginator', '../../bower_components/backbone.paginator/dist/backbone.paginator.js'], function(template) {
+  var Paginator;
+  return Paginator = (function(_super) {
+    __extends(Paginator, _super);
 
-      function Paginator() {
-        return Paginator.__super__.constructor.apply(this, arguments);
+    function Paginator() {
+      return Paginator.__super__.constructor.apply(this, arguments);
+    }
+
+    Paginator.ALL_MAGIC = '99999999';
+
+    Paginator.prototype.template = template;
+
+    Paginator.prototype.attributes = {
+      "class": 'paginator'
+    };
+
+    Paginator.prototype.ui = {
+      next: '.page_navigation a.next',
+      previous: '.page_navigation a.previous',
+      last: '.page_navigation a.last',
+      first: '.page_navigation a.first',
+      pageInput: '.page_navigation input',
+      perPage: '.row_select select'
+    };
+
+    Paginator.prototype.triggers = {
+      'click @ui.first': 'table:first',
+      'click @ui.last': 'table:last',
+      'click @ui.next': 'table:next',
+      'click @ui.previous': 'table:previous',
+      'change @ui.perPage': 'table:setPerPage',
+      'change @ui.pageInput': 'table:pageInputChanged',
+      'keyup @ui.pageInput': 'table:pageInputChanged'
+    };
+
+    Paginator.prototype.events = {
+      'click @ui.pageInput': 'pageInputClicked'
+    };
+
+    Paginator.prototype.perPage = 20;
+
+    Paginator.prototype.perPageOptions = [20, 50, 100, 'All'];
+
+    Paginator.prototype.initialize = function(opts) {
+      if (opts == null) {
+        opts = {};
       }
+      this.collection = opts.collection;
+      this.perPageOptions = opts.perPageOptions || this.perPageOptions;
+      this.perPage = opts.perPage || this.perPage;
+      this["static"] = !!opts["static"];
+      if (!_.contains(this.perPageOptions, this.perPage)) {
+        this.perPageOptions.unshift(this.perPage);
+      }
+      if (this["static"]) {
+        this.collection.howManyPer(this.perPage);
+      } else {
+        this.collection.perPage = this.perPage;
+      }
+      this.listenTo(this.collection, 'sync', this.render);
+      return this.listenTo(this.collection, 'reset', this.render);
+    };
 
-      Paginator.ALL_MAGIC = '99999999';
+    Paginator.prototype.pageInputClicked = function(e) {
+      return $(e.currentTarget).select();
+    };
 
-      Paginator.prototype.template = template;
+    Paginator.prototype.serializeData = function() {
+      var lastRow, totalRecords, _ref, _ref1;
+      totalRecords = this.collection.totalRecords || ((_ref = this.collection) != null ? (_ref1 = _ref.origModels) != null ? _ref1.length : void 0 : void 0) || 0;
+      lastRow = Math.min(this.collection.currentPage * this.collection.perPage, totalRecords);
+      return _.extend({}, this, this.collection, {
+        totalRecords: totalRecords,
+        lastRow: lastRow,
+        isLastPage: lastRow === totalRecords,
+        isFirstPage: this.collection.currentPage === 1,
+        ALL_MAGIC: Paginator.ALL_MAGIC
+      });
+    };
 
-      Paginator.prototype.attributes = {
-        "class": 'paginator'
-      };
+    return Paginator;
 
-      Paginator.prototype.ui = {
-        next: '.page_navigation a.next',
-        previous: '.page_navigation a.previous',
-        last: '.page_navigation a.last',
-        first: '.page_navigation a.first',
-        pageInput: '.page_navigation input',
-        perPage: '.row_select select'
-      };
-
-      Paginator.prototype.triggers = {
-        'click @ui.first': 'table:first',
-        'click @ui.last': 'table:last',
-        'click @ui.next': 'table:next',
-        'click @ui.previous': 'table:previous',
-        'change @ui.perPage': 'table:setPerPage',
-        'change @ui.pageInput': 'table:pageInputChanged',
-        'keyup @ui.pageInput': 'table:pageInputChanged'
-      };
-
-      Paginator.prototype.events = {
-        'click @ui.pageInput': 'pageInputClicked'
-      };
-
-      Paginator.prototype.perPage = 20;
-
-      Paginator.prototype.perPageOptions = [20, 50, 100, 'All'];
-
-      Paginator.prototype.initialize = function(opts) {
-        if (opts == null) {
-          opts = {};
-        }
-        this.collection = opts.collection;
-        this.perPageOptions = opts.perPageOptions || this.perPageOptions;
-        this.perPage = opts.perPage || this.perPage;
-        this["static"] = !!opts["static"];
-        if (!_.contains(this.perPageOptions, this.perPage)) {
-          this.perPageOptions.unshift(this.perPage);
-        }
-        if (this["static"]) {
-          this.collection.howManyPer(this.perPage);
-        } else {
-          this.collection.perPage = this.perPage;
-        }
-        this.listenTo(this.collection, 'sync', this.render);
-        return this.listenTo(this.collection, 'reset', this.render);
-      };
-
-      Paginator.prototype.pageInputClicked = function(e) {
-        return $(e.currentTarget).select();
-      };
-
-      Paginator.prototype.serializeData = function() {
-        var lastRow, totalRecords, _ref, _ref1;
-        totalRecords = this.collection.totalRecords || ((_ref = this.collection) != null ? (_ref1 = _ref.origModels) != null ? _ref1.length : void 0 : void 0) || 0;
-        lastRow = Math.min(this.collection.currentPage * this.collection.perPage, totalRecords);
-        return _.extend({}, this, this.collection, {
-          totalRecords: totalRecords,
-          lastRow: lastRow,
-          isLastPage: lastRow === totalRecords,
-          isFirstPage: this.collection.currentPage === 1,
-          ALL_MAGIC: Paginator.ALL_MAGIC
-        });
-      };
-
-      return Paginator;
-
-    })(Marionette.ItemView);
-  });
-
-}).call(this);
+  })(Marionette.ItemView);
+});
 
 define('templates/row',[],function(){
   var template = function(__obj) {
@@ -2557,181 +2525,175 @@ define('templates/row',[],function(){
   return template;
 });
 
-(function() {
-  define('utilities/string_utils',[], function() {
-    var StringUtils;
-    return StringUtils = {
-      underscored: function(str) {
-        str = str === null ? '' : String(str);
-        return str.trim().replace(/([a-z\d])([A-Z]+)/g, '$1_$2').replace(/[-\s]+/g, '_').toLowerCase();
-      },
-      capitalize: function(str) {
-        str = str === null ? '' : String(str);
-        return str.charAt(0).toUpperCase() + str.slice(1);
-      },
-      humanize: function(str) {
-        return StringUtils.capitalize(StringUtils.underscored(str).replace(/_id$/, '').replace(/_/g, ' '));
+define('utilities/string_utils',[], function() {
+  var StringUtils;
+  return StringUtils = {
+    underscored: function(str) {
+      str = str === null ? '' : String(str);
+      return str.trim().replace(/([a-z\d])([A-Z]+)/g, '$1_$2').replace(/[-\s]+/g, '_').toLowerCase();
+    },
+    capitalize: function(str) {
+      str = str === null ? '' : String(str);
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    },
+    humanize: function(str) {
+      return StringUtils.capitalize(StringUtils.underscored(str).replace(/_id$/, '').replace(/_/g, ' '));
+    }
+  };
+});
+
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+define('views/row',['templates/row', 'utilities/string_utils'], function(template, StringUtils) {
+  var Row;
+  return Row = (function(_super) {
+    __extends(Row, _super);
+
+    function Row() {
+      this.onShow = __bind(this.onShow, this);
+      this.selectionStateChanged = __bind(this.selectionStateChanged, this);
+      return Row.__super__.constructor.apply(this, arguments);
+    }
+
+    Row.prototype.template = template;
+
+    Row.prototype.tagName = 'tr';
+
+    Row.prototype.ui = {
+      checkbox: 'td.checkbox input'
+    };
+
+    Row.prototype.events = {
+      'change @ui.checkbox': 'triggerSelectionEvents'
+    };
+
+    Row.prototype.modelEvents = {
+      'change:selected': 'selectionStateChanged'
+    };
+
+    Row.prototype.initialize = function(opts) {
+      if (opts == null) {
+        opts = {};
+      }
+      this.columns = opts.columns;
+      this.selectable = !!opts.selectable;
+      this.tableSelections = opts.tableSelections;
+      this.serverAPI = opts.serverAPI;
+      this.carpenter = opts.carpenter;
+      this.setInitialSelectionState();
+      return _.each(this.columns, (function(_this) {
+        return function(column, idx) {
+          if (column.view != null) {
+            return _this.addRegion(_this.regionName(idx), "td." + (_this.regionName(idx)));
+          }
+        };
+      })(this));
+    };
+
+    Row.prototype.selectionStateChanged = function() {
+      if (!!this.ui.checkbox.prop('checked') === this.model.get('selected')) {
+        return;
+      }
+      this.ui.checkbox.prop('checked', this.model.get('selected'));
+      return this.recordSelectionState();
+    };
+
+    Row.prototype.setInitialSelectionState = function() {
+      if (!this.selectable) {
+        return false;
+      }
+      if (this.tableSelections.selectAllState) {
+        return this.model.set('selected', !(this.model.id in this.tableSelections.deselectedIDs), {
+          silent: true
+        });
+      } else {
+        return this.model.set('selected', this.model.id in this.tableSelections.selectedIDs, {
+          silent: true
+        });
       }
     };
-  });
 
-}).call(this);
-
-(function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  define('views/row',['templates/row', 'utilities/string_utils'], function(template, StringUtils) {
-    var Row;
-    return Row = (function(_super) {
-      __extends(Row, _super);
-
-      function Row() {
-        this.onShow = __bind(this.onShow, this);
-        this.selectionStateChanged = __bind(this.selectionStateChanged, this);
-        return Row.__super__.constructor.apply(this, arguments);
+    Row.prototype.setSelectionState = function() {
+      if (this.ui.checkbox.prop('checked')) {
+        return this.model.set('selected', true);
+      } else {
+        return this.model.set('selected', false);
       }
+    };
 
-      Row.prototype.template = template;
-
-      Row.prototype.tagName = 'tr';
-
-      Row.prototype.ui = {
-        checkbox: 'td.checkbox input'
-      };
-
-      Row.prototype.events = {
-        'change @ui.checkbox': 'triggerSelectionEvents'
-      };
-
-      Row.prototype.modelEvents = {
-        'change:selected': 'selectionStateChanged'
-      };
-
-      Row.prototype.initialize = function(opts) {
-        if (opts == null) {
-          opts = {};
-        }
-        this.columns = opts.columns;
-        this.selectable = !!opts.selectable;
-        this.tableSelections = opts.tableSelections;
-        this.serverAPI = opts.serverAPI;
-        this.carpenter = opts.carpenter;
-        this.setInitialSelectionState();
-        return _.each(this.columns, (function(_this) {
-          return function(column, idx) {
-            if (column.view != null) {
-              return _this.addRegion(_this.regionName(idx), "td." + (_this.regionName(idx)));
-            }
-          };
-        })(this));
-      };
-
-      Row.prototype.selectionStateChanged = function() {
-        if (!!this.ui.checkbox.prop('checked') === this.model.get('selected')) {
-          return;
-        }
-        this.ui.checkbox.prop('checked', this.model.get('selected'));
-        return this.recordSelectionState();
-      };
-
-      Row.prototype.setInitialSelectionState = function() {
-        if (!this.selectable) {
-          return false;
-        }
-        if (this.tableSelections.selectAllState) {
-          return this.model.set('selected', !(this.model.id in this.tableSelections.deselectedIDs), {
-            silent: true
-          });
-        } else {
-          return this.model.set('selected', this.model.id in this.tableSelections.selectedIDs, {
-            silent: true
-          });
-        }
-      };
-
-      Row.prototype.setSelectionState = function() {
+    Row.prototype.recordSelectionState = function() {
+      if (this.tableSelections.selectAllState) {
         if (this.ui.checkbox.prop('checked')) {
-          return this.model.set('selected', true);
+          return delete this.tableSelections.deselectedIDs[this.model.id];
         } else {
-          return this.model.set('selected', false);
+          return this.tableSelections.deselectedIDs[this.model.id] = true;
         }
-      };
-
-      Row.prototype.recordSelectionState = function() {
-        if (this.tableSelections.selectAllState) {
-          if (this.ui.checkbox.prop('checked')) {
-            return delete this.tableSelections.deselectedIDs[this.model.id];
-          } else {
-            return this.tableSelections.deselectedIDs[this.model.id] = true;
-          }
+      } else {
+        if (this.ui.checkbox.prop('checked')) {
+          return this.tableSelections.selectedIDs[this.model.id] = true;
         } else {
-          if (this.ui.checkbox.prop('checked')) {
-            return this.tableSelections.selectedIDs[this.model.id] = true;
-          } else {
-            return delete this.tableSelections.selectedIDs[this.model.id];
-          }
+          return delete this.tableSelections.selectedIDs[this.model.id];
         }
-      };
+      }
+    };
 
-      Row.prototype.triggerSelectionEvents = function() {
-        this.setSelectionState();
-        this.recordSelectionState();
-        this.carpenter.trigger('table:row:selection_toggled', this.model);
-        this.model.trigger('selection_toggled');
-        if (!this.ui.checkbox.prop('checked')) {
-          this.carpenter.trigger('table:row:deselected', this.model);
-          return this.model.trigger('deselected');
-        } else {
-          this.carpenter.trigger('table:row:selected', this.model);
-          return this.model.trigger('selected');
-        }
-      };
+    Row.prototype.triggerSelectionEvents = function() {
+      this.setSelectionState();
+      this.recordSelectionState();
+      this.carpenter.trigger('table:row:selection_toggled', this.model);
+      this.model.trigger('selection_toggled');
+      if (!this.ui.checkbox.prop('checked')) {
+        this.carpenter.trigger('table:row:deselected', this.model);
+        return this.model.trigger('deselected');
+      } else {
+        this.carpenter.trigger('table:row:selected', this.model);
+        return this.model.trigger('selected');
+      }
+    };
 
-      Row.prototype.onShow = function() {
-        return _.each(this.columns, (function(_this) {
-          return function(column, idx) {
-            var controller, view, viewOpts, _ref;
-            if (column.view != null) {
-              viewOpts = _.extend({}, column.viewOpts);
-              _.extend(viewOpts, {
-                model: _this.model,
-                column: column,
-                collection: _this.model.collection,
-                serverAPI: _this.serverAPI
-              });
-              view = new column.view(viewOpts);
-              controller = view.getMainView ? view : null;
-              view = view.getMainView ? view.getMainView() : view;
-              if (!view) {
-                throw new Error("getMainView() did not return a view instance or " + (view != null ? (_ref = view.constructor) != null ? _ref.name : void 0 : void 0) + " is not a view instance");
-              }
-              if (controller != null) {
-                _this.listenTo(view, "destroy", controller.destroy);
-              }
-              return _this[_this.regionName(idx)].show(view);
+    Row.prototype.onShow = function() {
+      return _.each(this.columns, (function(_this) {
+        return function(column, idx) {
+          var controller, view, viewOpts, _ref;
+          if (column.view != null) {
+            viewOpts = _.extend({}, column.viewOpts);
+            _.extend(viewOpts, {
+              model: _this.model,
+              column: column,
+              collection: _this.model.collection,
+              serverAPI: _this.serverAPI
+            });
+            view = new column.view(viewOpts);
+            controller = view.getMainView ? view : null;
+            view = view.getMainView ? view.getMainView() : view;
+            if (!view) {
+              throw new Error("getMainView() did not return a view instance or " + (view != null ? (_ref = view.constructor) != null ? _ref.name : void 0 : void 0) + " is not a view instance");
             }
-          };
-        })(this));
-      };
+            if (controller != null) {
+              _this.listenTo(view, "destroy", controller.destroy);
+            }
+            return _this[_this.regionName(idx)].show(view);
+          }
+        };
+      })(this));
+    };
 
-      Row.prototype.regionName = function(idx) {
-        return "cell" + idx;
-      };
+    Row.prototype.regionName = function(idx) {
+      return "cell" + idx;
+    };
 
-      Row.prototype.serializeData = function() {
-        return _.extend({
-          StringUtils: StringUtils
-        }, this);
-      };
+    Row.prototype.serializeData = function() {
+      return _.extend({
+        StringUtils: StringUtils
+      }, this);
+    };
 
-      return Row;
+    return Row;
 
-    })(Marionette.LayoutView);
-  });
-
-}).call(this);
+  })(Marionette.LayoutView);
+});
 
 define('templates/table',[],function(){
   var template = function(__obj) {
@@ -3047,215 +3009,212 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 
 define("views/../../bower_components/jquery-resizable-columns/dist/jquery.resizableColumns.js", function(){});
 
-(function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates/table', '../../bower_components/jquery-resizable-columns/dist/jquery.resizableColumns.js'], function(Row, Empty, Loading, template) {
-    var RowList;
-    return RowList = (function(_super) {
-      __extends(RowList, _super);
+define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates/table', '../../bower_components/jquery-resizable-columns/dist/jquery.resizableColumns.js'], function(Row, Empty, Loading, template) {
+  var RowList;
+  return RowList = (function(_super) {
+    __extends(RowList, _super);
 
-      function RowList() {
-        this.updateClasses = __bind(this.updateClasses, this);
-        this.fetched = __bind(this.fetched, this);
-        this.setSort = __bind(this.setSort, this);
-        this.sortChanged = __bind(this.sortChanged, this);
-        return RowList.__super__.constructor.apply(this, arguments);
+    function RowList() {
+      this.updateClasses = __bind(this.updateClasses, this);
+      this.fetched = __bind(this.fetched, this);
+      this.setSort = __bind(this.setSort, this);
+      this.sortChanged = __bind(this.sortChanged, this);
+      return RowList.__super__.constructor.apply(this, arguments);
+    }
+
+    RowList.prototype.template = template;
+
+    RowList.prototype.childView = Row;
+
+    RowList.prototype.collectionEvents = {
+      sync: 'fetched',
+      reset: 'fetched'
+    };
+
+    RowList.prototype.ui = {
+      selectAllCheckbox: 'thead th.select-all input',
+      rowCheckboxes: 'td.checkbox input',
+      sortableColHeader: 'thead th.sortable',
+      thead: 'thead',
+      table: 'table'
+    };
+
+    RowList.prototype.events = {
+      'click  @ui.selectAllCheckbox': 'toggleSelectAll',
+      'click  @ui.rowCheckboxes': 'selectIntermediateCheckboxes',
+      'click  th.sortable': 'sortChanged'
+    };
+
+    RowList.prototype.childViewContainer = 'tbody';
+
+    RowList.prototype.sortColumn = null;
+
+    RowList.prototype.sortDirection = null;
+
+    RowList.prototype.attributes = {
+      "class": 'wrap'
+    };
+
+    RowList.prototype.initialize = function(opts) {
+      if (opts == null) {
+        opts = {};
       }
+      this.htmlID = opts.htmlID;
+      this.columns = opts.columns;
+      this["static"] = !!opts["static"];
+      this.selectable = !!opts.selectable;
+      this.tableSelections = opts.tableSelections;
+      this.emptyView = opts.emptyView || opts.tableEmptyView || Empty;
+      this.loadingView = opts.loadingView || Loading;
+      this.carpenter = opts.carpenter;
+      this.setSort(this.collection.sortColumn, this.collection.sortDirection, {
+        noReload: true
+      });
+      if (this.selectable) {
+        this.selectedIDs = {};
+        this.deselectedIDs = {};
+      }
+      if (!this["static"]) {
+        this.originalEmptyView = this.emptyView;
+        this.emptyView = this.loadingView;
+      }
+      return this.listenTo(this.collection, 'remove:multiple:after', (function(_this) {
+        return function() {
+          return _this.handleRemoveMultiple();
+        };
+      })(this));
+    };
 
-      RowList.prototype.template = template;
+    RowList.prototype.sortChanged = function(e) {
+      var sortIdx, _ref;
+      sortIdx = $(e.currentTarget).index();
+      if (this.selectable) {
+        sortIdx--;
+      }
+      return this.trigger('table:sort', {
+        attribute: (_ref = this.columns[sortIdx]) != null ? _ref.attribute : void 0
+      });
+    };
 
-      RowList.prototype.childView = Row;
+    RowList.prototype.setSort = function(sortColumn, sortDirection, opts) {
+      var sortIdx, _ref;
+      this.sortColumn = sortColumn;
+      this.sortDirection = sortDirection;
+      if (opts == null) {
+        opts = {};
+      }
+      sortIdx = _.indexOf(this.columns, _.findWhere(this.columns, {
+        attribute: this.sortColumn
+      }));
+      if (this.selectable) {
+        sortIdx++;
+      }
+      this.$el.find('thead th').removeClass('sort asc desc').eq(sortIdx).addClass("sort " + this.sortDirection);
+      if (this.selectable) {
+        sortIdx--;
+      }
+      if (!opts.noReload) {
+        return this.collection.setSort(this.sortColumn, this.sortDirection, (_ref = this.columns[sortIdx]) != null ? _ref.sortAttribute : void 0);
+      }
+    };
 
-      RowList.prototype.collectionEvents = {
-        sync: 'fetched',
-        reset: 'fetched'
-      };
+    RowList.prototype.setSearch = function(filter) {
+      return this.collection.setSearch(filter);
+    };
 
-      RowList.prototype.ui = {
-        selectAllCheckbox: 'thead th.select-all input',
-        rowCheckboxes: 'td.checkbox input',
-        sortableColHeader: 'thead th.sortable',
-        thead: 'thead',
-        table: 'table'
-      };
+    RowList.prototype.getRowCheckboxes = function() {
+      return this.$el.find('td.checkbox input');
+    };
 
-      RowList.prototype.events = {
-        'click  @ui.selectAllCheckbox': 'toggleSelectAll',
-        'click  @ui.rowCheckboxes': 'selectIntermediateCheckboxes',
-        'click  th.sortable': 'sortChanged'
-      };
-
-      RowList.prototype.childViewContainer = 'tbody';
-
-      RowList.prototype.sortColumn = null;
-
-      RowList.prototype.sortDirection = null;
-
-      RowList.prototype.attributes = {
-        "class": 'wrap'
-      };
-
-      RowList.prototype.initialize = function(opts) {
-        if (opts == null) {
-          opts = {};
-        }
-        this.htmlID = opts.htmlID;
-        this.columns = opts.columns;
-        this["static"] = !!opts["static"];
-        this.selectable = !!opts.selectable;
-        this.tableSelections = opts.tableSelections;
-        this.emptyView = opts.emptyView || opts.tableEmptyView || Empty;
-        this.loadingView = opts.loadingView || Loading;
-        this.carpenter = opts.carpenter;
-        this.setSort(this.collection.sortColumn, this.collection.sortDirection, {
-          noReload: true
+    RowList.prototype.toggleSelectAll = function() {
+      var $rowCheckboxes;
+      $rowCheckboxes = this.getRowCheckboxes();
+      if (this.ui.selectAllCheckbox.prop('checked')) {
+        this.tableSelections.selectAllState = true;
+        this.tableSelections.deselectedIDs = {};
+        _.each(this.collection.models, function(model) {
+          return model.set('selected', true);
         });
-        if (this.selectable) {
-          this.selectedIDs = {};
-          this.deselectedIDs = {};
-        }
-        if (!this["static"]) {
-          this.originalEmptyView = this.emptyView;
-          this.emptyView = this.loadingView;
-        }
-        return this.listenTo(this.collection, 'remove:multiple:after', (function(_this) {
-          return function() {
-            return _this.handleRemoveMultiple();
-          };
-        })(this));
-      };
-
-      RowList.prototype.sortChanged = function(e) {
-        var sortIdx, _ref;
-        sortIdx = $(e.currentTarget).index();
-        if (this.selectable) {
-          sortIdx--;
-        }
-        return this.trigger('table:sort', {
-          attribute: (_ref = this.columns[sortIdx]) != null ? _ref.attribute : void 0
+      } else {
+        this.tableSelections.selectAllState = false;
+        this.tableSelections.selectedIDs = {};
+        _.each(this.collection.models, function(model) {
+          return model.set('selected', false);
         });
-      };
+      }
+      this.collection.trigger('select_all_toggled');
+      return true;
+    };
 
-      RowList.prototype.setSort = function(sortColumn, sortDirection, opts) {
-        var sortIdx, _ref;
-        this.sortColumn = sortColumn;
-        this.sortDirection = sortDirection;
-        if (opts == null) {
-          opts = {};
+    RowList.prototype.selectIntermediateCheckboxes = function(e) {
+      var $previousRows, $previouslySelectedCheckbox, $subsequentRows, newState;
+      if (window.event.shiftKey && this.previouslySelected) {
+        newState = $(e.target).is(':checked');
+        $previousRows = $(e.target).parents('tr').prevAll();
+        $subsequentRows = $(e.target).parents('tr').nextAll();
+        $previouslySelectedCheckbox = $('tr').find(this.previouslySelected);
+        if ($previousRows.has($previouslySelectedCheckbox).length > 0) {
+          $(e.target).parents('tr').prevUntil($('tr').has($previouslySelectedCheckbox)).find('td.checkbox input').prop('checked', newState).change();
+        } else if ($subsequentRows.has($previouslySelectedCheckbox).length > 0) {
+          $(e.target).parents('tr').nextUntil($('tr').has($previouslySelectedCheckbox)).find('td.checkbox input').prop('checked', newState).change();
         }
-        sortIdx = _.indexOf(this.columns, _.findWhere(this.columns, {
-          attribute: this.sortColumn
-        }));
-        if (this.selectable) {
-          sortIdx++;
-        }
-        this.$el.find('thead th').removeClass('sort asc desc').eq(sortIdx).addClass("sort " + this.sortDirection);
-        if (this.selectable) {
-          sortIdx--;
-        }
-        if (!opts.noReload) {
-          return this.collection.setSort(this.sortColumn, this.sortDirection, (_ref = this.columns[sortIdx]) != null ? _ref.sortAttribute : void 0);
-        }
-      };
+      }
+      return this.previouslySelected = $(e.target);
+    };
 
-      RowList.prototype.setSearch = function(filter) {
-        return this.collection.setSearch(filter);
-      };
+    RowList.prototype.handleRemoveMultiple = function() {
+      if (this.collection.length === 0) {
+        return this.ui.selectAllCheckbox.prop('checked', false);
+      }
+    };
 
-      RowList.prototype.getRowCheckboxes = function() {
-        return this.$el.find('td.checkbox input');
-      };
-
-      RowList.prototype.toggleSelectAll = function() {
-        var $rowCheckboxes;
-        $rowCheckboxes = this.getRowCheckboxes();
-        if (this.ui.selectAllCheckbox.prop('checked')) {
-          this.tableSelections.selectAllState = true;
-          this.tableSelections.deselectedIDs = {};
-          _.each(this.collection.models, function(model) {
-            return model.set('selected', true);
-          });
-        } else {
-          this.tableSelections.selectAllState = false;
-          this.tableSelections.selectedIDs = {};
-          _.each(this.collection.models, function(model) {
-            return model.set('selected', false);
-          });
-        }
-        this.collection.trigger('select_all_toggled');
-        return true;
-      };
-
-      RowList.prototype.selectIntermediateCheckboxes = function(e) {
-        var $previousRows, $previouslySelectedCheckbox, $subsequentRows, newState;
-        if (window.event.shiftKey && this.previouslySelected) {
-          newState = $(e.target).is(':checked');
-          $previousRows = $(e.target).parents('tr').prevAll();
-          $subsequentRows = $(e.target).parents('tr').nextAll();
-          $previouslySelectedCheckbox = $('tr').find(this.previouslySelected);
-          if ($previousRows.has($previouslySelectedCheckbox).length > 0) {
-            $(e.target).parents('tr').prevUntil($('tr').has($previouslySelectedCheckbox)).find('td.checkbox input').prop('checked', newState).change();
-          } else if ($subsequentRows.has($previouslySelectedCheckbox).length > 0) {
-            $(e.target).parents('tr').nextUntil($('tr').has($previouslySelectedCheckbox)).find('td.checkbox input').prop('checked', newState).change();
-          }
-        }
-        return this.previouslySelected = $(e.target);
-      };
-
-      RowList.prototype.handleRemoveMultiple = function() {
-        if (this.collection.length === 0) {
-          return this.ui.selectAllCheckbox.prop('checked', false);
-        }
-      };
-
-      RowList.prototype.fetched = function() {
-        if (this.originalEmptyView) {
-          this.emptyView = this.originalEmptyView;
-          this.originalEmptyView = null;
-          return this.render();
-        } else {
-          return this.updateClasses();
-        }
-      };
-
-      RowList.prototype.buildChildView = function(item, ItemView) {
-        return new ItemView({
-          model: item,
-          columns: this.columns,
-          selectable: this.selectable,
-          tableSelections: this.tableSelections,
-          serverAPI: this.collection.server_api,
-          carpenter: this.carpenter
-        });
-      };
-
-      RowList.prototype.serializeData = function() {
-        return this;
-      };
-
-      RowList.prototype.updateClasses = function() {
-        var totalRecords, _base, _base1;
-        totalRecords = this.collection.totalRecords || this.collection.length || 0;
-        if (typeof (_base = this.ui.table).toggleClass === "function") {
-          _base.toggleClass('loaded', true);
-        }
-        return typeof (_base1 = this.ui.table).toggleClass === "function" ? _base1.toggleClass('populated', totalRecords > 0) : void 0;
-      };
-
-      RowList.prototype.onRender = function() {
-        this.ui.table.resizableColumns();
+    RowList.prototype.fetched = function() {
+      if (this.originalEmptyView) {
+        this.emptyView = this.originalEmptyView;
+        this.originalEmptyView = null;
+        return this.render();
+      } else {
         return this.updateClasses();
-      };
+      }
+    };
 
-      return RowList;
+    RowList.prototype.buildChildView = function(item, ItemView) {
+      return new ItemView({
+        model: item,
+        columns: this.columns,
+        selectable: this.selectable,
+        tableSelections: this.tableSelections,
+        serverAPI: this.collection.server_api,
+        carpenter: this.carpenter
+      });
+    };
 
-    })(Marionette.CompositeView);
-  });
+    RowList.prototype.serializeData = function() {
+      return this;
+    };
 
-}).call(this);
+    RowList.prototype.updateClasses = function() {
+      var totalRecords, _base, _base1;
+      totalRecords = this.collection.totalRecords || this.collection.length || 0;
+      if (typeof (_base = this.ui.table).toggleClass === "function") {
+        _base.toggleClass('loaded', true);
+      }
+      return typeof (_base1 = this.ui.table).toggleClass === "function" ? _base1.toggleClass('populated', totalRecords > 0) : void 0;
+    };
+
+    RowList.prototype.onRender = function() {
+      this.ui.table.resizableColumns();
+      return this.updateClasses();
+    };
+
+    return RowList;
+
+  })(Marionette.CompositeView);
+});
 
 define('templates/selection_indicator',[],function(){
   var template = function(__obj) {
@@ -3310,397 +3269,393 @@ define('templates/selection_indicator',[],function(){
   return template;
 });
 
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define('views/selection_indicator',['templates/selection_indicator'], function(template) {
-    var SelectionIndicator;
-    return SelectionIndicator = (function(_super) {
-      __extends(SelectionIndicator, _super);
+define('views/selection_indicator',['templates/selection_indicator'], function(template) {
+  var SelectionIndicator;
+  return SelectionIndicator = (function(_super) {
+    __extends(SelectionIndicator, _super);
 
-      function SelectionIndicator() {
-        return SelectionIndicator.__super__.constructor.apply(this, arguments);
+    function SelectionIndicator() {
+      return SelectionIndicator.__super__.constructor.apply(this, arguments);
+    }
+
+    SelectionIndicator.prototype.template = template;
+
+    SelectionIndicator.prototype.initialize = function(opts) {
+      var calculateEvents, renderEvents;
+      if (opts == null) {
+        opts = {};
       }
-
-      SelectionIndicator.prototype.template = template;
-
-      SelectionIndicator.prototype.initialize = function(opts) {
-        var calculateEvents, renderEvents;
-        if (opts == null) {
-          opts = {};
-        }
-        this.tableSelections = opts.tableSelections;
-        this.tableCollection = opts.tableCollection;
-        calculateEvents = ['selection_toggled', 'select_all_toggled', 'remove:multiple:after'];
-        _.each(calculateEvents, (function(_this) {
-          return function(event) {
-            return _this.listenTo(_this.tableCollection, event, function() {
-              return _this.calculateNumSelected();
-            });
-          };
-        })(this));
-        renderEvents = ['sync', 'change:numSelected'];
-        return _.each(renderEvents, (function(_this) {
-          return function(event) {
-            return _this.listenTo(_this.tableCollection, event, function() {
-              return _this.render();
-            });
-          };
-        })(this));
-      };
-
-      SelectionIndicator.prototype.calculateNumSelected = function() {
-        var numSelected;
-        if (!this.tableCollection.totalRecords) {
-          return 0;
-        }
-        if (this.tableSelections.selectAllState) {
-          numSelected = this.tableCollection.totalRecords - Object.keys(this.tableSelections.deselectedIDs).length;
-        } else {
-          numSelected = Object.keys(this.tableSelections.selectedIDs).length;
-        }
-        return this.tableCollection.updateNumSelected(numSelected);
-      };
-
-      SelectionIndicator.prototype.serializeData = function() {
-        return {
-          numSelected: this.tableCollection.numSelected,
-          totalRecords: this.tableCollection.totalRecords
+      this.tableSelections = opts.tableSelections;
+      this.tableCollection = opts.tableCollection;
+      calculateEvents = ['selection_toggled', 'select_all_toggled', 'remove:multiple:after'];
+      _.each(calculateEvents, (function(_this) {
+        return function(event) {
+          return _this.listenTo(_this.tableCollection, event, function() {
+            return _this.calculateNumSelected();
+          });
         };
-      };
+      })(this));
+      renderEvents = ['sync', 'change:numSelected'];
+      return _.each(renderEvents, (function(_this) {
+        return function(event) {
+          return _this.listenTo(_this.tableCollection, event, function() {
+            return _this.render();
+          });
+        };
+      })(this));
+    };
 
-      return SelectionIndicator;
-
-    })(Marionette.ItemView);
-  });
-
-}).call(this);
-
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-
-  define('controllers/table_controller',['controllers/application_controller', 'entities/paginated_collection', 'entities/action_buttons_collection', 'entities/action_button', 'entities/filter', 'views/control_bar', 'views/empty', 'views/filter', 'views/header', 'views/layout', 'views/loading', 'views/paginator', 'views/row', 'views/row_list', 'views/selection_indicator', 'utilities/string_utils'], function(Controller, CreatePaginatedCollectionClass, ActionButtonsCollection, ActionButton, EntityFilter, ControlBar, Empty, Filter, Header, Layout, Loading, Paginator, Row, RowList, SelectionIndicator, StringUtils) {
-    var API;
-    Marionette.Carpenter = {};
-    Marionette.Carpenter.CellController = (function(_super) {
-      __extends(CellController, _super);
-
-      function CellController() {
-        return CellController.__super__.constructor.apply(this, arguments);
+    SelectionIndicator.prototype.calculateNumSelected = function() {
+      var numSelected;
+      if (!this.tableCollection.totalRecords) {
+        return 0;
       }
-
-      return CellController;
-
-    })(Controller);
-    Marionette.Carpenter.Controller = (function(_super) {
-      __extends(Controller, _super);
-
-      function Controller() {
-        this.toggleInteraction = __bind(this.toggleInteraction, this);
-        this.setPerPage = __bind(this.setPerPage, this);
-        this.totalPages = __bind(this.totalPages, this);
-        this.totalRecords = __bind(this.totalRecords, this);
-        this.last = __bind(this.last, this);
-        this.first = __bind(this.first, this);
-        this.previous = __bind(this.previous, this);
-        this.next = __bind(this.next, this);
-        this.refresh = __bind(this.refresh, this);
-        return Controller.__super__.constructor.apply(this, arguments);
+      if (this.tableSelections.selectAllState) {
+        numSelected = this.tableCollection.totalRecords - Object.keys(this.tableSelections.deselectedIDs).length;
+      } else {
+        numSelected = Object.keys(this.tableSelections.selectedIDs).length;
       }
+      return this.tableCollection.updateNumSelected(numSelected);
+    };
 
-      Controller.prototype.filterable = true;
-
-      Controller.prototype.selectable = false;
-
-      Controller.prototype.filterTemplatePath = '';
-
-      Controller.prototype.taggable = false;
-
-      Controller.prototype.title = null;
-
-      Controller.prototype["static"] = false;
-
-      Controller.prototype.defaultSort = null;
-
-      Controller.prototype.actionButtons = [];
-
-      Controller.prototype.columns = [];
-
-      Controller.prototype.perPageOptions = [20, 50, 100, 'All'];
-
-      Controller.prototype.perPage = 20;
-
-      Controller.prototype.columnDefaults = {
-        sortable: true,
-        escape: true,
-        defaultDirection: 'desc'
+    SelectionIndicator.prototype.serializeData = function() {
+      return {
+        numSelected: this.tableCollection.numSelected,
+        totalRecords: this.tableCollection.totalRecords
       };
+    };
 
-      Controller.prototype.header = null;
+    return SelectionIndicator;
 
-      Controller.prototype.buttons = null;
+  })(Marionette.ItemView);
+});
 
-      Controller.prototype.list = null;
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-      Controller.prototype.paginator = null;
+define('controllers/table_controller',['controllers/application_controller', 'entities/paginated_collection', 'entities/action_buttons_collection', 'entities/action_button', 'entities/filter', 'views/control_bar', 'views/empty', 'views/filter', 'views/header', 'views/layout', 'views/loading', 'views/paginator', 'views/row', 'views/row_list', 'views/selection_indicator', 'utilities/string_utils'], function(Controller, CreatePaginatedCollectionClass, ActionButtonsCollection, ActionButton, EntityFilter, ControlBar, Empty, Filter, Header, Layout, Loading, Paginator, Row, RowList, SelectionIndicator, StringUtils) {
+  var API;
+  Marionette.Carpenter = {};
+  Marionette.Carpenter.CellController = (function(_super) {
+    __extends(CellController, _super);
 
-      Controller.prototype.initialize = function(opts) {
-        var PagerClass, _base, _ref;
-        if (opts == null) {
-          opts = {};
-        }
-        _.extend(this, opts);
-        _.each(this.columns, (function(_this) {
-          return function(column) {
-            _.defaults(column, _this.columnDefaults);
-            return _.defaults(column, {
-              label: StringUtils.humanize(column.attribute)
-            });
-          };
-        })(this));
-        this["static"] = !!this["static"];
-        PagerClass = CreatePaginatedCollectionClass(this.collection, this);
-        this.collection = new PagerClass(this.collection.models);
-        if (typeof (_base = this.collection).rebind === "function") {
-          _base.rebind();
-        }
-        this.setMainView(new Layout(this));
-        this.collection.perPage = this.perPage;
-        this.collection.sortColumn = (_ref = this.defaultSortColumn()) != null ? _ref.attribute : void 0;
-        this.collection.sortDirection = this.defaultSortDirection();
-        if (!this["static"]) {
-          this.collection.updateSortKey();
-        }
-        this.tableCollection = this.collection;
-        this.tableSelections = {};
-        if (this.selectable) {
-          this.tableSelections.selectAllState = false;
-          this.tableSelections.selectedIDs = {};
-          this.tableSelections.deselectedIDs = {};
-        }
-        this.actionButtonsCollection = new ActionButtonsCollection(opts.actionButtons);
-        this.listClass || (this.listClass = RowList);
-        this.header = new Header(this);
-        this.buttons = new ControlBar(this);
-        this.list = new this.listClass(this);
-        this.paginator = new Paginator(this);
-        if (this.selectable) {
-          this.selectionIndicator = new SelectionIndicator(this);
-        }
-        this.listenTo(this.collection, 'reset', (function(_this) {
-          return function() {
-            return _this.toggleInteraction(true);
-          };
-        })(this));
-        this.listenTo(this.collection, 'sync', (function(_this) {
-          return function() {
-            return _this.toggleInteraction(true);
-          };
-        })(this));
-        this.listenTo(this.collection, 'change', (function(_this) {
-          return function() {
-            return _this.toggleInteraction(true);
-          };
-        })(this));
-        this.listenTo(this.collection, 'error', (function(_this) {
-          return function() {
-            return _this.toggleInteraction(true);
-          };
-        })(this));
-        this.listenTo(this.collection, 'remove:multiple', (function(_this) {
-          return function(removedIDs) {
-            _.each(removedIDs, function(id) {
-              return delete _this.tableSelections.selectedIDs[id];
-            });
-            _this.collection.trigger('remove:multiple:after');
-            _this.toggleInteraction(false);
-            return _this.tableCollection.fetch();
-          };
-        })(this));
-        this.listenTo(this.getMainView(), 'show', function() {
-          this.show(this.header, {
-            region: this.getMainView().headerRegion
+    function CellController() {
+      return CellController.__super__.constructor.apply(this, arguments);
+    }
+
+    return CellController;
+
+  })(Controller);
+  Marionette.Carpenter.Controller = (function(_super) {
+    __extends(Controller, _super);
+
+    function Controller() {
+      this.toggleInteraction = __bind(this.toggleInteraction, this);
+      this.setPerPage = __bind(this.setPerPage, this);
+      this.totalPages = __bind(this.totalPages, this);
+      this.totalRecords = __bind(this.totalRecords, this);
+      this.last = __bind(this.last, this);
+      this.first = __bind(this.first, this);
+      this.previous = __bind(this.previous, this);
+      this.next = __bind(this.next, this);
+      this.refresh = __bind(this.refresh, this);
+      return Controller.__super__.constructor.apply(this, arguments);
+    }
+
+    Controller.prototype.filterable = true;
+
+    Controller.prototype.selectable = false;
+
+    Controller.prototype.filterTemplatePath = '';
+
+    Controller.prototype.taggable = false;
+
+    Controller.prototype.title = null;
+
+    Controller.prototype["static"] = false;
+
+    Controller.prototype.defaultSort = null;
+
+    Controller.prototype.actionButtons = [];
+
+    Controller.prototype.columns = [];
+
+    Controller.prototype.perPageOptions = [20, 50, 100, 'All'];
+
+    Controller.prototype.perPage = 20;
+
+    Controller.prototype.columnDefaults = {
+      sortable: true,
+      escape: true,
+      defaultDirection: 'desc'
+    };
+
+    Controller.prototype.header = null;
+
+    Controller.prototype.buttons = null;
+
+    Controller.prototype.list = null;
+
+    Controller.prototype.paginator = null;
+
+    Controller.prototype.initialize = function(opts) {
+      var PagerClass, _base, _ref;
+      if (opts == null) {
+        opts = {};
+      }
+      _.extend(this, opts);
+      _.each(this.columns, (function(_this) {
+        return function(column) {
+          _.defaults(column, _this.columnDefaults);
+          return _.defaults(column, {
+            label: StringUtils.humanize(column.attribute)
           });
-          this.show(this.buttons, {
-            region: this.getMainView().buttonsRegion
+        };
+      })(this));
+      this["static"] = !!this["static"];
+      PagerClass = CreatePaginatedCollectionClass(this.collection, this);
+      this.collection = new PagerClass(this.collection.models);
+      if (typeof (_base = this.collection).rebind === "function") {
+        _base.rebind();
+      }
+      this.setMainView(new Layout(this));
+      this.collection.perPage = this.perPage;
+      this.collection.sortColumn = (_ref = this.defaultSortColumn()) != null ? _ref.attribute : void 0;
+      this.collection.sortDirection = this.defaultSortDirection();
+      if (!this["static"]) {
+        this.collection.updateSortKey();
+      }
+      this.tableCollection = this.collection;
+      this.tableSelections = {};
+      if (this.selectable) {
+        this.tableSelections.selectAllState = false;
+        this.tableSelections.selectedIDs = {};
+        this.tableSelections.deselectedIDs = {};
+      }
+      this.actionButtonsCollection = new ActionButtonsCollection(opts.actionButtons);
+      this.listClass || (this.listClass = RowList);
+      this.header = new Header(this);
+      this.buttons = new ControlBar(this);
+      this.list = new this.listClass(this);
+      this.paginator = new Paginator(this);
+      if (this.selectable) {
+        this.selectionIndicator = new SelectionIndicator(this);
+      }
+      this.listenTo(this.collection, 'reset', (function(_this) {
+        return function() {
+          return _this.toggleInteraction(true);
+        };
+      })(this));
+      this.listenTo(this.collection, 'sync', (function(_this) {
+        return function() {
+          return _this.toggleInteraction(true);
+        };
+      })(this));
+      this.listenTo(this.collection, 'change', (function(_this) {
+        return function() {
+          return _this.toggleInteraction(true);
+        };
+      })(this));
+      this.listenTo(this.collection, 'error', (function(_this) {
+        return function() {
+          return _this.toggleInteraction(true);
+        };
+      })(this));
+      this.listenTo(this.collection, 'remove:multiple', (function(_this) {
+        return function(removedIDs) {
+          _.each(removedIDs, function(id) {
+            return delete _this.tableSelections.selectedIDs[id];
           });
-          this.show(this.list, {
-            region: this.getMainView().tableRegion
-          });
-          this.show(this.paginator, {
-            region: this.getMainView().paginationRegion
-          });
-          if (this.selectable) {
-            return this.show(this.selectionIndicator, {
-              region: this.getMainView().selectionIndicatorRegion,
-              preventDestroy: false
-            });
-          }
+          _this.collection.trigger('remove:multiple:after');
+          _this.toggleInteraction(false);
+          return _this.tableCollection.fetch();
+        };
+      })(this));
+      this.listenTo(this.getMainView(), 'show', function() {
+        this.show(this.header, {
+          region: this.getMainView().headerRegion
         });
-        this.listenTo(this.paginator, 'table:first', this.first);
-        this.listenTo(this.paginator, 'table:previous', this.previous);
-        this.listenTo(this.paginator, 'table:next', this.next);
-        this.listenTo(this.paginator, 'table:last', this.last);
-        this.listenTo(this.paginator, 'table:setPerPage', (function(_this) {
-          return function() {
-            var needsReload, newPerPage;
-            newPerPage = _this.paginator.ui.perPage.val();
-            if (_this.perPage === newPerPage) {
+        this.show(this.buttons, {
+          region: this.getMainView().buttonsRegion
+        });
+        this.show(this.list, {
+          region: this.getMainView().tableRegion
+        });
+        this.show(this.paginator, {
+          region: this.getMainView().paginationRegion
+        });
+        if (this.selectable) {
+          return this.show(this.selectionIndicator, {
+            region: this.getMainView().selectionIndicatorRegion,
+            preventDestroy: false
+          });
+        }
+      });
+      this.listenTo(this.paginator, 'table:first', this.first);
+      this.listenTo(this.paginator, 'table:previous', this.previous);
+      this.listenTo(this.paginator, 'table:next', this.next);
+      this.listenTo(this.paginator, 'table:last', this.last);
+      this.listenTo(this.paginator, 'table:setPerPage', (function(_this) {
+        return function() {
+          var needsReload, newPerPage;
+          newPerPage = _this.paginator.ui.perPage.val();
+          if (_this.perPage === newPerPage) {
+            return;
+          }
+          needsReload = newPerPage > _this.perPage;
+          _this.setPerPage(newPerPage);
+          if (needsReload) {
+            return _this.toggleInteraction(false);
+          }
+        };
+      })(this));
+      this.listenTo(this.paginator, 'table:pageInputChanged', _.debounce((function(_this) {
+        return function(e) {
+          var clampedVal, val;
+          val = parseInt(_this.paginator.ui.pageInput.val());
+          if ((val != null) && _.isNumber(val) && !_.isNaN(val) && val !== _this.collection.currentPage) {
+            clampedVal = Math.min(Math.max(1, val), _this.totalPages());
+            if (clampedVal !== val) {
+              _this.paginator.ui.pageInput.val(clampedVal);
+            }
+            if (clampedVal === _this.collection.currentPage) {
               return;
             }
-            needsReload = newPerPage > _this.perPage;
-            _this.setPerPage(newPerPage);
-            if (needsReload) {
-              return _this.toggleInteraction(false);
-            }
-          };
-        })(this));
-        this.listenTo(this.paginator, 'table:pageInputChanged', _.debounce((function(_this) {
-          return function(e) {
-            var clampedVal, val;
-            val = parseInt(_this.paginator.ui.pageInput.val());
-            if ((val != null) && _.isNumber(val) && !_.isNaN(val) && val !== _this.collection.currentPage) {
-              clampedVal = Math.min(Math.max(1, val), _this.totalPages());
-              if (clampedVal !== val) {
-                _this.paginator.ui.pageInput.val(clampedVal);
-              }
-              if (clampedVal === _this.collection.currentPage) {
-                return;
-              }
-              _this.collection.goTo(clampedVal);
-              _this.toggleInteraction(false);
-              return _.defer(function() {
-                return _this.paginator.ui.pageInput.click();
-              });
-            }
-          };
-        })(this), 300));
-        this.listenTo(this.list, 'table:sort', (function(_this) {
-          return function(opts) {
-            var dir, sortCol;
-            if (opts == null) {
-              opts = {};
-            }
-            sortCol = _.findWhere(_this.columns, {
-              attribute: opts.attribute
-            });
-            dir = _this.list.sortColumn === opts.attribute ? _this.list.sortDirection === 'asc' ? 'desc' : 'asc' : _this.list.sortDirection || (sortCol != null ? sortCol.defaultDirection : void 0) || 'desc';
+            _this.collection.goTo(clampedVal);
             _this.toggleInteraction(false);
-            if (sortCol != null ? sortCol.sortable : void 0) {
-              return _this.list.setSort(sortCol.attribute, dir, sortCol.sortAttribute);
-            }
-          };
-        })(this));
-        if (this["static"]) {
-          this.collection.bootstrap();
-        } else {
-          this.collection.fetch({
-            reset: true
+            return _.defer(function() {
+              return _this.paginator.ui.pageInput.click();
+            });
+          }
+        };
+      })(this), 300));
+      this.listenTo(this.list, 'table:sort', (function(_this) {
+        return function(opts) {
+          var dir, sortCol;
+          if (opts == null) {
+            opts = {};
+          }
+          sortCol = _.findWhere(_this.columns, {
+            attribute: opts.attribute
           });
-        }
-        return this.show(this.getMainView(), {
-          region: opts.region
-        });
-      };
-
-      Controller.prototype.refresh = function(opts) {
-        if (opts == null) {
-          opts = {};
-        }
-        _.defaults(opts, {
+          dir = _this.list.sortColumn === opts.attribute ? _this.list.sortDirection === 'asc' ? 'desc' : 'asc' : _this.list.sortDirection || (sortCol != null ? sortCol.defaultDirection : void 0) || 'desc';
+          _this.toggleInteraction(false);
+          if (sortCol != null ? sortCol.sortable : void 0) {
+            return _this.list.setSort(sortCol.attribute, dir, sortCol.sortAttribute);
+          }
+        };
+      })(this));
+      if (this["static"]) {
+        this.collection.bootstrap();
+      } else {
+        this.collection.fetch({
           reset: true
         });
-        this.toggleInteraction(false);
-        return this.collection.fetch(opts);
-      };
+      }
+      return this.show(this.getMainView(), {
+        region: opts.region
+      });
+    };
 
-      Controller.prototype.next = function() {
-        this.toggleInteraction(false);
-        return this.collection.nextPage();
-      };
+    Controller.prototype.refresh = function(opts) {
+      if (opts == null) {
+        opts = {};
+      }
+      _.defaults(opts, {
+        reset: true
+      });
+      this.toggleInteraction(false);
+      return this.collection.fetch(opts);
+    };
 
-      Controller.prototype.previous = function() {
-        this.toggleInteraction(false);
-        return this.collection.prevPage();
-      };
+    Controller.prototype.next = function() {
+      this.toggleInteraction(false);
+      return this.collection.nextPage();
+    };
 
-      Controller.prototype.first = function() {
-        this.toggleInteraction(false);
-        return this.collection.goTo(1);
-      };
+    Controller.prototype.previous = function() {
+      this.toggleInteraction(false);
+      return this.collection.prevPage();
+    };
 
-      Controller.prototype.last = function() {
-        this.toggleInteraction(false);
-        return this.collection.goTo(this.totalPages());
-      };
+    Controller.prototype.first = function() {
+      this.toggleInteraction(false);
+      return this.collection.goTo(1);
+    };
 
-      Controller.prototype.totalRecords = function() {
-        if (this.collection.totalRecords != null) {
-          return this.collection.totalRecords;
-        } else if (this.collection.origModels != null) {
-          return this.collection.origModels.length;
-        } else if (this.collection.models != null) {
-          return this.collection.models.length;
-        } else {
-          return 0;
-        }
-      };
+    Controller.prototype.last = function() {
+      this.toggleInteraction(false);
+      return this.collection.goTo(this.totalPages());
+    };
 
-      Controller.prototype.totalPages = function() {
-        return Math.floor(this.totalRecords() / this.collection.perPage) + 1;
-      };
-
-      Controller.prototype.setPerPage = function(newPerPage) {
-        this.paginator.perPage = this.perPage = newPerPage;
-        return this.collection.howManyPer(newPerPage);
-      };
-
-      Controller.prototype.defaultSortColumn = function() {
-        return _.findWhere(this.columns, {
-          attribute: this.defaultSort
-        }) || _.findWhere(this.columns, {
-          sortable: true
-        });
-      };
-
-      Controller.prototype.defaultSortDirection = function() {
-        var dir, _ref;
-        dir = (_ref = this.defaultSortColumn()) != null ? _ref.defaultDirection : void 0;
-        return (_.contains(['asc', 'desc'], dir) && dir) || 'desc';
-      };
-
-      Controller.prototype.toggleInteraction = function(enabled) {
-        var $ctrlBarButtons, userInputSelector;
-        if (enabled) {
-          this.carpenter.trigger('total_records:change', this.totalRecords());
-        }
-        if (this.isInteractionEnabled === enabled) {
-          return;
-        }
-        if (!this["static"]) {
-          this.isInteractionEnabled = enabled;
-          userInputSelector = 'a,th,select,input';
-          $ctrlBarButtons = this.buttons.$el.find(userInputSelector);
-          this.getMainView().$el.find(userInputSelector).not($ctrlBarButtons).toggleClass('disabled', !enabled);
-          $ctrlBarButtons.toggleClass('action-disabled', !enabled);
-        }
-        if (enabled) {
-          return this.paginator.render();
-        }
-      };
-
-      return Controller;
-
-    })(Controller);
-    return API = {
-      createTable: function(options) {
-        return new Controller(options);
+    Controller.prototype.totalRecords = function() {
+      if (this.collection.totalRecords != null) {
+        return this.collection.totalRecords;
+      } else if (this.collection.origModels != null) {
+        return this.collection.origModels.length;
+      } else if (this.collection.models != null) {
+        return this.collection.models.length;
+      } else {
+        return 0;
       }
     };
-  });
 
-}).call(this);
+    Controller.prototype.totalPages = function() {
+      return Math.floor(this.totalRecords() / this.collection.perPage) + 1;
+    };
 
+    Controller.prototype.setPerPage = function(newPerPage) {
+      this.paginator.perPage = this.perPage = newPerPage;
+      return this.collection.howManyPer(newPerPage);
+    };
+
+    Controller.prototype.defaultSortColumn = function() {
+      return _.findWhere(this.columns, {
+        attribute: this.defaultSort
+      }) || _.findWhere(this.columns, {
+        sortable: true
+      });
+    };
+
+    Controller.prototype.defaultSortDirection = function() {
+      var dir, _ref;
+      dir = (_ref = this.defaultSortColumn()) != null ? _ref.defaultDirection : void 0;
+      return (_.contains(['asc', 'desc'], dir) && dir) || 'desc';
+    };
+
+    Controller.prototype.toggleInteraction = function(enabled) {
+      var $ctrlBarButtons, userInputSelector;
+      if (enabled) {
+        this.carpenter.trigger('total_records:change', this.totalRecords());
+      }
+      if (this.isInteractionEnabled === enabled) {
+        return;
+      }
+      if (!this["static"]) {
+        this.isInteractionEnabled = enabled;
+        userInputSelector = 'a,th,select,input';
+        $ctrlBarButtons = this.buttons.$el.find(userInputSelector);
+        this.getMainView().$el.find(userInputSelector).not($ctrlBarButtons).toggleClass('disabled', !enabled);
+        $ctrlBarButtons.toggleClass('action-disabled', !enabled);
+      }
+      if (enabled) {
+        return this.paginator.render();
+      }
+    };
+
+    return Controller;
+
+  })(Controller);
+  return API = {
+    createTable: function(options) {
+      return new Controller(options);
+    }
+  };
+});
+
+return require(["controllers/table_controller"]);
+}));
