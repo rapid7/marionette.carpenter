@@ -16,8 +16,8 @@ define [
   'views/selection_indicator'
   'utilities/string_utils'
 ], (
-    Controller, 
-    CreatePaginatedCollectionClass, 
+    Controller,
+    CreatePaginatedCollectionClass,
     ActionButtonsCollection,
     ActionButton,
     EntityFilter,
@@ -359,10 +359,3 @@ define [
           $ctrlBarButtons.toggleClass('action-disabled', not enabled)
 
         @paginator.render() if enabled
-
-
-
-    API =
-      # @return [Table.Controller] a new controller for the requested table
-      createTable: (options) ->
-        new Controller options
