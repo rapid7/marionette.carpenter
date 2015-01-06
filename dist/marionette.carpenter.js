@@ -1,5 +1,5 @@
 (function(root, factory) {
-  var deps = ['cocktail', 'underscore', 'backbone.radio', 'underscore.string', 'jquery-resizable-columns', 'marionette'];
+  var deps = ['cocktail', 'underscore', 'backbone.radio', 'marionette'];
 
   if (typeof define === 'function' && define.amd) {
     define(deps, function(Cocktail, _) {

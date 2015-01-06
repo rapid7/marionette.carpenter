@@ -67,7 +67,7 @@ define [
             static: true
 
         it 'does not render pagination', ->
-          expect(_.str.trim $(@region.el).text()).toEqual('')
+          expect($(@region.el).text().trim()).toEqual('')
 
 
     describe 'button behavior', ->

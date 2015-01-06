@@ -123,7 +123,7 @@ define [
         set 'collection', -> new Backbone.Collection([])
 
         it 'does not render pagination', ->
-          expect(_.str.trim @region.$el.find('.paginator').html()).toEqual('')
+          expect(@region.$el.find('.paginator').html().trim()).toEqual('')
 
     describe 'pagination', ->
 

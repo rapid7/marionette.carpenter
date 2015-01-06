@@ -101,7 +101,6 @@ module.exports = (grunt) ->
           vendor: [
             'bower_components/jquery/dist/jquery.js'
             'bower_components/underscore/underscore.js'
-            'bower_components/underscore.string/dist/underscore.string.min.js'
             'bower_components/backbone/backbone.js'
             'bower_components/backbone.marionette/lib/backbone.marionette.js'
             'bower_components/backbone.radio/build/backbone.radio.js'
