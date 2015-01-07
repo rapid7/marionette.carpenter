@@ -41,9 +41,6 @@ define [
 
     class Marionette.Carpenter.Controller extends Controller
 
-      # @property [Boolean] allow the table to be searched from the header
-      filterable: true
-
       # @property [Boolean] allow checkbox selection of table rows
       selectable: false
 
@@ -58,6 +55,9 @@ define [
 
       # @property [Boolean] do not use AJAX to sync the models
       static: false
+
+      # @property [Boolean] fetch collection on initialization
+      fetch: true
 
       # @property [String] attribute name of the default sorted column
       #   Defaults to the first sortable column if this property is null.
@@ -151,9 +151,6 @@ define [
       # @option opts :selectable             [Boolean] whether or not to display check boxes in each row
       # @option opts :renderFilterControls   [Boolean] whether or not to render the filter toggle and search box
       #                                        (default: false)
-      # @option opts :filterTemplatePath     [String] the path to the template for the table filter view
-      # @option opts :filterView             [Object] a custom filter view class
-      # @option opts :filterAttrs            [Object] the attributes representing the initial state of the filter
       #                                        on table load
       # @option opts :listClass              [App.Views.CompositeView] a custom class to use as the RowList
       #                                        (default: RowList)
@@ -278,7 +275,9 @@ define [
           @collection.bootstrap()
           # If we're loading with filter attributes set via querystring, start with a search.
         else
-          @collection.fetch reset: true
+          # Only if we want to fetch on initialization
+          if @fetch
+            @collection.fetch reset: true
 
         # calls the #show method defined App.Controllers.Application, which
         # puts the view into the (component) Application's main region

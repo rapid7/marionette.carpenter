@@ -1,19 +1,20 @@
 (function(root, factory) {
-  var deps = ['cocktail', 'underscore', 'backbone.radio', 'marionette'];
+  var deps = ['cocktail', 'jquery', 'underscore', 'backbone.radio', 'marionette'];
 
   if (typeof define === 'function' && define.amd) {
-    define(deps, function(Cocktail, _) {
-      return (root.Carpenter = factory(root, Cocktail, _));
+    define(deps, function(Cocktail, $, _) {
+      return (root.Carpenter = factory(root, Cocktail, $, _));
     });
   } else if (typeof exports !== 'undefined') {
     var Cocktail = require('cocktail');
+    var $ = require('jquery');
     var _ = require('underscore');
-    module.exports = factory(root, Cocktail, _);
+    module.exports = factory(root, Cocktail, $, _);
   } else {
-    root.Carpenter = factory(root, root.Cocktail, root._);
+    root.Carpenter = factory(root, root.Cocktail, root.$, root._);
   }
 
-}(this, function(root, Cocktail, _) {
+}(this, function(root, Cocktail,$, _) {
 /**
  * @license almond 0.2.9 Copyright (c) 2011-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -3789,8 +3790,6 @@ define('controllers/table_controller',['controllers/application_controller', 'en
       return Controller.__super__.constructor.apply(this, arguments);
     }
 
-    Controller.prototype.filterable = true;
-
     Controller.prototype.selectable = false;
 
     Controller.prototype.filterTemplatePath = '';
@@ -3800,6 +3799,8 @@ define('controllers/table_controller',['controllers/application_controller', 'en
     Controller.prototype.title = null;
 
     Controller.prototype["static"] = false;
+
+    Controller.prototype.fetch = true;
 
     Controller.prototype.defaultSort = null;
 
@@ -3975,9 +3976,11 @@ define('controllers/table_controller',['controllers/application_controller', 'en
       if (this["static"]) {
         this.collection.bootstrap();
       } else {
-        this.collection.fetch({
-          reset: true
-        });
+        if (this.fetch) {
+          this.collection.fetch({
+            reset: true
+          });
+        }
       }
       return this.show(this.getMainView(), {
         region: opts.region
