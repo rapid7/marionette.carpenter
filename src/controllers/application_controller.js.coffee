@@ -1,5 +1,4 @@
 define [
-  'utilities/mixin'
 ], ->
     # This is the base controller class that all other Marionette
     # controllers should inherit from. It provides some convenience
@@ -77,6 +76,10 @@ define [
       #Bind backbone radio to the controller instead of the app
       _attachRadio: () ->
         @carpenter = Backbone.Radio.channel('carpenter')
+
+      # Return Backbone.Radio channel
+      channel: ->
+        @carpenter
 
       _getDefaults: ->
         _.clone _.result(@, "defaults")

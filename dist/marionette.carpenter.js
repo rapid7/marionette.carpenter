@@ -1,20 +1,21 @@
 (function(root, factory) {
-  var deps = ['cocktail', 'jquery', 'underscore', 'backbone.radio', 'marionette'];
+  var deps = ['cocktail', 'jquery', 'underscore', 'marionette', 'backbone.radio'];
 
   if (typeof define === 'function' && define.amd) {
-    define(deps, function(Cocktail, $, _) {
-      return (root.Carpenter = factory(root, Cocktail, $, _));
+    define(deps, function(Cocktail, $, _, Marionette) {
+      return (root.Carpenter = factory(root, Cocktail, $, _, Marionette));
     });
   } else if (typeof exports !== 'undefined') {
     var Cocktail = require('cocktail');
     var $ = require('jquery');
     var _ = require('underscore');
-    module.exports = factory(root, Cocktail, $, _);
+    var Marionette = require('marionete');
+    module.exports = factory(root, Cocktail, $, _, Marionette);
   } else {
-    root.Carpenter = factory(root, root.Cocktail, root.$, root._);
+    root.Carpenter = factory(root, root.Cocktail, root.$, root._, root.Marionette);
   }
 
-}(this, function(root, Cocktail,$, _) {
+}(this, function(root, Cocktail,$, _, Marionette) {
 /**
  * @license almond 0.2.9 Copyright (c) 2011-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -439,64 +440,10 @@ var requirejs, require, define;
 
 define("almond", function(){});
 
-var __slice = [].slice;
-
-define('utilities/mixin',[], function() {
-  var include, key, klass, klasses, mixinKeywords, module, modules, obj, _i, _len, _results;
-  mixinKeywords = ["beforeIncluded", "afterIncluded"];
-  include = function() {
-    var concern, klass, obj, objs, _i, _len, _ref, _ref1, _ref2;
-    objs = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-    klass = this;
-    for (_i = 0, _len = objs.length; _i < _len; _i++) {
-      obj = objs[_i];
-      concern = obj;
-      if ((_ref = concern.beforeIncluded) != null) {
-        _ref.call(klass.prototype, klass, concern);
-      }
-      Cocktail.mixin(klass, (_ref1 = _(concern)).omit.apply(_ref1, mixinKeywords));
-      if ((_ref2 = concern.afterIncluded) != null) {
-        _ref2.call(klass.prototype, klass, concern);
-      }
-    }
-    return klass;
-  };
-  modules = [
-    {
-      Backbone: ["Collection", "Model", "View"]
-    }, {
-      Marionette: ["ItemView", "LayoutView", "CollectionView", "CompositeView", "Controller"]
-    }
-  ];
-  _results = [];
-  for (_i = 0, _len = modules.length; _i < _len; _i++) {
-    module = modules[_i];
-    _results.push((function() {
-      var _results1;
-      _results1 = [];
-      for (key in module) {
-        klasses = module[key];
-        _results1.push((function() {
-          var _j, _len1, _ref, _results2;
-          _results2 = [];
-          for (_j = 0, _len1 = klasses.length; _j < _len1; _j++) {
-            klass = klasses[_j];
-            obj = window[key];
-            _results2.push((_ref = obj[klass]) != null ? _ref.include = include : void 0);
-          }
-          return _results2;
-        })());
-      }
-      return _results1;
-    })());
-  }
-  return _results;
-});
-
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define('controllers/application_controller',['utilities/mixin'], function() {
+define('controllers/application_controller',[], function() {
   var Controller;
   return Controller = (function(_super) {
     __extends(Controller, _super);
@@ -561,6 +508,10 @@ define('controllers/application_controller',['utilities/mixin'], function() {
 
     Controller.prototype._attachRadio = function() {
       return this.carpenter = Backbone.Radio.channel('carpenter');
+    };
+
+    Controller.prototype.channel = function() {
+      return this.carpenter;
     };
 
     Controller.prototype._getDefaults = function() {
@@ -764,41 +715,6 @@ define('entities/filter',[], function() {
   })(Backbone.Model);
 });
 
-define('concerns/views/filter_toggle',[], function() {
-  var FilterToggle;
-  return FilterToggle = {
-    ui: {
-      filterToggle: 'a.filter-toggle'
-    },
-    events: {
-      'click @ui.filterToggle': 'triggerFilterToggle'
-    },
-    triggerFilterToggle: function() {
-      this.ui.filterToggle.toggleClass('enabled');
-      return this.carpenter.trigger(this.filterToggleEvent);
-    }
-  };
-});
-
-define('concerns/views/filter_custom_query_field',[], function() {
-  var FilterCustomQueryField;
-  return FilterCustomQueryField = {
-    ui: {
-      filterCustomQueryField: 'input.filter-custom-query-field'
-    },
-    events: {
-      'keyup @ui.filterCustomQueryField': 'inputActivity'
-    },
-    inputActivity: function() {
-      this.debouncedTriggerCustomQuery || (this.debouncedTriggerCustomQuery = _.debounce(this.triggerFilterCustomQuery, 1000));
-      return this.debouncedTriggerCustomQuery();
-    },
-    triggerFilterCustomQuery: function() {
-      return this.carpenter.trigger(this.filterCustomQueryEvent, this.ui.filterCustomQueryField.val());
-    }
-  };
-});
-
 define('templates/action_button',[],function(){
   var template = function(__obj) {
   var _safe = function(value) {
@@ -970,59 +886,10 @@ define('views/action_button',['templates/action_button'], function(template) {
   })(Marionette.ItemView);
 });
 
-define('templates/control_bar',[],function(){
-  var template = function(__obj) {
-  var _safe = function(value) {
-    if (typeof value === 'undefined' && value == null)
-      value = '';
-    var result = new String(value);
-    result.ecoSafe = true;
-    return result;
-  };
-  return (function() {
-    var __out = [], __self = this, _print = function(value) {
-      if (typeof value !== 'undefined' && value != null)
-        __out.push(value.ecoSafe ? value : __self.escape(value));
-    }, _capture = function(callback) {
-      var out = __out, result;
-      __out = [];
-      callback.call(this);
-      result = __out.join('');
-      __out = out;
-      return _safe(result);
-    };
-    (function() {
-      if (this.renderFilterControls) {
-        _print(_safe('\n  <div class="filter-controls-wrapper">\n    <div class="filter-controls">\n      <a href="javascript:void(0);" class="filter-toggle">\n        Filter\n        <span class="explanatory-text">Toggle search filter</span>\n      </a>\n\n      <div class=\'search-field\'>\n        <input type="text" class="filter-custom-query-field" placeholder="Search">\n      </div>\n    </div>\n  </div>\n'));
-      }
-    
-      _print(_safe('\n'));
-    
-    }).call(this);
-    
-    return __out.join('');
-  }).call((function() {
-    var obj = {
-      escape: function(value) {
-        return ('' + value)
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;');
-      },
-      safe: _safe
-    }, key;
-    for (key in __obj) obj[key] = __obj[key];
-    return obj;
-  })());
-};
-  return template;
-});
-
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define('views/control_bar',['concerns/views/filter_toggle', 'concerns/views/filter_custom_query_field', 'views/action_button', 'templates/control_bar'], function(FilterToggle, FilterCustomQueryField, ActionButton, template) {
+define('views/control_bar',['views/action_button'], function(ActionButton) {
   var ControlBar;
   return ControlBar = (function(_super) {
     __extends(ControlBar, _super);
@@ -1030,8 +897,6 @@ define('views/control_bar',['concerns/views/filter_toggle', 'concerns/views/filt
     function ControlBar() {
       return ControlBar.__super__.constructor.apply(this, arguments);
     }
-
-    ControlBar.prototype.template = template;
 
     ControlBar.prototype.childView = ActionButton;
 
@@ -1047,9 +912,6 @@ define('views/control_bar',['concerns/views/filter_toggle', 'concerns/views/filt
       this.columns = opts.columns;
       this.tableSelections = opts.tableSelections;
       this.tableCollection = opts.tableCollection;
-      this.renderFilterControls = !!opts.renderFilterControls;
-      this.filterCustomQueryEvent = opts.filterCustomQueryEvent;
-      this.filterToggleEvent = opts.filterToggleEvent;
       this.selectable = !!opts.selectable;
       this.carpenter = opts.carpenter;
       return ControlBar.__super__.initialize.apply(this, arguments);
@@ -1071,13 +933,9 @@ define('views/control_bar',['concerns/views/filter_toggle', 'concerns/views/filt
       return this;
     };
 
-    ControlBar.include(FilterToggle);
-
-    ControlBar.include(FilterCustomQueryField);
-
     return ControlBar;
 
-  })(Marionette.CompositeView);
+  })(Marionette.CollectionView);
 });
 
 define('templates/empty',[],function(){
@@ -1146,146 +1004,6 @@ define('views/empty',['templates/empty'], function(template) {
     };
 
     return Empty;
-
-  })(Marionette.ItemView);
-});
-
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-define('views/filter',[], function() {
-  var Filter;
-  return Filter = (function(_super) {
-    __extends(Filter, _super);
-
-    function Filter() {
-      this.resetFilter = __bind(this.resetFilter, this);
-      this.toggleFilter = __bind(this.toggleFilter, this);
-      return Filter.__super__.constructor.apply(this, arguments);
-    }
-
-    Filter.prototype.ui = {
-      textInputs: 'input[type=text], textarea',
-      checkboxes: 'input[type=checkbox]',
-      selectInputs: 'select',
-      filter: '.filter',
-      filterCols: '.filter-column',
-      resetLink: 'a.filter-reset',
-      hideOnResetInputs: 'input.hide-on-reset'
-    };
-
-    Filter.prototype.events = {
-      'keyup @ui.textInputs': 'inputActivity',
-      'change @ui.selectInputs': 'inputActivity',
-      'change @ui.checkboxes': 'inputActivity',
-      'click @ui.resetLink': 'resetFilter'
-    };
-
-    Filter.prototype.modelEvents = {
-      'change': 'triggerSearch'
-    };
-
-    Filter.prototype.initialize = function(opts) {
-      if (opts == null) {
-        opts = {};
-      }
-      this.template = this.templatePath(opts.filterTemplatePath);
-      this.model = opts.filterModel;
-      this.filterAttrs = opts.filterAttrs;
-      this.collection = opts.collection;
-      return this.carpenter = opts.carpenter;
-    };
-
-    Filter.prototype.inputActivity = function() {
-      this.debouncedUpdateModel || (this.debouncedUpdateModel = _.debounce(this.updateModel, 1000));
-      return this.debouncedUpdateModel();
-    };
-
-    Filter.prototype.prepareInputReaders = function() {
-      this.filterInputReaderSet = new Backbone.Syphon.InputReaderSet();
-      this.filterInputReaderSet.registerDefault(function($el) {
-        return $el.val();
-      });
-      return this.filterInputReaderSet.register('checkbox', function($el) {
-        if ($el.prop('checked')) {
-          return $el.data('filter-value');
-        }
-      });
-    };
-
-    Filter.prototype.prepareInputWriters = function() {
-      this.filterInputWriterSet = new Backbone.Syphon.InputWriterSet;
-      this.filterInputWriterSet.registerDefault(function($el, value) {
-        return $el.val(value);
-      });
-      return this.filterInputWriterSet.register('checkbox', (function(_this) {
-        return function($el, value) {
-          return _this.ui.checkboxes.filter("[data-filter-value='" + value + "']").prop('checked', true);
-        };
-      })(this));
-    };
-
-    Filter.prototype.updateModel = function(customQuery) {
-      var data;
-      this.prepareInputReaders();
-      data = Backbone.Syphon.serialize(this, {
-        inputReaders: this.filterInputReaderSet
-      });
-      _.extend(data, {
-        custom_query: customQuery
-      });
-      this.collection.currentPage = 1;
-      return this.model.set(data);
-    };
-
-    Filter.prototype.triggerSearch = function() {
-      return this.trigger('table:search', this.model);
-    };
-
-    Filter.prototype.handleFilterOnLoad = function() {
-      this.prepareInputWriters();
-      Backbone.Syphon.deserialize(this, this.model.attributes, {
-        inputWriters: this.filterInputWriterSet
-      });
-      return this.toggleFilter();
-    };
-
-    Filter.prototype.addFilterColumnClasses = function() {
-      var filterClass;
-      filterClass = (function() {
-        switch (this.ui.filterCols.length) {
-          case 5:
-            return 'columns-5';
-          case 4:
-            return 'columns-4';
-          case 3:
-            return 'columns-3';
-        }
-      }).call(this);
-      return this.ui.filterCols.addClass(filterClass);
-    };
-
-    Filter.prototype.toggleFilter = function() {
-      return this.ui.filter.toggle();
-    };
-
-    Filter.prototype.resetFilter = function() {
-      this.ui.textInputs.val('');
-      this.ui.selectInputs.val('');
-      this.ui.checkboxes.prop('checked', false);
-      this.ui.hideOnResetInputs.css('visibility', 'hidden');
-      return this.updateModel();
-    };
-
-    Filter.prototype.onRender = function() {
-      this.addFilterColumnClasses();
-      if (this.filterAttrs) {
-        return this.handleFilterOnLoad();
-      }
-    };
-
-    return Filter;
 
   })(Marionette.ItemView);
 });
@@ -3762,7 +3480,7 @@ var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-define('controllers/table_controller',['controllers/application_controller', 'entities/paginated_collection', 'entities/action_buttons_collection', 'entities/action_button', 'entities/filter', 'views/control_bar', 'views/empty', 'views/filter', 'views/header', 'views/layout', 'views/loading', 'views/paginator', 'views/row', 'views/row_list', 'views/selection_indicator', 'utilities/string_utils'], function(Controller, CreatePaginatedCollectionClass, ActionButtonsCollection, ActionButton, EntityFilter, ControlBar, Empty, Filter, Header, Layout, Loading, Paginator, Row, RowList, SelectionIndicator, StringUtils) {
+define('controllers/table_controller',['controllers/application_controller', 'entities/paginated_collection', 'entities/action_buttons_collection', 'entities/action_button', 'entities/filter', 'views/control_bar', 'views/empty', 'views/header', 'views/layout', 'views/loading', 'views/paginator', 'views/row', 'views/row_list', 'views/selection_indicator', 'utilities/string_utils'], function(Controller, CreatePaginatedCollectionClass, ActionButtonsCollection, ActionButton, EntityFilter, ControlBar, Empty, Header, Layout, Loading, Paginator, Row, RowList, SelectionIndicator, StringUtils) {
   Marionette.Carpenter = {};
   Marionette.Carpenter.CellController = (function(_super) {
     __extends(CellController, _super);

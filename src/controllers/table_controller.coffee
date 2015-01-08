@@ -6,7 +6,6 @@ define [
   'entities/filter'
   'views/control_bar'
   'views/empty'
-  'views/filter'
   'views/header'
   'views/layout'
   'views/loading',
@@ -23,7 +22,6 @@ define [
     EntityFilter,
     ControlBar,
     Empty,
-    Filter,
     Header,
     Layout,
     Loading,
