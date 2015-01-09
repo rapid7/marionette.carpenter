@@ -80,6 +80,14 @@ module.exports = (grunt) ->
           optimize: "none"
           generateSourceMaps: true
 
+    uglify:
+      options:
+        mangle: true
+        screwIE8: true # always
+      dist:
+        files:
+          "dist/marionette.carpenter.min.js": "dist/marionette.carpenter.js"
+
     concat:
 
       # "Fix up" our specs to load everything synchronously
@@ -144,8 +152,9 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-eco')
   grunt.loadNpmTasks('grunt-requirejs')
   grunt.loadNpmTasks('grunt-image-embed')
+  grunt.loadNpmTasks('grunt-contrib-uglify')
 
   grunt.registerTask('style', ['clean', 'sass'])
-  grunt.registerTask('build', ['clean', 'style', 'coffee', 'eco', 'requirejs', 'concat', 'copy', 'imageEmbed'])
+  grunt.registerTask('build', ['clean', 'style', 'coffee', 'eco', 'requirejs', 'concat', 'copy', 'imageEmbed', 'uglify'])
   grunt.registerTask('spec',  ['build', 'jasmine'])
   grunt.registerTask('default', ['build'])
