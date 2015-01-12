@@ -33,11 +33,15 @@ define [
   ) ->
 
     Marionette.Carpenter = {}
+
     # Used as a base controller for rendering a cell view
     class Marionette.Carpenter.CellController extends Controller
 
 
     class Marionette.Carpenter.Controller extends Controller
+
+      # @property [Boolean] show table view on initialize
+      showView: true
 
       # @property [Boolean] allow checkbox selection of table rows
       selectable: false
@@ -279,7 +283,7 @@ define [
 
         # calls the #show method defined App.Controllers.Application, which
         # puts the view into the (component) Application's main region
-        @show @getMainView(), region: opts.region
+        @show @getMainView(), region: opts.region if @showView
 
       refresh: (opts={}) =>
         _.defaults opts, reset: true
@@ -356,3 +360,11 @@ define [
           $ctrlBarButtons.toggleClass('action-disabled', not enabled)
 
         @paginator.render() if enabled
+
+    Marionette.Carpenter.create = (opts={}) ->
+      opts.showView = false
+      controller = new Marionette.Carpenter.Controller(opts)
+      controller.getMainView()
+
+    Marionette.Carpenter.Controller
+
