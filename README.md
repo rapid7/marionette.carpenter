@@ -31,6 +31,10 @@ Carpenter relies on the following libraries:
 - [Backbone.Marionette 2.3+](https://github.com/onsi/cocktail)
 - [Cocktail](https://github.com/onsi/cocktail)
 
+#### API Documentation
+
+API documentation is available [on Github pages](https://rapid7.github.io/marionette.carpenter/doc/).
+
 #### Development
 
 To build from source, just run:
