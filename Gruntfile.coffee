@@ -20,6 +20,18 @@ module.exports = (grunt) ->
         src: ['marionette.carpenter.js', 'marionette.carpenter.require.js',]
         dest: 'dist/'
 
+      # This makes me :-(, sass task doesn't parse css files so we generate a scss file.
+      # The copy task also drops the . syntax in the copied file name.
+      cssAsScss:
+        files: [
+          expand:true
+          cwd: 'bower_components'
+          src: ['**/jquery.resizableColumns.css']
+          dest: 'bower_components'
+          filter: 'isFile'
+          ext: '.resizableColumns.scss'
+        ]
+
     coffee:
       source:
         options:
@@ -119,6 +131,8 @@ module.exports = (grunt) ->
           specs: ['build/spec/specs.js']
           summary: true
 
+
+
     sass:
       options:
         includePaths: [
@@ -155,6 +169,6 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-uglify')
 
   grunt.registerTask('style', ['clean', 'sass'])
-  grunt.registerTask('build', ['clean', 'style', 'coffee', 'eco', 'requirejs', 'concat', 'copy', 'imageEmbed', 'uglify'])
+  grunt.registerTask('build', ['clean', 'style', 'coffee', 'eco', 'requirejs', 'concat', 'copy:js', 'copy:css', 'imageEmbed', 'uglify'])
   grunt.registerTask('spec',  ['build', 'jasmine'])
   grunt.registerTask('default', ['build'])
