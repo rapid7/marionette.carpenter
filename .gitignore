@@ -7,6 +7,8 @@ SpecRunner.html
 doc/
 build/
 .sass-cache/
+.idea/
+npm-debug.log
 # Marketing site
 # Ignore ruby version/gemset
 site/.ruby-version
@@ -21,3 +23,4 @@ site/source/bower_components
 site/.sass-cache
 # Ignore cache
 site/.cache
+

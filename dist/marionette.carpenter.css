@@ -1,4 +1,3 @@
-@import url(jquery.resizableColumns.css);
 .table-component .buttons-region ul li a.action-button.add, .table-component .buttons-region ul li a.action-button {
   display: inline-block;
   -webkit-border-radius: 5px;
@@ -96,7 +95,7 @@
     background-color: #7abc21; }
 
 .table-component {
-   }
+  /* jQuery Resizable Columns v0.1.0 | http://dobtco.github.io/jquery-resizable-columns/ | Licensed MIT | Built Wed Apr 30 2014 14:24:25 */ }
   .table-component .header-region h3 {
     margin-bottom: 10px; }
   .table-component .header-region div.right {
@@ -415,3 +414,15 @@
         vertical-align: top; }
   .table-component .select-all-tooltip {
     width: 100px; }
+  .table-component .rc-handle-container {
+    position: relative; }
+  .table-component .rc-handle {
+    position: absolute;
+    width: 7px;
+    cursor: ew-resize;
+    margin-left: -3px;
+    z-index: 2; }
+  .table-component table.rc-table-resizing {
+    cursor: ew-resize; }
+  .table-component table.rc-table-resizing thead, .table-component table.rc-table-resizing thead > th, .table-component table.rc-table-resizing thead > th > a {
+    cursor: ew-resize; }

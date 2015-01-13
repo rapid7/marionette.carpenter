@@ -34,6 +34,11 @@ One of the more common tasks when developing web applications is building tabula
 ## Getting Started
 
 ### Installation
+#### API Documentation
+
+API documentation is available [on Github pages](https://rapid7.github.io/marionette.carpenter/doc/).
+
+#### Development
 
 #### Installing via Bower
 
@@ -78,4 +83,6 @@ To run tests, run:
 
 ```console
 $ grunt spec
-```
+```To run tests on file change:
+    
+    $ grunt watch

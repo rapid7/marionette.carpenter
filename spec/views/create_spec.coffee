@@ -1,4 +1,4 @@
-# todo: need jquer here
+# todo: need jquery here
 define [
   'controllers/table_controller'
   'spec/support/matchers/to_be_an_instance_of'
@@ -7,7 +7,7 @@ define [
   'spec/support/matchers/to_have_class'
 ], ->
 
-  describe 'Marionette.Carpenter.Controller', ->
+  describe 'Marionette.Carpenter.create', ->
 
     set 'app',            -> new Marionette.Application()
     set 'perPageOptions', -> [20, 50]
@@ -46,7 +46,8 @@ define [
         defaultSort: defaultSort
         app: app
 
-      @controller = new Marionette.Carpenter.Controller(defaults)
+      @view = new Marionette.Carpenter.create(defaults)
+      @region.show(@view)
 
     describe 'when calling the constructor', ->
 
@@ -134,17 +135,17 @@ define [
         set 'perPageOptions', -> [10, 20]
 
         describe 'and I click the next page button', ->
-          beforeEach -> @controller.paginator.ui.next.click()
+          beforeEach -> @view.controller.paginator.ui.next.click()
 
           it 'navigates the collection to page 2', ->
-            expect(@controller.collection.currentPage).toEqual(2)
+            expect(@view.controller.collection.currentPage).toEqual(2)
 
         describe 'and I click the last page button', ->
           beforeEach ->
-            @controller.paginator.ui.last.click()
+            @view.controller.paginator.ui.last.click()
 
           it 'navigates the collection to page 31', ->
-            expect(@controller.collection.currentPage).toEqual(31)
+            expect(@view.controller.collection.currentPage).toEqual(31)
 
         describe 'and I enter 15 into the page input field', ->
 
@@ -152,12 +153,12 @@ define [
           # input field, which adds a small delay (in case another key is pressed)
           it 'navigates the collection to page 15', ->
             runs ->
-              @controller.paginator.ui.pageInput.attr('value', '15').change()
+              @view.controller.paginator.ui.pageInput.attr('value', '15').change()
 
             waits(800)
 
             runs ->
-              expect(@controller.collection.currentPage).toEqual(15)
+              expect(@view.controller.collection.currentPage).toEqual(15)
 
 
     describe 'sortability', ->
@@ -168,8 +169,8 @@ define [
           set 'columns', -> [{attribute: 'A', attribute: 'B', attribute: 'C'}]
 
           it 'defaults "sortable" to the setting in @columnDefaults', ->
-            sortableDefaultSetting = @controller.columnDefaults.sortable
-            expect(@controller.columns[0].sortable).toEqual(sortableDefaultSetting)
+            sortableDefaultSetting = @view.controller.columnDefaults.sortable
+            expect(@view.controller.columns[0].sortable).toEqual(sortableDefaultSetting)
 
         describe 'when all columns are sortable', ->
           set 'columns', -> [
@@ -179,10 +180,10 @@ define [
           ]
 
           it 'sorts by the first sortable column, "A"', ->
-            expect(@controller.collection.sortColumn).toEqual('A')
+            expect(@view.controller.collection.sortColumn).toEqual('A')
 
           it 'defaults to descending sort', ->
-            expect(@controller.collection.sortDirection).toEqual('desc')
+            expect(@view.controller.collection.sortDirection).toEqual('desc')
 
         describe 'when A is not sortable and B\'s defaultDirection is asc', ->
           set 'columns', -> [
@@ -192,16 +193,16 @@ define [
           ]
 
           it 'sorts by the first sortable column, "B"', ->
-            expect(@controller.collection.sortColumn).toEqual('B')
+            expect(@view.controller.collection.sortColumn).toEqual('B')
 
           it 'defaults to descending sort', ->
-            expect(@controller.collection.sortDirection).toEqual('asc')
+            expect(@view.controller.collection.sortDirection).toEqual('asc')
 
           describe 'when the defaultSort attribute is specified as "C"', ->
             set 'defaultSort', -> 'C'
 
             it 'sorts by the defaultSort column "C"', ->
-              expect(@controller.collection.sortColumn).toEqual('C')
+              expect(@view.controller.collection.sortColumn).toEqual('C')
 
           describe 'the C column is clicked', ->
 
@@ -209,7 +210,7 @@ define [
               @region.$el.find('th:contains(C)').click()
 
             it 'sorts by the C column', ->
-              expect(@controller.collection.sortColumn).toEqual('C')
+              expect(@view.controller.collection.sortColumn).toEqual('C')
 
             it 'sets a class of "sort" to the C <th>', ->
               expect(@region.$el.find('th:contains(C)')).toHaveClass('sort')
@@ -223,7 +224,7 @@ define [
               @region.$el.find('th:contains(B)').click()
 
             it 'sorts by the B column', ->
-              expect(@controller.collection.sortColumn).toEqual('B')
+              expect(@view.controller.collection.sortColumn).toEqual('B')
 
             it 'sets a class of "sort" to the B <th>', ->
               expect(@region.$el.find('th:contains(B)')).toHaveClass('sort')
@@ -237,7 +238,7 @@ define [
               @region.$el.find('th:contains(A)').click()
 
             it 'still sorts by the C column', ->
-              expect(@controller.collection.sortColumn).toEqual('C')
+              expect(@view.controller.collection.sortColumn).toEqual('C')
 
             it 'sets a class of "sort" to the C <th>', ->
               expect(@region.$el.find('th:contains(C)')).toHaveClass('sort')

@@ -1,17 +1,11 @@
 define [
-  'concerns/views/filter_toggle'
-  'concerns/views/filter_custom_query_field'
   'views/action_button'
-  'templates/control_bar'
-], (FilterToggle, FilterCustomQueryField, ActionButton, template) ->
+], (ActionButton) ->
 
   #
   # Hold the action and tag buttons
   #
-  class ControlBar extends Marionette.CompositeView
-
-    template: template
-
+  class ControlBar extends Marionette.CollectionView
     childView: ActionButton
 
     tagName: 'ul'
@@ -31,9 +25,6 @@ define [
       @columns                = opts.columns
       @tableSelections        = opts.tableSelections
       @tableCollection        = opts.tableCollection
-      @renderFilterControls   = !!opts.renderFilterControls
-      @filterCustomQueryEvent = opts.filterCustomQueryEvent
-      @filterToggleEvent      = opts.filterToggleEvent
       @selectable             = !!opts.selectable
       @carpenter              = opts.carpenter
 
@@ -55,5 +46,3 @@ define [
 
     serializeData: -> @
 
-    @include FilterToggle
-    @include FilterCustomQueryField

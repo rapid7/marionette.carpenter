@@ -6,7 +6,6 @@ define [
   'entities/filter'
   'views/control_bar'
   'views/empty'
-  'views/filter'
   'views/header'
   'views/layout'
   'views/loading',
@@ -14,33 +13,35 @@ define [
   'views/row'
   'views/row_list'
   'views/selection_indicator'
+  'utilities/string_utils'
 ], (
-    Controller, 
-    CreatePaginatedCollectionClass, 
+    Controller,
+    CreatePaginatedCollectionClass,
     ActionButtonsCollection,
     ActionButton,
     EntityFilter,
     ControlBar,
     Empty,
-    Filter,
     Header,
     Layout,
     Loading,
     Paginator,
     Row,
     RowList,
-    SelectionIndicator
+    SelectionIndicator,
+    StringUtils
   ) ->
 
     Marionette.Carpenter = {}
+
     # Used as a base controller for rendering a cell view
     class Marionette.Carpenter.CellController extends Controller
 
 
     class Marionette.Carpenter.Controller extends Controller
 
-      # @property [Boolean] allow the table to be searched from the header
-      filterable: true
+      # @property [Boolean] show table view on initialize
+      showView: true
 
       # @property [Boolean] allow checkbox selection of table rows
       selectable: false
@@ -56,6 +57,9 @@ define [
 
       # @property [Boolean] do not use AJAX to sync the models
       static: false
+
+      # @property [Boolean] fetch collection on initialization
+      fetch: true
 
       # @property [String] attribute name of the default sorted column
       #   Defaults to the first sortable column if this property is null.
@@ -149,9 +153,6 @@ define [
       # @option opts :selectable             [Boolean] whether or not to display check boxes in each row
       # @option opts :renderFilterControls   [Boolean] whether or not to render the filter toggle and search box
       #                                        (default: false)
-      # @option opts :filterTemplatePath     [String] the path to the template for the table filter view
-      # @option opts :filterView             [Object] a custom filter view class
-      # @option opts :filterAttrs            [Object] the attributes representing the initial state of the filter
       #                                        on table load
       # @option opts :listClass              [App.Views.CompositeView] a custom class to use as the RowList
       #                                        (default: RowList)
@@ -162,7 +163,7 @@ define [
         # apply column defaults
         _.each @columns, (column) =>
           _.defaults(column, @columnDefaults)
-          _.defaults(column, label: _.str.humanize(column.attribute))
+          _.defaults(column, label: StringUtils.humanize(column.attribute))
 
         # ensure @static is a Boolean
         @static = !!@static
@@ -276,11 +277,13 @@ define [
           @collection.bootstrap()
           # If we're loading with filter attributes set via querystring, start with a search.
         else
-          @collection.fetch reset: true
+          # Only if we want to fetch on initialization
+          if @fetch
+            @collection.fetch reset: true
 
         # calls the #show method defined App.Controllers.Application, which
         # puts the view into the (component) Application's main region
-        @show @getMainView(), region: opts.region
+        @show @getMainView(), region: opts.region if @showView
 
       refresh: (opts={}) =>
         _.defaults opts, reset: true
@@ -358,9 +361,10 @@ define [
 
         @paginator.render() if enabled
 
+    Marionette.Carpenter.create = (opts={}) ->
+      opts.showView = false
+      controller = new Marionette.Carpenter.Controller(opts)
+      controller.getMainView()
 
+    Marionette.Carpenter.Controller
 
-    API =
-      # @return [Table.Controller] a new controller for the requested table
-      createTable: (options) ->
-        new Controller options
