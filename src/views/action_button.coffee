@@ -84,7 +84,7 @@ define [
     # @return [void]
     executeTrigger: ->
       if @model.get 'event'
-        @carpenter.trigger @model.get('event')
+        @carpenterRadio.trigger @model.get('event')
 
     #
     # Execute this button's associated callback, passing the table selection data

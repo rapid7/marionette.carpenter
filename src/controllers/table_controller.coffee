@@ -342,7 +342,7 @@ define [
       toggleInteraction: (enabled) =>
 
         # Trigger an update of any total records indicators.
-        @carpenter.trigger 'total_records:change', @totalRecords() if enabled
+        @carpenterRadio.trigger 'total_records:change', @totalRecords() if enabled
 
         return if @isInteractionEnabled is enabled
 

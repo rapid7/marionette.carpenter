@@ -456,11 +456,11 @@ define('controllers/application_controller',[], function() {
       this._attachRadio();
       Controller.__super__.constructor.call(this, options);
       this._instance_id = _.uniqueId("controller");
-      this.carpenter.command("register:instance", this, this._instance_id);
+      this.carpenterRadio.command("register:instance", this, this._instance_id);
     }
 
     Controller.prototype.destroy = function() {
-      this.carpenter.command("unregister:instance", this, this._instance_id);
+      this.carpenterRadio.command("unregister:instance", this, this._instance_id);
       return Controller.__super__.destroy.apply(this, arguments);
     };
 
@@ -495,7 +495,7 @@ define('controllers/application_controller',[], function() {
 
     Controller.prototype._manageView = function(view, options) {
       if (options.loading) {
-        return this.carpenter.command("show:loading", view, options);
+        return this.carpenterRadio.command("show:loading", view, options);
       } else {
         return options.region.show(view);
       }
@@ -507,11 +507,11 @@ define('controllers/application_controller',[], function() {
     };
 
     Controller.prototype._attachRadio = function() {
-      return this.carpenter = Backbone.Radio.channel('carpenter');
+      return this.carpenterRadio = Backbone.Radio.channel('carpenter');
     };
 
     Controller.prototype.channel = function() {
-      return this.carpenter;
+      return this.carpenterRadio;
     };
 
     Controller.prototype._getDefaults = function() {
@@ -571,11 +571,7 @@ define('entities/paginated_collection',[], function() {
     };
 
     AjaxPaginatedCollection.prototype.displayErrorMessage = function(message) {
-      return this.carpenter.command('flash:display', {
-        title: 'Error in search',
-        style: 'error',
-        message: message || 'There is an error in your search terms.'
-      });
+      return this.carpenterRadio.trigger('error:search', message);
     };
 
     AjaxPaginatedCollection.prototype.updateSortKey = function() {
@@ -628,6 +624,7 @@ define('entities/paginated_collection',[], function() {
         currentPage: opts.currentPage || 1,
         perPage: opts.perPage || 20
       },
+      carpenterRadio: opts.carpenterRadio,
       updateNumSelected: function(numSelected) {
         this.numSelected = numSelected;
         return this.trigger('change:numSelected');
@@ -858,7 +855,7 @@ define('views/action_button',['templates/action_button'], function(template) {
 
     ActionButton.prototype.executeTrigger = function() {
       if (this.model.get('event')) {
-        return this.carpenter.trigger(this.model.get('event'));
+        return this.carpenterRadio.trigger(this.model.get('event'));
       }
     };
 
@@ -2785,13 +2782,13 @@ define('views/row',['templates/row', 'utilities/string_utils'], function(templat
     Row.prototype.triggerSelectionEvents = function() {
       this.setSelectionState();
       this.recordSelectionState();
-      this.carpenter.trigger('table:row:selection_toggled', this.model);
+      this.carpenterRadio.trigger('table:row:selection_toggled', this.model);
       this.model.trigger('selection_toggled');
       if (!this.ui.checkbox.prop('checked')) {
-        this.carpenter.trigger('table:row:deselected', this.model);
+        this.carpenterRadio.trigger('table:row:deselected', this.model);
         return this.model.trigger('deselected');
       } else {
-        this.carpenter.trigger('table:row:selected', this.model);
+        this.carpenterRadio.trigger('table:row:selected', this.model);
         return this.model.trigger('selected');
       }
     };
@@ -3774,7 +3771,7 @@ define('controllers/table_controller',['controllers/application_controller', 'en
     Controller.prototype.toggleInteraction = function(enabled) {
       var $ctrlBarButtons, userInputSelector;
       if (enabled) {
-        this.carpenter.trigger('total_records:change', this.totalRecords());
+        this.carpenterRadio.trigger('total_records:change', this.totalRecords());
       }
       if (this.isInteractionEnabled === enabled) {
         return;
