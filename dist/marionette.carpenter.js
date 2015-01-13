@@ -1195,6 +1195,7 @@ define('views/layout',['templates/layout'], function(template) {
         opts = {};
       }
       _.extend(this.regions, opts != null ? opts.regions : void 0);
+      this.controller = opts;
       this.columns = opts.columns;
       this.collection = opts.collection;
       return this.selectable = !!opts.selectable;
@@ -3489,7 +3490,7 @@ define('controllers/table_controller',['controllers/application_controller', 'en
     return CellController;
 
   })(Controller);
-  return Marionette.Carpenter.Controller = (function(_super) {
+  Marionette.Carpenter.Controller = (function(_super) {
     __extends(Controller, _super);
 
     function Controller() {
@@ -3504,6 +3505,8 @@ define('controllers/table_controller',['controllers/application_controller', 'en
       this.refresh = __bind(this.refresh, this);
       return Controller.__super__.constructor.apply(this, arguments);
     }
+
+    Controller.prototype.showView = true;
 
     Controller.prototype.selectable = false;
 
@@ -3697,9 +3700,11 @@ define('controllers/table_controller',['controllers/application_controller', 'en
           });
         }
       }
-      return this.show(this.getMainView(), {
-        region: opts.region
-      });
+      if (this.showView) {
+        return this.show(this.getMainView(), {
+          region: opts.region
+        });
+      }
     };
 
     Controller.prototype.refresh = function(opts) {
@@ -3791,6 +3796,16 @@ define('controllers/table_controller',['controllers/application_controller', 'en
     return Controller;
 
   })(Controller);
+  Marionette.Carpenter.create = function(opts) {
+    var controller;
+    if (opts == null) {
+      opts = {};
+    }
+    opts.showView = false;
+    controller = new Marionette.Carpenter.Controller(opts);
+    return controller.getMainView();
+  };
+  return Marionette.Carpenter.Controller;
 });
 
   return require("controllers/table_controller");

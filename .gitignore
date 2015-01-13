@@ -8,6 +8,7 @@ doc/
 build/
 .sass-cache/
 .idea/
+npm-debug.log
 # Marketing site
 # Ignore ruby version/gemset
 site/.ruby-version
