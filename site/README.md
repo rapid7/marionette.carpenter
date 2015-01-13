@@ -1,6 +1,6 @@
 # Carpenter marketing site
 
-This is the marketing site for Carpenter. Here's the rundown:
+This is the marketing site for Carpenter. It lives at [carpenter.coffee](http://carpenter.coffee). It's a [Middleman](https://middlemanapp.com/) site.
 
 ## Working with the site
 
