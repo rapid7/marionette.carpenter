@@ -44,10 +44,7 @@ define [], ->
           @displayErrorMessage(response?.responseJSON?.message)
 
     displayErrorMessage: (message) ->
-      @carpenter.command 'flash:display',
-        title:   'Error in search'
-        style:   'error'
-        message: message || 'There is an error in your search terms.'
+      @carpenterRadio.trigger('error:search', message)
 
     # Remembers the sort options for the next API call
     updateSortKey: ->
@@ -121,6 +118,9 @@ define [], ->
 
       # number of rows to render per page
         perPage: opts.perPage || 20
+
+      # reference to carpenter Backbon.Radio Channel
+      carpenterRadio: opts.carpenterRadio
 
     #
     # Update the count of selected records, and fire an event.

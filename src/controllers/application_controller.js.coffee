@@ -13,11 +13,11 @@ define [
         @_attachRadio()
         super options
         @_instance_id = _.uniqueId("controller")
-        @carpenter.command "register:instance", @, @_instance_id
+        @carpenterRadio.command "register:instance", @, @_instance_id
 
       # Unregisters the Controller from the app and closes itself
       destroy: ->
-        @carpenter.command "unregister:instance", @, @_instance_id
+        @carpenterRadio.command "unregister:instance", @, @_instance_id
         super
 
       # Shows the specified view in the desired region. If a Controller
@@ -65,7 +65,7 @@ define [
       _manageView: (view, options) ->
         if options.loading
           ## show the loading view
-          @carpenter.command "show:loading", view, options
+          @carpenterRadio.command "show:loading", view, options
         else
           options.region.show view
 
@@ -75,11 +75,11 @@ define [
 
       #Bind backbone radio to the controller instead of the app
       _attachRadio: () ->
-        @carpenter = Backbone.Radio.channel('carpenter')
+        @carpenterRadio = Backbone.Radio.channel('carpenter')
 
       # Return Backbone.Radio channel
       channel: ->
-        @carpenter
+        @carpenterRadio
 
       _getDefaults: ->
         _.clone _.result(@, "defaults")
