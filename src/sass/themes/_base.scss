@@ -1,11 +1,7 @@
-
-
 //
 // The table component displays an AJAX or static-based table
 // complete with header, control bar, and pagination controls.
 //
-
-
 
 .table-component {
 
@@ -97,9 +93,6 @@
     }
 
     thead {
-
-      @include background-image(linear-gradient($gradient-start, $gradient-end));
-
       th {
         cursor: normal;
         @include user-select(none);
@@ -111,19 +104,16 @@
         &.checkbox {
           cursor: pointer;
         }
-
-        &:first-child {
-          @include border-top-left-radius($wrapper-border-radius);
-        }
         &:last-child {
-          @include border-top-right-radius($wrapper-border-radius);
           border-right: 0;
         }
         &.select-all {
           width: 32px;
         }
         &.sortable {
-          span { padding-right: 10px; }
+          span {
+            padding-right: 10px;
+          }
         }
 
         span {
@@ -160,12 +150,6 @@
         }
         &.sortable {
           cursor: pointer;
-          &:hover, &.sort {
-            @include background-image(linear-gradient(
-                            darken($gradient-start, $darken),
-                            darken($gradient-end, $darken)
-            ));
-          }
         }
         &.disabled {
           pointer-events: none;
@@ -189,129 +173,6 @@
         }
       }
     }
-
-  }
-
-  .pagination-region {
-
-    a, input, select {
-      &.disabled {
-        @include opacity(0.4);
-        cursor: default;
-        pointer-events: none;
-      }
-    }
-
-    .paginator {
-      text-align: right;
-
-      div.left {
-        float: left;
-        padding-top: 2px;
-      }
-
-      label.row_select {
-        span.line {
-          line-height: $size;
-          vertical-align: baseline;
-        }
-        select {
-          @include box-shadow(inset 0, 0, 2px, rgba(0,0,0,.2));
-          @include border-radius(2px);
-          color: #333;
-          border: 1px solid #ccc;
-          background: #fff;
-          font-weight: bold;
-          padding: 3px 5px;
-          -webkit-appearance: none;
-          position: relative;
-          &:focus {
-            outline: none;
-          }
-          &:after {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            width: 45px;
-            content: 'v';
-          }
-        }
-      }
-
-      span.page_info {
-        padding-left: 10px;
-        padding-right: 10px;
-        vertical-align: baseline;
-        margin-top: 3px;
-      }
-
-      .page_navigation {
-        display: inline-block;
-        font-size: 0; // knock out whitespace spacing between elements
-        margin-top: 5px;
-        * {
-          vertical-align: baseline;
-          font-size: 11px;
-        }
-        a {
-          background-color: $bgcolor;
-          display: inline-block;
-          vertical-align: top;
-          width: 21px;
-          height: 22px;
-          margin-right: 0;
-          margin-top: 0;
-          padding-left: 3px;
-          padding-right: 3px;
-          border: 1px solid #bbb;
-          background-repeat: no-repeat;
-          cursor: pointer;
-          &, &:hover {
-            background-image: image-url('images/pagination_new.png');
-            @include image-2x('images/pagination_new_2x.png', 78px, 11px);
-          }
-          &:hover {
-            background-color: darken($bgcolor, 8%);
-          }
-          &.first, &.next {
-            border-right: none;
-          }
-          &.last, &.previous {
-            border-left: 1px solid #ddd;
-          }
-          &.first {
-            @include border-radius-separate(5px, 0, 0, 5px);
-            background-position: -39px 5px;
-          }
-          &.previous {
-            background-position: -59px 5px;
-            border-left: 1px solid #c0c0c0;
-            border-right: 0;
-          }
-          &.previous, &.next {
-            @include border-radius-separate(0, 0, 0, 0);
-          }
-          &.next {
-            background-position: 4px 5px;
-            border-right: 1px solid #c0c0c0;
-            border-left: 0;
-          }
-          &.last {
-            @include border-radius-separate(0, 5px, 5px, 0);
-            background-position: -16px 5px;
-            border-left: 0;
-          }
-        }
-        input.curr {
-          width: 30px;
-          height: 18px;
-          text-align: center;
-          margin-top: 0;
-          vertical-align: top;
-        }
-      }
-    }
   }
 
   .select-all-tooltip {
@@ -320,3 +181,60 @@
 
   @import "jquery.resizableColumns.css";
 }
+
+.pagination-region {
+
+  a, input, select {
+    &.disabled {
+      @include opacity(0.4);
+      cursor: default;
+      pointer-events: none;
+    }
+  }
+  a {
+    background-color: $pagination-link-background-color;
+    border: 1px solid $pagination-link-border-color;
+    display: inline-block;
+    vertical-align: top;
+    width: 21px;
+    height: 22px;
+    margin-right: 0;
+    margin-top: 0;
+    padding-left: 3px;
+    padding-right: 3px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+
+    &.first {
+      background-position: -39px 5px;
+    }
+    &.previous {
+      background-position: -59px 5px;
+    }
+    &.next {
+      background-position: 4px 5px;
+    }
+    &.last {
+      background-position: -16px 5px;
+    }
+  }
+
+  .paginator {
+    text-align: right;
+
+    .page_navigation {
+      a, a:hover {
+        background-image: image-url('images/pagination_new.png');
+        @include image-2x('images/pagination_new_2x.png', 78px, 11px);
+      }
+      input.curr {
+        width: 30px;
+        height: 18px;
+        text-align: center;
+        margin-top: 0;
+        vertical-align: top;
+      }
+    }
+  }
+}
+

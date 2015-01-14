@@ -10,12 +10,16 @@ module.exports = (grunt) ->
     copy:
 
       css:
-        src: 'build/css/table.css'
+        src: 'build/css/table-base.css'
         dest: 'dist/marionette.carpenter.css'
 
       foundationCss:
         src: 'build/css/table-foundation.css'
         dest: 'build/marionette.carpenter.foundation.css'
+
+      proCss:
+        src: 'build/css/table-pro.css'
+        dest: 'build/marionette.carpenter.pro.css'
 
       js:
         expand: true
@@ -148,7 +152,7 @@ module.exports = (grunt) ->
       base:
         expand: true
         flatten: true
-        src: ['./src/sass/table.scss']
+        src: ['./src/sass/table-base.scss']
         dest: './build/css'
         ext: '.css'
       foundation:
@@ -157,12 +161,28 @@ module.exports = (grunt) ->
         src: ['./src/sass/table-foundation.scss']
         dest: './build/css'
         ext: '.css'
+      pro:
+        expand: true
+        flatten: true
+        src: ['./src/sass/table-pro.scss']
+        dest: './build/css'
+        ext: '.css'
 
 
     imageEmbed:
-      dist:
+      base:
         src: [ "./dist/marionette.carpenter.css" ]
         dest: "./dist/marionette.carpenter.css"
+        options:
+          baseDir: './assets'
+      foundation:
+        src: [ "./dist/marionette.carpenter.foundation.css" ]
+        dest: "./dist/marionette.carpenter.foundation.css"
+        options:
+          baseDir: './assets'
+      pro:
+        src: [ "./dist/marionette.carpenter.pro.css" ]
+        dest: "./dist/marionette.carpenter.pro.css"
         options:
           baseDir: './assets'
 

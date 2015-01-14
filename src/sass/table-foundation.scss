@@ -2,13 +2,36 @@
 @import "themes/settings";
 
 // Override themes/settings variables here.
+$wrapper-border-radius: none;
+// TODO: This is a gross hack, at the moment. We need to output Foundation-specific markup.
+$pagination-link-background-color: #f3f3f3;
+$pagination-link-border-color: #999999;
 
 @import "themes/base";
 
 // Override themes/base styles here.
 
 .table-component {
-  .table-region thead {
-    background-image: none;
+  .table-region {
+    border: none;
+
+    thead {
+
+      th {
+        text-transform: none;
+        border-right: none;
+      }
+    }
+  }
+}
+
+.pagination-region .paginator .page_navigation {
+  padding-top: 7px;
+
+  a {
+    width: 25px;
+  }
+  input.curr {
+    height: 22px;
   }
 }
