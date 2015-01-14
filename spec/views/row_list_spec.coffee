@@ -8,6 +8,10 @@ define [
 
     createRegion()
 
+    #Need ref to Backbone.Radio
+    buildCarpenterRadio = ->
+      new Backbone.Radio.channel('carpenter')
+
     describe 'when rendering a static collection', ->
 
       buildModelClass = ->
@@ -28,11 +32,6 @@ define [
           { attribute: 'name' }
           { attribute: 'class' }
         ]
-
-      #Need ref to Backbone.Radio
-      buildCarpenterRadio = ->
-        new Backbone.Radio.channel('carpenter')
-
 
       buildRowList = (n=0, opts={}) ->
         defaults =
@@ -196,9 +195,6 @@ define [
           collection = _.times(n, -> new Model(id: n))
           new Backbone.Collection collection, { model: Model }
 
-        #Need ref to Backbone.Radio
-        buildCarpenterRadio = ->
-          new Backbone.Radio.channel('carpenter')
 
         defaultRowListOptions =
           collection:      buildCollection(n, opts)
