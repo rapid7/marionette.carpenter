@@ -295,7 +295,7 @@ define [
               selectedFlag=true
             )
 
-            $(@region.el).find('thead input[type=checkbox]')[0].click()
+            $(@region.el).find('thead input[type=checkbox]').click()
 
           afterEach ->
             selectedFlag=false
