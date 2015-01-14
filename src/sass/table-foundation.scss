@@ -1,0 +1,14 @@
+@import "themes/imports";
+@import "themes/settings";
+
+// Override themes/settings variables here.
+
+@import "themes/base";
+
+// Override themes/base styles here.
+
+.table-component {
+  .table-region thead {
+    background-image: none;
+  }
+}

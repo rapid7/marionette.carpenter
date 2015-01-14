@@ -10,8 +10,12 @@ module.exports = (grunt) ->
     copy:
 
       css:
-        src: 'build/marionette.carpenter.css'
+        src: 'build/css/table.css'
         dest: 'dist/marionette.carpenter.css'
+
+      foundationCss:
+        src: 'build/css/table-foundation.css'
+        dest: 'build/marionette.carpenter.foundation.css'
 
       js:
         expand: true
@@ -21,7 +25,7 @@ module.exports = (grunt) ->
         dest: 'dist/'
 
       # This makes me :-(, sass task doesn't parse css files so we generate a scss file.
-      # The copy task also drops the . syntax i the copied file.
+      # The copy task also drops the . syntax in the copied file.
       cssAsScss:
         files: [
           expand:true
@@ -102,15 +106,16 @@ module.exports = (grunt) ->
           "dist/marionette.carpenter.min.js": "dist/marionette.carpenter.js"
 
     concat:
-
       # "Fix up" our specs to load everything synchronously
       spec:
         src: ["build/spec/specs.js", "build/spec/require_stub.js"]
         dest: "build/spec/specs.js"
-
-      css:
-        src: ["build/css/**.css"]
+      base_css:
+        src: ["build/css/table.css"]
         dest: "dist/marionette.carpenter.css"
+      foundation_css:
+        src: ["build/css/table-foundation.css"]
+        dest: "dist/marionette.carpenter.foundation.css"
 
     watch:
       files: ['src/**/**.coffee', 'src/**/**.eco', 'spec/**/**.coffee']
@@ -132,8 +137,6 @@ module.exports = (grunt) ->
           specs: ['build/spec/specs.js']
           summary: true
 
-
-
     sass:
       options:
         includePaths: [
@@ -142,12 +145,19 @@ module.exports = (grunt) ->
         ]
         sourceMap: false
         style: 'compact'
-      build:
+      base:
         expand: true
         flatten: true
-        src: ['./src/sass/*.scss']
+        src: ['./src/sass/table.scss']
         dest: './build/css'
         ext: '.css'
+      foundation:
+        expand: true
+        flatten: true
+        src: ['./src/sass/table-foundation.scss']
+        dest: './build/css'
+        ext: '.css'
+
 
     imageEmbed:
       dist:
@@ -170,6 +180,20 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-uglify')
 
   grunt.registerTask('style', ['clean', 'sass'])
-  grunt.registerTask('build', ['clean', 'style', 'coffee', 'eco', 'requirejs', 'concat', 'copy:js', 'copy:css', 'imageEmbed', 'uglify'])
+  grunt.registerTask(
+    'build',
+    [
+      'clean'
+      'style'
+      'coffee'
+      'eco'
+      'requirejs'
+      'concat'
+      'copy:js'
+      'copy:css'
+      'imageEmbed'
+      'uglify'
+    ]
+  )
   grunt.registerTask('spec',  ['build', 'jasmine'])
   grunt.registerTask('default', ['build'])

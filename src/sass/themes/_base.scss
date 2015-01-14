@@ -1,18 +1,13 @@
-@import "compass/css3";
-@import "compass/css3/user-interface";
-@import "_css3";
-@import "_buttons";
+
 
 //
 // The table component displays an AJAX or static-based table
 // complete with header, control bar, and pagination controls.
 //
 
-$light-gray-border: #ccc;
-$table-row-hover-color: #efefef;
+
 
 .table-component {
-  $wrapper-border-radius: 5px;
 
   .header-region {
     h3 {
@@ -102,8 +97,7 @@ $table-row-hover-color: #efefef;
     }
 
     thead {
-      $gradient-start: #fff;
-      $gradient-end: #dfdfdf;
+
       @include background-image(linear-gradient($gradient-start, $gradient-end));
 
       th {
@@ -167,7 +161,6 @@ $table-row-hover-color: #efefef;
         &.sortable {
           cursor: pointer;
           &:hover, &.sort {
-            $darken: 5%;
             @include background-image(linear-gradient(
                             darken($gradient-start, $darken),
                             darken($gradient-end, $darken)
@@ -200,7 +193,6 @@ $table-row-hover-color: #efefef;
   }
 
   .pagination-region {
-    $size: 23px;
 
     a, input, select {
       &.disabled {
@@ -263,7 +255,6 @@ $table-row-hover-color: #efefef;
           font-size: 11px;
         }
         a {
-          $bgcolor: #d8d9d9;
           background-color: $bgcolor;
           display: inline-block;
           vertical-align: top;
