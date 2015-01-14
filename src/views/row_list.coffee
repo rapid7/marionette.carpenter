@@ -59,7 +59,7 @@ define [
       @tableSelections =   opts.tableSelections
       @emptyView       =   opts.emptyView || opts.tableEmptyView || Empty
       @loadingView     =   opts.loadingView || Loading
-      @carpenter       =   opts.carpenter
+      @carpenter       =   opts
 
       @setSort(@collection.sortColumn, @collection.sortDirection, noReload: true)
 
@@ -130,10 +130,12 @@ define [
       $rowCheckboxes = @getRowCheckboxes()
 
       if @ui.selectAllCheckbox.prop 'checked'
+        @carpenter.carpenterRadio.trigger('table:rows:selected')
         @tableSelections.selectAllState = true
         @tableSelections.deselectedIDs = {}
         _.each @collection.models, (model) -> model.set('selected', true)
       else
+        @carpenter.carpenterRadio.trigger('table:rows:deselected')
         @tableSelections.selectAllState = false
         @tableSelections.selectedIDs = {}
         _.each @collection.models, (model) -> model.set('selected', false)

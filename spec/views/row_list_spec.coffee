@@ -29,11 +29,17 @@ define [
           { attribute: 'class' }
         ]
 
+      #Need ref to Backbone.Radio
+      buildCarpenterRadio = ->
+        new Backbone.Radio.channel('carpenter')
+
+
       buildRowList = (n=0, opts={}) ->
         defaults =
           collection: buildCollection(n)
           columns:    buildColumns()
           static:     true
+          carpenterRadio:  buildCarpenterRadio()
         opts = _.extend({}, defaults, opts)
         new RowList opts
 
@@ -190,11 +196,16 @@ define [
           collection = _.times(n, -> new Model(id: n))
           new Backbone.Collection collection, { model: Model }
 
+        #Need ref to Backbone.Radio
+        buildCarpenterRadio = ->
+          new Backbone.Radio.channel('carpenter')
+
         defaultRowListOptions =
           collection:      buildCollection(n, opts)
           columns:         opts.columns
           static:          true
           tableSelections: {}
+          carpenterRadio: buildCarpenterRadio()
         rowListOptions = _.extend({}, defaultRowListOptions, opts.rowListOptions)
         new RowList rowListOptions
 

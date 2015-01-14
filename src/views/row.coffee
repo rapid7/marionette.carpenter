@@ -109,14 +109,14 @@ define [
       @setSelectionState()
       @recordSelectionState()
 
-      @carpenterRadio.trigger 'table:row:selection_toggled', @model
+      @carpenter.carpenterRadio.trigger 'table:row:selection_toggled', @model
       @model.trigger 'selection_toggled'
 
       if !@ui.checkbox.prop 'checked'
-        @carpenterRadio.trigger 'table:row:deselected', @model
+        @carpenter.carpenterRadio.trigger 'table:row:deselected', @model
         @model.trigger 'deselected'
       else
-        @carpenterRadio.trigger 'table:row:selected', @model
+        @carpenter.carpenterRadio.trigger 'table:row:selected', @model
         @model.trigger 'selected'
 
     # Render any columns that had an associated View classes

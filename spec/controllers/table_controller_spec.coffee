@@ -288,15 +288,51 @@ define [
           expect($(@region.el).find('input[type=checkbox]:checked').length).toEqual(0)
 
         describe 'after clicking the checkbox in thead', ->
+          selectedFlag = false
+
           beforeEach ->
-            $(@region.el).find('thead input[type=checkbox]').click()
+            @controller.carpenterRadio.on('table:rows:selected',()->
+              selectedFlag=true
+            )
+
+            $(@region.el).find('thead input[type=checkbox]')[0].click()
+
+          afterEach ->
+            selectedFlag=false
+            @controller.carpenterRadio.off('table:rows:selected')
+
+          it 'triggers the table:rows:selected event', ->
+            waitsFor(()->
+              selectedFlag
+            , "The table:rows:selected event should be triggered", 5000)
+
+            runs ->
+              expect(selectedFlag).toEqual(true)
 
           it 'selects all checkboxes', ->
             expect($(@region.el).find('input[type=checkbox]:checked').length).toEqual(2)
 
           describe 'and then clicking again', ->
+            deselectedFlag = false
+
             beforeEach ->
+              @controller.carpenterRadio.on('table:rows:deselected',()->
+                deselectedFlag =true
+              )
+
               $(@region.el).find('thead input[type=checkbox]').click()
+
+            afterEach ->
+              deselectedFlag  = false
+              @controller.carpenterRadio.off('table:rows:deselected')
+
+            it 'triggers the table:rows:deselected:event', ->
+              waitsFor(()->
+                deselectedFlag
+              , "The table:rows:deselected event should be triggered", 5000)
+
+              runs ->
+                expect(deselectedFlag).toEqual(true)
 
             it 'deselects all checkboxes', ->
               expect($(@region.el).find('input[type=checkbox]:checked').length).toEqual(0)

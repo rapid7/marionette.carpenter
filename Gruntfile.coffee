@@ -131,8 +131,6 @@ module.exports = (grunt) ->
           specs: ['build/spec/specs.js']
           summary: true
 
-
-
     sass:
       options:
         includePaths: [
