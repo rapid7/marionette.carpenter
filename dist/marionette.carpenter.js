@@ -2722,7 +2722,7 @@ define('views/row',['templates/row', 'utilities/string_utils'], function(templat
       this.selectable = !!opts.selectable;
       this.tableSelections = opts.tableSelections;
       this.serverAPI = opts.serverAPI;
-      this.controller = opts.carpenter;
+      this.controller = opts.controller;
       this.setInitialSelectionState();
       return _.each(this.columns, (function(_this) {
         return function(column, idx) {

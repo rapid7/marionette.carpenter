@@ -41,7 +41,7 @@ define [
       @selectable      = !!opts.selectable
       @tableSelections =   opts.tableSelections
       @serverAPI       =   opts.serverAPI
-      @controller      =   opts.carpenter
+      @controller      =   opts.controller
       @setInitialSelectionState()
 
       # dynamically add regions for each column that needs a View
