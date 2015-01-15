@@ -1,0 +1,10 @@
+--name       "Carpenter"
+--readme     README.md
+--title      "Marionette.Carpenter Documentation"
+--private
+--quiet
+--extension  coffee
+--output     ./doc
+./src
+-
+LICENSE

@@ -21,7 +21,7 @@ module.exports = (grunt) ->
         dest: 'dist/'
 
       # This makes me :-(, sass task doesn't parse css files so we generate a scss file.
-      # The copy task also drops the . syntax in the copied file name.
+      # The copy task also drops the . syntax i the copied file.
       cssAsScss:
         files: [
           expand:true
@@ -82,6 +82,7 @@ module.exports = (grunt) ->
           baseUrl: "build/"
           include: [
             "spec/controllers/table_controller_spec.js"
+            "spec/views/create_spec.js"
             "spec/views/control_bar_spec.js"
             "spec/views/row_spec.js"
             "spec/views/row_list_spec.js"

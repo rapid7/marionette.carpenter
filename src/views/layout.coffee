@@ -35,6 +35,7 @@ define [
     initialize: (opts={}) ->
       # merge in the defaults
       _.extend @regions, opts?.regions
+      @controller =   opts
       @columns    =   opts.columns
       @collection =   opts.collection
       @selectable = !!opts.selectable
