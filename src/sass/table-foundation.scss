@@ -11,7 +11,17 @@ $pagination-link-border-color: #999999;
 
 // Override themes/base styles here.
 
+
+
 .table-component {
+  // TODO: This is also a gross hack. Need to be able to wipe out existing classes.
+  .buttons-region ul li a.action-button {
+    @include border-radius(0px);
+    background-image: none !important;
+    font-size: 1em;
+    line-height: 2px;
+  }
+
   .table-region {
     border: none;
 
@@ -25,13 +35,31 @@ $pagination-link-border-color: #999999;
   }
 }
 
-.pagination-region .paginator .page_navigation {
-  padding-top: 7px;
-
-  a {
-    width: 25px;
+.pagination-region .paginator {
+  label.row_select {
+    float: left;
+    span.line {
+      display: none
+    }
+    select {
+      width: 100px;
+      float: right;
+    }
   }
-  input.curr {
-    height: 22px;
+
+  span.page_info {
+    display: inline-block;
+    margin: 5px 0 0 15px;
+  }
+
+  .page_navigation {
+    padding-top: 7px;
+
+    a {
+      width: 25px;
+    }
+    input.curr {
+      height: 22px;
+    }
   }
 }
