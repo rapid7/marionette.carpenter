@@ -41,7 +41,7 @@ define [
       @selectable      = !!opts.selectable
       @tableSelections =   opts.tableSelections
       @serverAPI       =   opts.serverAPI
-      @carpenter       =   opts.carpenter
+      @controller      =   opts.carpenter
       @setInitialSelectionState()
 
       # dynamically add regions for each column that needs a View
@@ -109,14 +109,14 @@ define [
       @setSelectionState()
       @recordSelectionState()
 
-      @carpenterRadio.trigger 'table:row:selection_toggled', @model
+      @controller.carpenterRadio.trigger 'table:row:selection_toggled', @model
       @model.trigger 'selection_toggled'
 
       if !@ui.checkbox.prop 'checked'
-        @carpenterRadio.trigger 'table:row:deselected', @model
+        @controller.carpenterRadio.trigger 'table:row:deselected', @model
         @model.trigger 'deselected'
       else
-        @carpenterRadio.trigger 'table:row:selected', @model
+        @controller.carpenterRadio.trigger 'table:row:selected', @model
         @model.trigger 'selected'
 
     # Render any columns that had an associated View classes
