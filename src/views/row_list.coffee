@@ -59,7 +59,7 @@ define [
       @tableSelections =   opts.tableSelections
       @emptyView       =   opts.emptyView || opts.tableEmptyView || Empty
       @loadingView     =   opts.loadingView || Loading
-      @carpenter       =   opts
+      @controller      =   opts
 
       @setSort(@collection.sortColumn, @collection.sortDirection, noReload: true)
 
@@ -130,12 +130,12 @@ define [
       $rowCheckboxes = @getRowCheckboxes()
 
       if @ui.selectAllCheckbox.prop 'checked'
-        @carpenter.carpenterRadio.trigger('table:rows:selected')
+        @controller.carpenterRadio.trigger('table:rows:selected')
         @tableSelections.selectAllState = true
         @tableSelections.deselectedIDs = {}
         _.each @collection.models, (model) -> model.set('selected', true)
       else
-        @carpenter.carpenterRadio.trigger('table:rows:deselected')
+        @controller.carpenterRadio.trigger('table:rows:deselected')
         @tableSelections.selectAllState = false
         @tableSelections.selectedIDs = {}
         _.each @collection.models, (model) -> model.set('selected', false)
@@ -144,7 +144,7 @@ define [
       @collection.trigger 'select_all_toggled'
 
       # Ensure we always return true (and don't prevent bubbling).
-      return true
+      true
 
     #
     # If the shift key is held down, set all checkboxes between the target
@@ -197,7 +197,7 @@ define [
         selectable: @selectable
         tableSelections: @tableSelections
         serverAPI: @collection.server_api
-        carpenter: @carpenter
+        controller: @controller
 
     serializeData: -> @
 

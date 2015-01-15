@@ -2721,7 +2721,7 @@ define('views/row',['templates/row', 'utilities/string_utils'], function(templat
       this.selectable = !!opts.selectable;
       this.tableSelections = opts.tableSelections;
       this.serverAPI = opts.serverAPI;
-      this.carpenter = opts.carpenter;
+      this.controller = opts.carpenter;
       this.setInitialSelectionState();
       return _.each(this.columns, (function(_this) {
         return function(column, idx) {
@@ -2782,13 +2782,13 @@ define('views/row',['templates/row', 'utilities/string_utils'], function(templat
     Row.prototype.triggerSelectionEvents = function() {
       this.setSelectionState();
       this.recordSelectionState();
-      this.carpenter.carpenterRadio.trigger('table:row:selection_toggled', this.model);
+      this.controller.carpenterRadio.trigger('table:row:selection_toggled', this.model);
       this.model.trigger('selection_toggled');
       if (!this.ui.checkbox.prop('checked')) {
-        this.carpenter.carpenterRadio.trigger('table:row:deselected', this.model);
+        this.controller.carpenterRadio.trigger('table:row:deselected', this.model);
         return this.model.trigger('deselected');
       } else {
-        this.carpenter.carpenterRadio.trigger('table:row:selected', this.model);
+        this.controller.carpenterRadio.trigger('table:row:selected', this.model);
         return this.model.trigger('selected');
       }
     };
@@ -3210,7 +3210,7 @@ define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates
       this.tableSelections = opts.tableSelections;
       this.emptyView = opts.emptyView || opts.tableEmptyView || Empty;
       this.loadingView = opts.loadingView || Loading;
-      this.carpenter = opts;
+      this.controller = opts;
       this.setSort(this.collection.sortColumn, this.collection.sortDirection, {
         noReload: true
       });
@@ -3274,14 +3274,14 @@ define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates
       var $rowCheckboxes;
       $rowCheckboxes = this.getRowCheckboxes();
       if (this.ui.selectAllCheckbox.prop('checked')) {
-        this.carpenter.carpenterRadio.trigger('table:rows:selected');
+        this.controller.carpenterRadio.trigger('table:rows:selected');
         this.tableSelections.selectAllState = true;
         this.tableSelections.deselectedIDs = {};
         _.each(this.collection.models, function(model) {
           return model.set('selected', true);
         });
       } else {
-        this.carpenter.carpenterRadio.trigger('table:rows:deselected');
+        this.controller.carpenterRadio.trigger('table:rows:deselected');
         this.tableSelections.selectAllState = false;
         this.tableSelections.selectedIDs = {};
         _.each(this.collection.models, function(model) {
@@ -3331,7 +3331,7 @@ define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates
         selectable: this.selectable,
         tableSelections: this.tableSelections,
         serverAPI: this.collection.server_api,
-        carpenter: this.carpenter
+        controller: this.controller
       });
     };
 
