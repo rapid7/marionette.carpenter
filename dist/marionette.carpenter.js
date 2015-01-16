@@ -1028,9 +1028,15 @@ define('templates/header',[],function(){
     };
     (function() {
       if (this.title && this.title.length) {
-        _print(_safe('\n  <h3>'));
+        _print(_safe('\n  <h3\n    '));
+        if (this.htmlID != null) {
+          _print(_safe('\n      data-table-id=\''));
+          _print(this.htmlID);
+          _print(_safe('\'\n    '));
+        }
+        _print(_safe('\n  >\n    '));
         _print(this.title);
-        _print(_safe('</h3>\n'));
+        _print(_safe('\n  </h3>\n'));
       }
     
       _print(_safe('\n\n<div class=\'right\'>\n  '));
@@ -1085,7 +1091,8 @@ define('views/header',['templates/header'], function(template) {
         opts = {};
       }
       this.title = opts.title;
-      return this.taggable = !!opts.taggable;
+      this.taggable = !!opts.taggable;
+      return this.htmlID = opts.htmlID;
     };
 
     Header.prototype.serializeData = function() {

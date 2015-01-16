@@ -20,5 +20,6 @@ define [
     initialize: (opts={}) ->
       @title      =   opts.title
       @taggable   = !!opts.taggable
+      @htmlID     =   opts.htmlID
 
     serializeData: -> @

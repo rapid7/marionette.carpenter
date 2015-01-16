@@ -1,5 +1,11 @@
 <% if @title and @title.length: %>
-  <h3><%= @title %></h3>
+  <h3
+    <% if @htmlID?: %>
+      data-table-id='<%= @htmlID %>'
+    <% end %>
+  >
+    <%= @title %>
+  </h3>
 <% end %>
 
 <div class='right'>
