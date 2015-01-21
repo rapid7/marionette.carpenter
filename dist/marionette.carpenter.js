@@ -3588,10 +3588,9 @@ define('controllers/table_controller',['controllers/application_controller', 'en
         this.tableSelections.deselectedIDs = {};
       }
       this.actionButtonsCollection = new ActionButtonsCollection(opts.actionButtons);
-      this.listClass || (this.listClass = RowList);
       this.header = new Header(this);
       this.buttons = new ControlBar(this);
-      this.list = new this.listClass(this);
+      this.list = new RowList(this);
       this.paginator = new Paginator(this);
       if (this.selectable) {
         this.selectionIndicator = new SelectionIndicator(this);
@@ -3626,26 +3625,29 @@ define('controllers/table_controller',['controllers/application_controller', 'en
           return _this.tableCollection.fetch();
         };
       })(this));
-      this.listenTo(this.getMainView(), 'show', function() {
-        this.show(this.header, {
-          region: this.getMainView().headerRegion
-        });
-        this.show(this.buttons, {
-          region: this.getMainView().buttonsRegion
-        });
-        this.show(this.list, {
-          region: this.getMainView().tableRegion
-        });
-        this.show(this.paginator, {
-          region: this.getMainView().paginationRegion
-        });
-        if (this.selectable) {
-          return this.show(this.selectionIndicator, {
-            region: this.getMainView().selectionIndicatorRegion,
-            preventDestroy: false
+      this.listenTo(this.getMainView(), 'show', (function(_this) {
+        return function() {
+          _this.show(_this.header, {
+            region: _this.getMainView().headerRegion
           });
-        }
-      });
+          _this.show(_this.buttons, {
+            region: _this.getMainView().buttonsRegion
+          });
+          _this.show(_this.list, {
+            region: _this.getMainView().tableRegion
+          });
+          _this.show(_this.paginator, {
+            region: _this.getMainView().paginationRegion
+          });
+          if (_this.selectable) {
+            _this.show(_this.selectionIndicator, {
+              region: _this.getMainView().selectionIndicatorRegion,
+              preventDestroy: false
+            });
+          }
+          return typeof _this.onShow === "function" ? _this.onShow(_this) : void 0;
+        };
+      })(this));
       this.listenTo(this.paginator, 'table:first', this.first);
       this.listenTo(this.paginator, 'table:previous', this.previous);
       this.listenTo(this.paginator, 'table:next', this.next);
