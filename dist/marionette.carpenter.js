@@ -638,7 +638,7 @@ define('entities/paginated_collection',[], function() {
     _ref = collection.constructor.prototype;
     for (k in _ref) {
       v = _ref[k];
-      (_base = WrappedCollection.prototype)[k] || (_base[k] = v);
+      (_base = WrappedCollection.prototype)[k] || (_base[k] = typeof v === 'object' ? _.clone(v) : v);
     }
     return WrappedCollection;
   };

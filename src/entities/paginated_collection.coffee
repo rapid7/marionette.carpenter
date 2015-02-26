@@ -146,7 +146,7 @@ define [], ->
 
     # mix in methods from the original collection instance's class
     for k, v of collection.constructor.prototype
-      WrappedCollection.prototype[k] ||= v
+      WrappedCollection.prototype[k] ||= if typeof v == 'object' then _.clone(v) else v
 
     # return the wrapped collection to the user
     WrappedCollection
