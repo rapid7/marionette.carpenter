@@ -607,7 +607,7 @@ define('entities/paginated_collection',[], function() {
 
   })(Backbone.Paginator.clientPager);
   return CreatePaginatedCollectionClass = function(collection, opts) {
-    var WrappedCollection, k, superclass, v, _base, _ref;
+    var WrappedCollection, k, superclass, v, _base, _ref, _ref1;
     if (opts == null) {
       opts = {};
     }
@@ -638,7 +638,14 @@ define('entities/paginated_collection',[], function() {
     _ref = collection.constructor.prototype;
     for (k in _ref) {
       v = _ref[k];
-      (_base = WrappedCollection.prototype)[k] || (_base[k] = typeof v === 'object' ? _.clone(v) : v);
+      (_base = WrappedCollection.prototype)[k] || (_base[k] = v);
+    }
+    _ref1 = WrappedCollection.prototype;
+    for (k in _ref1) {
+      v = _ref1[k];
+      if (typeof v === 'object') {
+        WrappedCollection.prototype[k] = _.clone(v);
+      }
     }
     return WrappedCollection;
   };
