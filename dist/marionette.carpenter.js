@@ -607,7 +607,7 @@ define('entities/paginated_collection',[], function() {
 
   })(Backbone.Paginator.clientPager);
   return CreatePaginatedCollectionClass = function(collection, opts) {
-    var WrappedCollection, k, superclass, v, _base, _ref;
+    var WrappedCollection, k, superclass, v, _base, _ref, _ref1;
     if (opts == null) {
       opts = {};
     }
@@ -639,6 +639,13 @@ define('entities/paginated_collection',[], function() {
     for (k in _ref) {
       v = _ref[k];
       (_base = WrappedCollection.prototype)[k] || (_base[k] = v);
+    }
+    _ref1 = WrappedCollection.prototype;
+    for (k in _ref1) {
+      v = _ref1[k];
+      if (typeof v === 'object') {
+        WrappedCollection.prototype[k] = _.clone(v);
+      }
     }
     return WrappedCollection;
   };
@@ -3282,19 +3289,19 @@ define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates
       var $rowCheckboxes;
       $rowCheckboxes = this.getRowCheckboxes();
       if (this.ui.selectAllCheckbox.prop('checked')) {
-        this.controller.carpenterRadio.trigger('table:rows:selected');
         this.tableSelections.selectAllState = true;
         this.tableSelections.deselectedIDs = {};
         _.each(this.collection.models, function(model) {
           return model.set('selected', true);
         });
+        this.controller.carpenterRadio.trigger('table:rows:selected');
       } else {
-        this.controller.carpenterRadio.trigger('table:rows:deselected');
         this.tableSelections.selectAllState = false;
         this.tableSelections.selectedIDs = {};
         _.each(this.collection.models, function(model) {
           return model.set('selected', false);
         });
+        this.controller.carpenterRadio.trigger('table:rows:deselected');
       }
       this.collection.trigger('select_all_toggled');
       return true;

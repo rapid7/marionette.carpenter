@@ -148,5 +148,9 @@ define [], ->
     for k, v of collection.constructor.prototype
       WrappedCollection.prototype[k] ||= v
 
+    # make sure each instance collection doesn't reference the same object
+    for k, v of WrappedCollection.prototype
+      WrappedCollection.prototype[k] = _.clone(v) if typeof v == 'object'
+
     # return the wrapped collection to the user
     WrappedCollection

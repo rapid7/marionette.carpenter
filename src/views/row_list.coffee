@@ -130,15 +130,15 @@ define [
       $rowCheckboxes = @getRowCheckboxes()
 
       if @ui.selectAllCheckbox.prop 'checked'
-        @controller.carpenterRadio.trigger('table:rows:selected')
         @tableSelections.selectAllState = true
         @tableSelections.deselectedIDs = {}
         _.each @collection.models, (model) -> model.set('selected', true)
+        @controller.carpenterRadio.trigger('table:rows:selected')
       else
-        @controller.carpenterRadio.trigger('table:rows:deselected')
         @tableSelections.selectAllState = false
         @tableSelections.selectedIDs = {}
         _.each @collection.models, (model) -> model.set('selected', false)
+        @controller.carpenterRadio.trigger('table:rows:deselected')
 
       # TODO: This event needs to be documented... but where? On both types of collection?
       @collection.trigger 'select_all_toggled'
