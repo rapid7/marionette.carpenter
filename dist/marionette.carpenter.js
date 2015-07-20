@@ -456,11 +456,11 @@ define('controllers/application_controller',[], function() {
       this._attachRadio();
       Controller.__super__.constructor.call(this, options);
       this._instance_id = _.uniqueId("controller");
-      this.carpenter.command("register:instance", this, this._instance_id);
+      this.carpenterRadio.command("register:instance", this, this._instance_id);
     }
 
     Controller.prototype.destroy = function() {
-      this.carpenter.command("unregister:instance", this, this._instance_id);
+      this.carpenterRadio.command("unregister:instance", this, this._instance_id);
       return Controller.__super__.destroy.apply(this, arguments);
     };
 
@@ -495,7 +495,7 @@ define('controllers/application_controller',[], function() {
 
     Controller.prototype._manageView = function(view, options) {
       if (options.loading) {
-        return this.carpenter.command("show:loading", view, options);
+        return this.carpenterRadio.command("show:loading", view, options);
       } else {
         return options.region.show(view);
       }
@@ -507,11 +507,11 @@ define('controllers/application_controller',[], function() {
     };
 
     Controller.prototype._attachRadio = function() {
-      return this.carpenter = Backbone.Radio.channel('carpenter');
+      return this.carpenterRadio = Backbone.Radio.channel('carpenter');
     };
 
     Controller.prototype.channel = function() {
-      return this.carpenter;
+      return this.carpenterRadio;
     };
 
     Controller.prototype._getDefaults = function() {
@@ -571,11 +571,7 @@ define('entities/paginated_collection',[], function() {
     };
 
     AjaxPaginatedCollection.prototype.displayErrorMessage = function(message) {
-      return this.carpenter.command('flash:display', {
-        title: 'Error in search',
-        style: 'error',
-        message: message || 'There is an error in your search terms.'
-      });
+      return this.carpenterRadio.trigger('error:search', message);
     };
 
     AjaxPaginatedCollection.prototype.updateSortKey = function() {
@@ -611,7 +607,7 @@ define('entities/paginated_collection',[], function() {
 
   })(Backbone.Paginator.clientPager);
   return CreatePaginatedCollectionClass = function(collection, opts) {
-    var WrappedCollection, k, superclass, v, _base, _ref;
+    var WrappedCollection, k, superclass, v, _base, _ref, _ref1;
     if (opts == null) {
       opts = {};
     }
@@ -628,6 +624,7 @@ define('entities/paginated_collection',[], function() {
         currentPage: opts.currentPage || 1,
         perPage: opts.perPage || 20
       },
+      carpenterRadio: opts.carpenterRadio,
       updateNumSelected: function(numSelected) {
         this.numSelected = numSelected;
         return this.trigger('change:numSelected');
@@ -642,6 +639,13 @@ define('entities/paginated_collection',[], function() {
     for (k in _ref) {
       v = _ref[k];
       (_base = WrappedCollection.prototype)[k] || (_base[k] = v);
+    }
+    _ref1 = WrappedCollection.prototype;
+    for (k in _ref1) {
+      v = _ref1[k];
+      if (typeof v === 'object') {
+        WrappedCollection.prototype[k] = _.clone(v);
+      }
     }
     return WrappedCollection;
   };
@@ -858,7 +862,7 @@ define('views/action_button',['templates/action_button'], function(template) {
 
     ActionButton.prototype.executeTrigger = function() {
       if (this.model.get('event')) {
-        return this.carpenter.trigger(this.model.get('event'));
+        return this.carpenterRadio.trigger(this.model.get('event'));
       }
     };
 
@@ -1031,9 +1035,15 @@ define('templates/header',[],function(){
     };
     (function() {
       if (this.title && this.title.length) {
-        _print(_safe('\n  <h3>'));
+        _print(_safe('\n  <h3\n    '));
+        if (this.htmlID != null) {
+          _print(_safe('\n      data-table-id=\''));
+          _print(this.htmlID);
+          _print(_safe('\'\n    '));
+        }
+        _print(_safe('\n  >\n    '));
         _print(this.title);
-        _print(_safe('</h3>\n'));
+        _print(_safe('\n  </h3>\n'));
       }
     
       _print(_safe('\n\n<div class=\'right\'>\n  '));
@@ -1088,7 +1098,8 @@ define('views/header',['templates/header'], function(template) {
         opts = {};
       }
       this.title = opts.title;
-      return this.taggable = !!opts.taggable;
+      this.taggable = !!opts.taggable;
+      return this.htmlID = opts.htmlID;
     };
 
     Header.prototype.serializeData = function() {
@@ -2725,7 +2736,7 @@ define('views/row',['templates/row', 'utilities/string_utils'], function(templat
       this.selectable = !!opts.selectable;
       this.tableSelections = opts.tableSelections;
       this.serverAPI = opts.serverAPI;
-      this.carpenter = opts.carpenter;
+      this.controller = opts.controller;
       this.setInitialSelectionState();
       return _.each(this.columns, (function(_this) {
         return function(column, idx) {
@@ -2786,13 +2797,13 @@ define('views/row',['templates/row', 'utilities/string_utils'], function(templat
     Row.prototype.triggerSelectionEvents = function() {
       this.setSelectionState();
       this.recordSelectionState();
-      this.carpenter.trigger('table:row:selection_toggled', this.model);
+      this.controller.carpenterRadio.trigger('table:row:selection_toggled', this.model);
       this.model.trigger('selection_toggled');
       if (!this.ui.checkbox.prop('checked')) {
-        this.carpenter.trigger('table:row:deselected', this.model);
+        this.controller.carpenterRadio.trigger('table:row:deselected', this.model);
         return this.model.trigger('deselected');
       } else {
-        this.carpenter.trigger('table:row:selected', this.model);
+        this.controller.carpenterRadio.trigger('table:row:selected', this.model);
         return this.model.trigger('selected');
       }
     };
@@ -3214,7 +3225,7 @@ define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates
       this.tableSelections = opts.tableSelections;
       this.emptyView = opts.emptyView || opts.tableEmptyView || Empty;
       this.loadingView = opts.loadingView || Loading;
-      this.carpenter = opts.carpenter;
+      this.controller = opts;
       this.setSort(this.collection.sortColumn, this.collection.sortDirection, {
         noReload: true
       });
@@ -3283,12 +3294,14 @@ define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates
         _.each(this.collection.models, function(model) {
           return model.set('selected', true);
         });
+        this.controller.carpenterRadio.trigger('table:rows:selected');
       } else {
         this.tableSelections.selectAllState = false;
         this.tableSelections.selectedIDs = {};
         _.each(this.collection.models, function(model) {
           return model.set('selected', false);
         });
+        this.controller.carpenterRadio.trigger('table:rows:deselected');
       }
       this.collection.trigger('select_all_toggled');
       return true;
@@ -3333,7 +3346,7 @@ define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates
         selectable: this.selectable,
         tableSelections: this.tableSelections,
         serverAPI: this.collection.server_api,
-        carpenter: this.carpenter
+        controller: this.controller
       });
     };
 
@@ -3582,10 +3595,9 @@ define('controllers/table_controller',['controllers/application_controller', 'en
         this.tableSelections.deselectedIDs = {};
       }
       this.actionButtonsCollection = new ActionButtonsCollection(opts.actionButtons);
-      this.listClass || (this.listClass = RowList);
       this.header = new Header(this);
       this.buttons = new ControlBar(this);
-      this.list = new this.listClass(this);
+      this.list = new RowList(this);
       this.paginator = new Paginator(this);
       if (this.selectable) {
         this.selectionIndicator = new SelectionIndicator(this);
@@ -3620,26 +3632,29 @@ define('controllers/table_controller',['controllers/application_controller', 'en
           return _this.tableCollection.fetch();
         };
       })(this));
-      this.listenTo(this.getMainView(), 'show', function() {
-        this.show(this.header, {
-          region: this.getMainView().headerRegion
-        });
-        this.show(this.buttons, {
-          region: this.getMainView().buttonsRegion
-        });
-        this.show(this.list, {
-          region: this.getMainView().tableRegion
-        });
-        this.show(this.paginator, {
-          region: this.getMainView().paginationRegion
-        });
-        if (this.selectable) {
-          return this.show(this.selectionIndicator, {
-            region: this.getMainView().selectionIndicatorRegion,
-            preventDestroy: false
+      this.listenTo(this.getMainView(), 'show', (function(_this) {
+        return function() {
+          _this.show(_this.header, {
+            region: _this.getMainView().headerRegion
           });
-        }
-      });
+          _this.show(_this.buttons, {
+            region: _this.getMainView().buttonsRegion
+          });
+          _this.show(_this.list, {
+            region: _this.getMainView().tableRegion
+          });
+          _this.show(_this.paginator, {
+            region: _this.getMainView().paginationRegion
+          });
+          if (_this.selectable) {
+            _this.show(_this.selectionIndicator, {
+              region: _this.getMainView().selectionIndicatorRegion,
+              preventDestroy: false
+            });
+          }
+          return typeof _this.onShow === "function" ? _this.onShow(_this) : void 0;
+        };
+      })(this));
       this.listenTo(this.paginator, 'table:first', this.first);
       this.listenTo(this.paginator, 'table:previous', this.previous);
       this.listenTo(this.paginator, 'table:next', this.next);
@@ -3779,7 +3794,7 @@ define('controllers/table_controller',['controllers/application_controller', 'en
     Controller.prototype.toggleInteraction = function(enabled) {
       var $ctrlBarButtons, userInputSelector;
       if (enabled) {
-        this.carpenter.trigger('total_records:change', this.totalRecords());
+        this.carpenterRadio.trigger('total_records:change', this.totalRecords());
       }
       if (this.isInteractionEnabled === enabled) {
         return;

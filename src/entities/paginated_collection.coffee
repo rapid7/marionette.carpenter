@@ -44,10 +44,7 @@ define [], ->
           @displayErrorMessage(response?.responseJSON?.message)
 
     displayErrorMessage: (message) ->
-      @carpenter.command 'flash:display',
-        title:   'Error in search'
-        style:   'error'
-        message: message || 'There is an error in your search terms.'
+      @carpenterRadio.trigger('error:search', message)
 
     # Remembers the sort options for the next API call
     updateSortKey: ->
@@ -122,6 +119,9 @@ define [], ->
       # number of rows to render per page
         perPage: opts.perPage || 20
 
+      # reference to carpenter Backbon.Radio Channel
+      carpenterRadio: opts.carpenterRadio
+
     #
     # Update the count of selected records, and fire an event.
     #
@@ -147,6 +147,10 @@ define [], ->
     # mix in methods from the original collection instance's class
     for k, v of collection.constructor.prototype
       WrappedCollection.prototype[k] ||= v
+
+    # make sure each instance collection doesn't reference the same object
+    for k, v of WrappedCollection.prototype
+      WrappedCollection.prototype[k] = _.clone(v) if typeof v == 'object'
 
     # return the wrapped collection to the user
     WrappedCollection

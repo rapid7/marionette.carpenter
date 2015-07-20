@@ -37,7 +37,9 @@ define [
     # Used as a base controller for rendering a cell view
     class Marionette.Carpenter.CellController extends Controller
 
-
+    #
+    # The Controller glues together the various views in the Table.
+    #
     class Marionette.Carpenter.Controller extends Controller
 
       # @property [Boolean] show table view on initialize
@@ -151,11 +153,9 @@ define [
       # @option opts :perPage                [Number] number of rows per page
       # @option opts :perPageOptions         [Array<Number,String>] choices in the "Display" dropdown
       # @option opts :selectable             [Boolean] whether or not to display check boxes in each row
-      # @option opts :renderFilterControls   [Boolean] whether or not to render the filter toggle and search box
+      # @option opts :renderFilterControls   [Boolean] whether or not to render the filter toggle and search box on table load
       #                                        (default: false)
-      #                                        on table load
-      # @option opts :listClass              [App.Views.CompositeView] a custom class to use as the RowList
-      #                                        (default: RowList)
+      # @option opts :onShow                 [Function] run when the views are initially rendered. `this` is passed as an argument.
       initialize: (opts={}) ->
         # merge in any specified overrides
         _.extend @, opts
@@ -195,16 +195,12 @@ define [
         # create a collection of action buttons for the control bar
         @actionButtonsCollection = new ActionButtonsCollection(opts.actionButtons)
 
-        # support custom RowList subclasses
-        @listClass ||= RowList
-
         # build the new table
         @header             = new Header(@)
         @buttons            = new ControlBar(@)
-        @list               = new @listClass(@)
+        @list               = new RowList(@)
         @paginator          = new Paginator(@)
         @selectionIndicator = new SelectionIndicator(@) if @selectable
-
 
         @listenTo @collection, 'reset',  => @toggleInteraction true
         @listenTo @collection, 'sync',   => @toggleInteraction true
@@ -224,12 +220,13 @@ define [
           @tableCollection.fetch()
 
         # wire the pieces together
-        @listenTo @getMainView(), 'show', ->
+        @listenTo @getMainView(), 'show', =>
           @show @header,             region: @getMainView().headerRegion
           @show @buttons,            region: @getMainView().buttonsRegion
           @show @list,               region: @getMainView().tableRegion
           @show @paginator,          region: @getMainView().paginationRegion
           @show @selectionIndicator, region: @getMainView().selectionIndicatorRegion, preventDestroy:false if @selectable
+          @onShow?(@)
 
         @listenTo @paginator, 'table:first', @first
         @listenTo @paginator, 'table:previous', @previous
@@ -346,7 +343,7 @@ define [
       toggleInteraction: (enabled) =>
 
         # Trigger an update of any total records indicators.
-        @carpenter.trigger 'total_records:change', @totalRecords() if enabled
+        @carpenterRadio.trigger 'total_records:change', @totalRecords() if enabled
 
         return if @isInteractionEnabled is enabled
 

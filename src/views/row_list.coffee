@@ -59,7 +59,7 @@ define [
       @tableSelections =   opts.tableSelections
       @emptyView       =   opts.emptyView || opts.tableEmptyView || Empty
       @loadingView     =   opts.loadingView || Loading
-      @carpenter       =   opts.carpenter
+      @controller      =   opts
 
       @setSort(@collection.sortColumn, @collection.sortDirection, noReload: true)
 
@@ -133,16 +133,18 @@ define [
         @tableSelections.selectAllState = true
         @tableSelections.deselectedIDs = {}
         _.each @collection.models, (model) -> model.set('selected', true)
+        @controller.carpenterRadio.trigger('table:rows:selected')
       else
         @tableSelections.selectAllState = false
         @tableSelections.selectedIDs = {}
         _.each @collection.models, (model) -> model.set('selected', false)
+        @controller.carpenterRadio.trigger('table:rows:deselected')
 
       # TODO: This event needs to be documented... but where? On both types of collection?
       @collection.trigger 'select_all_toggled'
 
       # Ensure we always return true (and don't prevent bubbling).
-      return true
+      true
 
     #
     # If the shift key is held down, set all checkboxes between the target
@@ -195,7 +197,7 @@ define [
         selectable: @selectable
         tableSelections: @tableSelections
         serverAPI: @collection.server_api
-        carpenter: @carpenter
+        controller: @controller
 
     serializeData: -> @
 

@@ -20,6 +20,7 @@ define [
     set 'btns',           -> ['D', 'E', 'F']
     set 'defaultSort',    -> null
     set 'itemViewMatch',  -> "JOE WAS HERE"
+    set 'onShow',         -> null
     set 'ItemView',       -> Marionette.ItemView.extend(template: -> itemViewMatch)
 
     beforeEach ->
@@ -45,6 +46,7 @@ define [
         columns: columns
         defaultSort: defaultSort
         app: app
+        onShow: onShow
 
       @controller = new Marionette.Carpenter.Controller(defaults)
 
@@ -53,77 +55,198 @@ define [
       it 'renders something', ->
         expect(@region.el.children.length).toBeGreaterThan 0
 
-    describe '#name', ->
-      set 'titleText', -> "JOES FAVORITE TABLE HEADER"
+    describe 'constructor options', ->
 
-      it 'is rendered in the table header', ->
-        expect(@region.el).toContainNodeWithText(titleText)
+      describe 'name', ->
+        set 'titleText', -> "JOES FAVORITE TABLE HEADER"
 
-    describe '#actionButtons', ->
+        it 'is rendered in the table header', ->
+          expect(@region.el).toContainNodeWithText(titleText)
 
-      describe 'with one actionButton named "FOO LABEL 123"', ->
-        set 'labelText', -> 'FOO LABEL 123'
-        set 'actionButtons', -> [{ label: 'FOO LABEL 123' }]
+      describe 'opts.actionButtons', ->
 
-        it 'is rendered in the table control bar', ->
-          expect(@region.el).toContainNodeWithText(labelText)
+        describe 'with one actionButton named "FOO LABEL 123"', ->
+          set 'labelText', -> 'FOO LABEL 123'
+          set 'actionButtons', -> [{ label: 'FOO LABEL 123' }]
 
-      describe 'with three actionButton named "A, B, C"', ->
-        set 'actionButtons', -> _.map(['A', 'B', 'C'], (text) -> label: text)
-        set 'buttonsEl',     -> $(@region.el).find('.action_buttons')
+          it 'is rendered in the table control bar', ->
+            expect(@region.el).toContainNodeWithText(labelText)
 
-        it 'renders a node containing A', ->
-          expect(@region.el).toContainNodeWithText('A')
+        describe 'with three actionButton named "A, B, C"', ->
+          set 'actionButtons', -> _.map(['A', 'B', 'C'], (text) -> label: text)
+          set 'buttonsEl',     -> $(@region.el).find('.action_buttons')
 
-        it 'renders a node containing B', ->
-          expect(@region.el).toContainNodeWithText('B')
+          it 'renders a node containing A', ->
+            expect(@region.el).toContainNodeWithText('A')
 
-        it 'renders a node containing C', ->
-          expect(@region.el).toContainNodeWithText('C')
+          it 'renders a node containing B', ->
+            expect(@region.el).toContainNodeWithText('B')
 
-    describe '#columns', ->
+          it 'renders a node containing C', ->
+            expect(@region.el).toContainNodeWithText('C')
 
-      describe 'when given three columns with attributes D, E, F', ->
-        set 'columns', -> _.map(btns, (c) -> attribute: c)
+      describe 'columns', ->
 
-        it 'renders a node containing D', ->
-          expect(@region.el).toContainNodeWithText('D')
+        describe 'when given three columns with attributes D, E, F', ->
+          set 'columns', -> _.map(btns, (c) -> attribute: c)
 
-        it 'renders a node containing E', ->
-          expect(@region.el).toContainNodeWithText('E')
+          it 'renders a node containing D', ->
+            expect(@region.el).toContainNodeWithText('D')
 
-        it 'renders a node containing F', ->
-          expect(@region.el).toContainNodeWithText('F')
+          it 'renders a node containing E', ->
+            expect(@region.el).toContainNodeWithText('E')
 
-      describe 'when the :view property is present in the column definition', ->
-        set 'columns', -> [{ attribute: 'a', view: ItemView }]
-        set 'collection', -> new Backbone.Collection([{a:1}])
+          it 'renders a node containing F', ->
+            expect(@region.el).toContainNodeWithText('F')
 
-        it 'renders the view', ->
-          expect(@region.el).toContainNodeWithText(itemViewMatch)
+        describe 'when the :view property is present in the column definition', ->
+          set 'columns', -> [{ attribute: 'a', view: ItemView }]
+          set 'collection', -> new Backbone.Collection([{a:1}])
 
-    describe '#perPageOptions', ->
+          it 'renders the view', ->
+            expect(@region.el).toContainNodeWithText(itemViewMatch)
 
-      describe 'when given a non-empty collection', ->
+      describe 'perPageOptions', ->
 
-        set 'collection', -> new Backbone.Collection([{},{}])
+        describe 'when given a non-empty collection', ->
 
-        describe 'when perPageOptions is [20, 50]', ->
+          set 'collection', -> new Backbone.Collection([{},{}])
 
-          set 'perPageOptions', -> [20, 50]
+          describe 'when perPageOptions is [20, 50]', ->
 
-          it 'renders a dropdown with an option containing 20', ->
-            expect(@region.el).toContainNodeWithText('20', 'select option')
+            set 'perPageOptions', -> [20, 50]
 
-          it 'renders a dropdown with an option containing 50', ->
-            expect(@region.el).toContainNodeWithText('50', 'select option')
+            it 'renders a dropdown with an option containing 20', ->
+              expect(@region.el).toContainNodeWithText('20', 'select option')
 
-      describe 'when given an empty collection', ->
+            it 'renders a dropdown with an option containing 50', ->
+              expect(@region.el).toContainNodeWithText('50', 'select option')
 
-        set 'collection', -> new Backbone.Collection([])
+      describe 'onShow', ->
 
-        it 'does not render pagination', ->
-          expect(@region.$el.find('.paginator').html().trim()).toEqual('')
+        describe 'call order', ->
+
+          called = false
+          set 'onShow', -> (-> called = true )
+
+          it 'is called', ->
+            expect(called).toEqual(true)
+
+        describe 'params', ->
+
+          arg = null
+          set 'onShow', -> ((x) -> arg = x )
+
+          it 'is passed the controller instance', ->
+            expect(arg).toEqual(@controller)
+
+      describe 'collection', ->
+
+        describe 'when given an empty collection', ->
+
+          set 'collection', -> new Backbone.Collection([])
+
+          it 'does not render pagination', ->
+            expect(@region.$el.find('.paginator').html().trim()).toEqual('')
+
+        
+        describe 'when given a single row with attributes 1, 2, and 3', ->
+          set 'columns', -> _.map(['D', 'E', 'F'], (c) -> attribute: c)
+          set 'collection', -> new Backbone.Collection([{D: '1', E: '2', F: '3'}])
+
+          it 'renders a node containing 1', ->
+            expect(@region.el).toContainNodeWithText('1')
+
+          it 'renders a node containing 2', ->
+            expect(@region.el).toContainNodeWithText('2')
+
+          it 'renders a node containing 3', ->
+            expect(@region.el).toContainNodeWithText('3')
+
+      describe 'selectable', ->
+
+        describe 'with an empty collection', ->
+          set 'collection', -> new Backbone.Collection([])
+
+          describe 'when true', ->
+            set 'selectable', -> true
+
+            it 'renders a column containing a checkbox', ->
+              expect($(@region.el).find('input[type=checkbox]').length).toEqual(1)
+
+          describe 'when false', ->
+            set 'selectable', -> false
+
+            it 'does not render a column containing a checkbox', ->
+              expect($(@region.el).find('input[type=checkbox]').length).toEqual(0)
+
+        describe 'with a collection of 1 item', ->
+          set 'collection', -> new Backbone.Collection([{ D: '1', E: '2', F: '3' }])
+
+          it 'renders two checkboxes', ->
+            expect($(@region.el).find('input[type=checkbox]').length).toEqual(2)
+
+          it 'renders only unchecked checkboxes', ->
+            expect($(@region.el).find('input[type=checkbox]:checked').length).toEqual(0)
+
+          describe 'after clicking the checkbox in thead', ->
+            selectedFlag = false
+
+            beforeEach ->
+              @controller.carpenterRadio.on('table:rows:selected',()->
+                selectedFlag=true
+              )
+
+              $(@region.el).find('thead input[type=checkbox]').click()
+
+            afterEach ->
+              selectedFlag=false
+              @controller.carpenterRadio.off('table:rows:selected')
+
+            it 'triggers the table:rows:selected event', ->
+              waitsFor(()->
+                selectedFlag
+              , "The table:rows:selected event should be triggered", 5000)
+
+              runs ->
+                expect(selectedFlag).toEqual(true)
+
+            it 'selects all checkboxes', ->
+              expect($(@region.el).find('input[type=checkbox]:checked').length).toEqual(2)
+
+            describe 'and then clicking again', ->
+              deselectedFlag = false
+
+              beforeEach ->
+                @controller.carpenterRadio.on('table:rows:deselected',()->
+                  deselectedFlag =true
+                )
+
+                $(@region.el).find('thead input[type=checkbox]').click()
+
+              afterEach ->
+                deselectedFlag  = false
+                @controller.carpenterRadio.off('table:rows:deselected')
+
+              it 'triggers the table:rows:deselected:event', ->
+                waitsFor(()->
+                  deselectedFlag
+                , "The table:rows:deselected event should be triggered", 5000)
+
+                runs ->
+                  expect(deselectedFlag).toEqual(true)
+
+              it 'deselects all checkboxes', ->
+                expect($(@region.el).find('input[type=checkbox]:checked').length).toEqual(0)
+
+        describe 'when true', ->
+
+          it 'renders a checkbox in the header row', ->
+            expect(@region.$el.find('th input[type=checkbox]').size()).toEqual(1)
+
+          it 'renders a checkbox in each table row', ->
+            expect(@region.$el.find('tr td.checkbox input[type=checkbox]').size()).toEqual(@region.currentView.collection.length)
+
 
     describe 'pagination', ->
 
@@ -244,67 +367,3 @@ define [
 
             it 'does not set a class of "sort" on any other columns', ->
               expect(@region.$el.find('th').not(':contains(C)')).not.toHaveClass('sort')
-
-
-    describe '#collection', ->
-
-      describe 'when given a single row with attributes 1, 2, and 3', ->
-        set 'columns', -> _.map(['D', 'E', 'F'], (c) -> attribute: c)
-        set 'collection', -> new Backbone.Collection([{D: '1', E: '2', F: '3'}])
-
-        it 'renders a node containing 1', ->
-          expect(@region.el).toContainNodeWithText('1')
-
-        it 'renders a node containing 2', ->
-          expect(@region.el).toContainNodeWithText('2')
-
-        it 'renders a node containing 3', ->
-          expect(@region.el).toContainNodeWithText('3')
-
-    describe '#selectable', ->
-
-      describe 'with an empty collection', ->
-        set 'collection', -> new Backbone.Collection([])
-
-        describe 'when true', ->
-          set 'selectable', -> true
-
-          it 'renders a column containing a checkbox', ->
-            expect($(@region.el).find('input[type=checkbox]').length).toEqual(1)
-
-        describe 'when false', ->
-          set 'selectable', -> false
-
-          it 'does not render a column containing a checkbox', ->
-            expect($(@region.el).find('input[type=checkbox]').length).toEqual(0)
-
-      describe 'with a collection of 1 item', ->
-        set 'collection', -> new Backbone.Collection([{ D: '1', E: '2', F: '3' }])
-
-        it 'renders two checkboxes', ->
-          expect($(@region.el).find('input[type=checkbox]').length).toEqual(2)
-
-        it 'renders only unchecked checkboxes', ->
-          expect($(@region.el).find('input[type=checkbox]:checked').length).toEqual(0)
-
-        describe 'after clicking the checkbox in thead', ->
-          beforeEach ->
-            $(@region.el).find('thead input[type=checkbox]').click()
-
-          it 'selects all checkboxes', ->
-            expect($(@region.el).find('input[type=checkbox]:checked').length).toEqual(2)
-
-          describe 'and then clicking again', ->
-            beforeEach ->
-              $(@region.el).find('thead input[type=checkbox]').click()
-
-            it 'deselects all checkboxes', ->
-              expect($(@region.el).find('input[type=checkbox]:checked').length).toEqual(0)
-
-      describe 'when true', ->
-
-        it 'renders a checkbox in the header row', ->
-          expect(@region.$el.find('th input[type=checkbox]').size()).toEqual(1)
-
-        it 'renders a checkbox in each table row', ->
-          expect(@region.$el.find('tr td.checkbox input[type=checkbox]').size()).toEqual(@region.currentView.collection.length)
