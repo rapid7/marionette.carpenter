@@ -2779,6 +2779,9 @@ define('views/row',['templates/row', 'utilities/string_utils'], function(templat
     };
 
     Row.prototype.recordSelectionState = function() {
+      if (!this.selectable) {
+        return;
+      }
       if (this.tableSelections.selectAllState) {
         if (this.ui.checkbox.prop('checked')) {
           return delete this.tableSelections.deselectedIDs[this.model.id];

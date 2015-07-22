@@ -84,6 +84,8 @@ define [
     # @return [void]
     # TODO: Test this method.
     recordSelectionState: ->
+      return unless @selectable
+
       # If we are currently in 'select all' mode...
       if @tableSelections.selectAllState
         # ...remove the ID from the list of deselected IDs if we've selected it.
