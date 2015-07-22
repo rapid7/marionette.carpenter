@@ -3638,20 +3638,20 @@ define('controllers/table_controller',['controllers/application_controller', 'en
       this.listenTo(this.getMainView(), 'show', (function(_this) {
         return function() {
           _this.show(_this.header, {
-            region: _this.getMainView().headerRegion
+            region: (_this.headerRegion != null ? _this.headerRegion : _this.getMainView().headerRegion)
           });
           _this.show(_this.buttons, {
-            region: _this.getMainView().buttonsRegion
+            region: (_this.buttonsRegion != null ? _this.buttonsRegion : _this.getMainView().buttonsRegion)
           });
           _this.show(_this.list, {
-            region: _this.getMainView().tableRegion
+            region: (_this.tableRegion != null ? _this.tableRegion : _this.getMainView().tableRegion)
           });
           _this.show(_this.paginator, {
-            region: _this.getMainView().paginationRegion
+            region: (_this.paginationRegion != null ? _this.paginationRegion : _this.getMainView().paginationRegion)
           });
           if (_this.selectable) {
             _this.show(_this.selectionIndicator, {
-              region: _this.getMainView().selectionIndicatorRegion,
+              region: (_this.selectionIndicatorRegion != null ? _this.selectionIndicatorRegion : _this.getMainView().selectionIndicatorRegion),
               preventDestroy: false
             });
           }

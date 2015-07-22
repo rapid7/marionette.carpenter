@@ -221,11 +221,14 @@ define [
 
         # wire the pieces together
         @listenTo @getMainView(), 'show', =>
-          @show @header,             region: @getMainView().headerRegion
-          @show @buttons,            region: @getMainView().buttonsRegion
-          @show @list,               region: @getMainView().tableRegion
-          @show @paginator,          region: @getMainView().paginationRegion
-          @show @selectionIndicator, region: @getMainView().selectionIndicatorRegion, preventDestroy:false if @selectable
+          @show @header,             region: ( if @headerRegion? then @headerRegion else @getMainView().headerRegion )
+          @show @buttons,            region: ( if @buttonsRegion? then @buttonsRegion else @getMainView().buttonsRegion )
+          @show @list,               region: ( if @tableRegion? then @tableRegion else @getMainView().tableRegion )
+          @show @paginator,          region: ( if @paginationRegion? then @paginationRegion else @getMainView().paginationRegion )
+          if @selectable
+            @show @selectionIndicator,
+              region: ( if @selectionIndicatorRegion? then @selectionIndicatorRegion else @getMainView().selectionIndicatorRegion )
+              preventDestroy: false
           @onShow?(@)
 
         @listenTo @paginator, 'table:first', @first
