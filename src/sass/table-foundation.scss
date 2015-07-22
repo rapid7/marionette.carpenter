@@ -1,0 +1,65 @@
+@import "themes/imports";
+@import "themes/settings";
+
+// Override themes/settings variables here.
+$wrapper-border-radius: none;
+// TODO: This is a gross hack, at the moment. We need to output Foundation-specific markup.
+$pagination-link-background-color: #f3f3f3;
+$pagination-link-border-color: #999999;
+
+@import "themes/base";
+
+// Override themes/base styles here.
+
+
+
+.table-component {
+  // TODO: This is also a gross hack. Need to be able to wipe out existing classes.
+  .buttons-region ul li a.action-button {
+    @include border-radius(0px);
+    background-image: none !important;
+    font-size: 1em;
+    line-height: 2px;
+  }
+
+  .table-region {
+    border: none;
+
+    thead {
+
+      th {
+        text-transform: none;
+        border-right: none;
+      }
+    }
+  }
+}
+
+.pagination-region .paginator {
+  label.row_select {
+    float: left;
+    span.line {
+      display: none
+    }
+    select {
+      width: 100px;
+      float: right;
+    }
+  }
+
+  span.page_info {
+    display: inline-block;
+    margin: 5px 0 0 15px;
+  }
+
+  .page_navigation {
+    padding-top: 7px;
+
+    a {
+      width: 25px;
+    }
+    input.curr {
+      height: 22px;
+    }
+  }
+}

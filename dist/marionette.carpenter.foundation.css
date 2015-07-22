@@ -127,11 +127,11 @@
       z-index: 1; }
   .table-component .table-region {
     overflow: visible;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    -ms-border-radius: 5px;
-    -o-border-radius: 5px;
-    border-radius: 5px;
+    -webkit-border-radius: none;
+    -moz-border-radius: none;
+    -ms-border-radius: none;
+    -o-border-radius: none;
+    border-radius: none;
     border: 1px solid #ccc;
     position: relative; }
     .table-component .table-region table {
@@ -214,8 +214,8 @@
   cursor: default;
   pointer-events: none; }
 .pagination-region a {
-  background-color: #d8d9d9;
-  border: 1px solid #bbb;
+  background-color: #f3f3f3;
+  border: 1px solid #999999;
   display: inline-block;
   vertical-align: top;
   width: 21px;
@@ -249,3 +249,35 @@
     text-align: center;
     margin-top: 0;
     vertical-align: top; }
+
+.table-component .buttons-region ul li a.action-button {
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -ms-border-radius: 0px;
+  -o-border-radius: 0px;
+  border-radius: 0px;
+  background-image: none !important;
+  font-size: 1em;
+  line-height: 2px; }
+.table-component .table-region {
+  border: none; }
+  .table-component .table-region thead th {
+    text-transform: none;
+    border-right: none; }
+
+.pagination-region .paginator label.row_select {
+  float: left; }
+  .pagination-region .paginator label.row_select span.line {
+    display: none; }
+  .pagination-region .paginator label.row_select select {
+    width: 100px;
+    float: right; }
+.pagination-region .paginator span.page_info {
+  display: inline-block;
+  margin: 5px 0 0 15px; }
+.pagination-region .paginator .page_navigation {
+  padding-top: 7px; }
+  .pagination-region .paginator .page_navigation a {
+    width: 25px; }
+  .pagination-region .paginator .page_navigation input.curr {
+    height: 22px; }
