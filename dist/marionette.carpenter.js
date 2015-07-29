@@ -1358,13 +1358,13 @@ define('templates/paginator',[],function(){
       return _safe(result);
     };
     (function() {
-      var i, val, _i, _len, _ref;
+      var i, j, len, ref, val;
     
       if (this.collection.length > 0) {
         _print(_safe('\n  <div class=\'left\'>\n    <label class=\'row_select\'>\n      <span class=\'line\'>Show</span>\n      <select class=\'rows\'>\n        '));
-        _ref = this.perPageOptions;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          i = _ref[_i];
+        ref = this.perPageOptions;
+        for (j = 0, len = ref.length; j < len; j++) {
+          i = ref[j];
           _print(_safe('\n          '));
           val = i === 'All' ? this.ALL_MAGIC : i;
           _print(_safe('\n          <option value=\''));
@@ -1430,7 +1430,7 @@ define('templates/paginator',[],function(){
 * Copyright (c) 2014 Addy Osmani; Licensed MIT */
 /*globals Backbone:true, _:true, jQuery:true*/
 Backbone.Paginator = (function ( Backbone, _, $ ) {
-  
+  "use strict";
 
 
   var bbVer = _.map(Backbone.VERSION.split('.'), function(digit) {
@@ -2605,7 +2605,7 @@ define('templates/row',[],function(){
       return _safe(result);
     };
     (function() {
-      var column, idx, _i, _len, _ref;
+      var column, i, idx, len, ref;
     
       if (this.selectable) {
         _print(_safe('\n  <td class="checkbox">\n    <input type="checkbox" data-id="'));
@@ -2623,9 +2623,9 @@ define('templates/row',[],function(){
     
       _print(_safe('\n'));
     
-      _ref = this.columns;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        column = _ref[_i];
+      ref = this.columns;
+      for (i = 0, len = ref.length; i < len; i++) {
+        column = ref[i];
         _print(_safe('\n  <td class=\''));
         _print(column["class"]);
         _print(_safe(' '));
@@ -2875,7 +2875,7 @@ define('templates/table',[],function(){
       return _safe(result);
     };
     (function() {
-      var column, sorted, _i, _len, _ref;
+      var column, i, len, ref, sorted;
     
       _print(_safe('<table '));
     
@@ -2893,9 +2893,9 @@ define('templates/table',[],function(){
     
       _print(_safe('\n\n      '));
     
-      _ref = this.columns;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        column = _ref[_i];
+      ref = this.columns;
+      for (i = 0, len = ref.length; i < len; i++) {
+        column = ref[i];
         _print(_safe('\n        '));
         sorted = column.attribute === this.sortColumn;
         _print(_safe('\n        <th unselectable="on" class="unselectable '));
@@ -3792,6 +3792,16 @@ define('controllers/table_controller',['controllers/application_controller', 'en
       var dir, _ref;
       dir = (_ref = this.defaultSortColumn()) != null ? _ref.defaultDirection : void 0;
       return (_.contains(['asc', 'desc'], dir) && dir) || 'desc';
+    };
+
+    Controller.prototype.showColumn = function(columnClass) {
+      $("tr ." + columnClass).show();
+      return this.triggerMethod("show:column");
+    };
+
+    Controller.prototype.hideColumn = function(columnClass) {
+      $("tr ." + columnClass).hide();
+      return this.triggerMethod("hide:column");
     };
 
     Controller.prototype.toggleInteraction = function(enabled) {
