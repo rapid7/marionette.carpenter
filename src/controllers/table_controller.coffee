@@ -340,6 +340,15 @@ define [
         dir = @defaultSortColumn()?.defaultDirection
         (_.contains(['asc', 'desc'], dir) and dir) or 'desc'
 
+      # Show a column that has a custom class and trigger the "show:column" event
+      showColumn: (columnClass) ->
+        $("tr ." + columnClass).show()
+        @triggerMethod("show:column")
+
+      # Hide a column that has a custom class and trigger the "hide:column" event
+      hideColumn: (columnClass) ->
+        $("tr ." + columnClass).hide()
+        @triggerMethod("hide:column")
 
       # Enables/disables user interaction on the various parts of the table views
       # @param enabled [Boolean] enable or disable the table
