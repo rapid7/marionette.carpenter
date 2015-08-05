@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased](#unreleased)
+## [0.0.2](https://github.com/rapid7/marionette.carpenter/releases/0.0.2) - 8/5/2015
 
 ### Changed
 
