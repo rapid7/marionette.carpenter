@@ -12,3 +12,4 @@ All notable changes to this project will be documented in this file. This projec
 ### Fixed
 
 - [Don't record selection state when table isn't selectable.](https://github.com/rapid7/marionette.carpenter/commit/8e55509ab35f30b2a02944ad932408b5fe4abf63) See #8.
+- [Ensure shift selection of rows works in Firefox.](https://github.com/rapid7/marionette.carpenter/issues/25)
