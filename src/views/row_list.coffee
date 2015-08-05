@@ -153,7 +153,7 @@ define [
     #
     # @return [void]
     selectIntermediateCheckboxes: (e) ->
-      if window.event.shiftKey && @previouslySelected
+      if e.shiftKey && @previouslySelected
         newState  = $(e.target).is(':checked')
         $previousRows   = $(e.target).parents('tr').prevAll()
         $subsequentRows = $(e.target).parents('tr').nextAll()
