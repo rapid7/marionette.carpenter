@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file. This projec
 ### Changed
 
 - [Allow caller to pass custom regions for each component of the table.](https://github.com/rapid7/marionette.carpenter/commit/7b6088a9e3f0a6db5aa0dcfc80b29527a087cc65)
+- [Add `showColumn` and `hideColumn` methods.](https://github.com/rapid7/marionette.carpenter/pull/22)
 
 ### Fixed
 
