@@ -116,10 +116,12 @@ define [
       # @property [Number] the number of rows to show per page by default.
       perPage: 20
 
-      # @property [Object] of defaults that are applied to every column definition
+      # @property [Object] columnDefaults The defaults that are applied to every column definition
+      # @option columnDefaults :escapeLabel [Boolean] Whether or not to escape characters in the label
       columnDefaults:
         sortable: true
         escape: true
+        escapeLabel: true
         defaultDirection: 'desc'
 
       #

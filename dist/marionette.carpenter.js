@@ -1358,13 +1358,13 @@ define('templates/paginator',[],function(){
       return _safe(result);
     };
     (function() {
-      var i, val, _i, _len, _ref;
+      var i, j, len, ref, val;
     
       if (this.collection.length > 0) {
         _print(_safe('\n  <div class=\'left\'>\n    <label class=\'row_select\'>\n      <span class=\'line\'>Show</span>\n      <select class=\'rows\'>\n        '));
-        _ref = this.perPageOptions;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          i = _ref[_i];
+        ref = this.perPageOptions;
+        for (j = 0, len = ref.length; j < len; j++) {
+          i = ref[j];
           _print(_safe('\n          '));
           val = i === 'All' ? this.ALL_MAGIC : i;
           _print(_safe('\n          <option value=\''));
@@ -1430,7 +1430,7 @@ define('templates/paginator',[],function(){
 * Copyright (c) 2014 Addy Osmani; Licensed MIT */
 /*globals Backbone:true, _:true, jQuery:true*/
 Backbone.Paginator = (function ( Backbone, _, $ ) {
-  
+  "use strict";
 
 
   var bbVer = _.map(Backbone.VERSION.split('.'), function(digit) {
@@ -2605,7 +2605,7 @@ define('templates/row',[],function(){
       return _safe(result);
     };
     (function() {
-      var column, idx, _i, _len, _ref;
+      var column, i, idx, len, ref;
     
       if (this.selectable) {
         _print(_safe('\n  <td class="checkbox">\n    <input type="checkbox" data-id="'));
@@ -2623,9 +2623,9 @@ define('templates/row',[],function(){
     
       _print(_safe('\n'));
     
-      _ref = this.columns;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        column = _ref[_i];
+      ref = this.columns;
+      for (i = 0, len = ref.length; i < len; i++) {
+        column = ref[i];
         _print(_safe('\n  <td class=\''));
         _print(column["class"]);
         _print(_safe(' '));
@@ -2875,7 +2875,7 @@ define('templates/table',[],function(){
       return _safe(result);
     };
     (function() {
-      var column, sorted, _i, _len, _ref;
+      var column, i, len, ref, sorted;
     
       _print(_safe('<table '));
     
@@ -2893,9 +2893,9 @@ define('templates/table',[],function(){
     
       _print(_safe('\n\n      '));
     
-      _ref = this.columns;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        column = _ref[_i];
+      ref = this.columns;
+      for (i = 0, len = ref.length; i < len; i++) {
+        column = ref[i];
         _print(_safe('\n        '));
         sorted = column.attribute === this.sortColumn;
         _print(_safe('\n        <th unselectable="on" class="unselectable '));
@@ -2906,9 +2906,17 @@ define('templates/table',[],function(){
         }
         _print(_safe(' '));
         _print(sorted ? "sort " + this.sortDirection : "not-sort");
-        _print(_safe('">\n          <span>'));
-        _print(column.label);
-        _print(_safe('</span>\n        </th>\n      '));
+        _print(_safe('">\n          <span>\n            '));
+        if (column.escapeLabel) {
+          _print(_safe('\n              '));
+          _print(column.label);
+          _print(_safe('\n            '));
+        } else {
+          _print(_safe('\n              '));
+          _print(_safe(column.label));
+          _print(_safe('\n            '));
+        }
+        _print(_safe('\n          </span>\n        </th>\n      '));
       }
     
       _print(_safe('\n    </tr>\n  </thead>\n\n  <tbody>\n\n  </tbody>\n</table>\n'));
@@ -3552,6 +3560,7 @@ define('controllers/table_controller',['controllers/application_controller', 'en
     Controller.prototype.columnDefaults = {
       sortable: true,
       escape: true,
+      escapeLabel: true,
       defaultDirection: 'desc'
     };
 

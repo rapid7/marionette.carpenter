@@ -10,7 +10,13 @@
       <% for column in @columns: %>
         <% sorted = column.attribute is @sortColumn %>
         <th unselectable="on" class="unselectable <%= column.class %> <%= 'sortable' if column.sortable %> <%= if sorted then "sort #{@sortDirection}" else "not-sort" %>">
-          <span><%= column.label %></span>
+          <span>
+            <% if column.escapeLabel: %>
+              <%= column.label %>
+            <% else: %>
+              <%- column.label %>
+            <% end %>
+          </span>
         </th>
       <% end %>
     </tr>
