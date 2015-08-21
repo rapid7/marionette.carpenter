@@ -2,7 +2,7 @@
   var deps = ['cocktail', 'jquery', 'underscore', 'marionette', 'backbone.radio'];
 
   if (typeof define === 'function' && define.amd) {
-    define(deps, function(Cocktail, $, _, Marionette) {
+    define('carpenter', deps, function(Cocktail, $, _, Marionette) {
       return (root.Carpenter = factory(root, Cocktail, $, _, Marionette));
     });
   } else if (typeof exports !== 'undefined') {
