@@ -1,4 +1,4 @@
-<table <% if @htmlID: %>id="<%= @htmlID %>"<% end %>>
+<table class='table' <% if @htmlID: %>id="<%= @htmlID %>"<% end %>>
   <thead>
     <tr>
       <% if @selectable: %>
