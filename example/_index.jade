@@ -12,23 +12,23 @@ p.
 
 +codeSample('coffeescript', 'table').
   class WoodworkersCollection extends Backbone.Collection
-  url: '/components/table/woodworkers.json'
+    url: '/components/table/woodworkers.json'
 
   collection = new WoodworkersCollection
   collection.fetch
-  success: ->
-    new Marionette.Carpenter.Controller
-      title: 'Woodworkers'
-      region: new Backbone.Marionette.Region el: '#table-region'
-      collection: collection
-      static: true
-      columns: [
-        { attribute: 'first_name' }
-        { attribute: 'last_name' }
-        { attribute: 'email' }
-        { attribute: 'city' }
-        { attribute: 'state' }
-      ]
+    success: ->
+      new Marionette.Carpenter.Controller
+        title: 'Woodworkers'
+        region: new Backbone.Marionette.Region el: '#table-region'
+        collection: collection
+        static: true
+        columns: [
+          { attribute: 'first_name' }
+          { attribute: 'last_name' }
+          { attribute: 'email' }
+          { attribute: 'city' }
+          { attribute: 'state' }
+        ]
 
 script(src="bower_components/jquery/dist/jquery.js")
 script(src="bower_components/jquery-resizable-columns/dist/jquery.resizableColumns.min.js")
