@@ -1,13 +1,43 @@
-.col-lg-12
-  table.table
-    thead
-      tr
-        th City
-        th State
-    tbody
-      tr
-        td Austin
-        td TX
-      tr
-        td Washington
-        td DC (sorta)
+include ../../../mixins.jade
+
+// Quick styling overrides. I'm outta time, y'all!
+style.
+  .paginator { display: none; }
+  th:hover { cursor: pointer; }
+
+p.
+  This serves as an example of how to embed an external component repository.
+
+#table-region
+
++codeSample('coffeescript', 'table').
+  class WoodworkersCollection extends Backbone.Collection
+  url: '/components/table/woodworkers.json'
+
+  collection = new WoodworkersCollection
+  collection.fetch
+  success: ->
+    new Marionette.Carpenter.Controller
+      title: 'Woodworkers'
+      region: new Backbone.Marionette.Region el: '#table-region'
+      collection: collection
+      static: true
+      columns: [
+        { attribute: 'first_name' }
+        { attribute: 'last_name' }
+        { attribute: 'email' }
+        { attribute: 'city' }
+        { attribute: 'state' }
+      ]
+
+script(src="bower_components/jquery/dist/jquery.js")
+script(src="bower_components/jquery-resizable-columns/dist/jquery.resizableColumns.min.js")
+script(src="bower_components/underscore/underscore.js")
+script(src="bower_components/backbone/backbone.js")
+script(src="bower_components/backbone.babysitter/lib/backbone.babysitter.js")
+script(src="bower_components/backbone.radio/src/backbone.radio.js")
+script(src="bower_components/backbone.wreqr/lib/backbone.wreqr.js")
+script(src="bower_components/cocktail/Cocktail.js")
+script(src="bower_components/backbone.marionette/lib/backbone.marionette.js")
+script(src="bower_components/marionette.carpenter/dist/marionette.carpenter.js")
+script(src="components/table/example.js")
