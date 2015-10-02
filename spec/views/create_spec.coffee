@@ -144,8 +144,8 @@ define [
           beforeEach ->
             @view.controller.paginator.ui.last.click()
 
-          it 'navigates the collection to page 31', ->
-            expect(@view.controller.collection.currentPage).toEqual(31)
+          it 'navigates the collection to page 30', ->
+            expect(@view.controller.collection.currentPage).toEqual(30)
 
         describe 'and I enter 15 into the page input field', ->
 

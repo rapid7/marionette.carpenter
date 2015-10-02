@@ -325,7 +325,10 @@ define [
 
       # @return [Number] the total number of pages
       totalPages: =>
-        Math.floor(@totalRecords() / @collection.perPage) + 1
+        if @totalRecords() % @collection.perPage is 0
+          Math.floor(@totalRecords() / @collection.perPage)
+        else
+          Math.floor(@totalRecords() / @collection.perPage) + 1
 
       # Updates the #perPage property and re-renders the collection
       # @param newPerPage [Number] the new number of rows per table page
