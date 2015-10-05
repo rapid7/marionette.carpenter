@@ -206,6 +206,7 @@ define [
       totalRecords = @collection.totalRecords || @collection.length || 0
       @ui.table.toggleClass?('loaded', true)
       @ui.table.toggleClass?('populated', totalRecords > 0)
+      @ui.table.toggleClass?('populated-empty', totalRecords is 0)
 
     onRender: ->
       @ui.table.resizableColumns()

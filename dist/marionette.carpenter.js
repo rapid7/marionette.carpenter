@@ -3366,12 +3366,15 @@ define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates
     };
 
     RowList.prototype.updateClasses = function() {
-      var totalRecords, _base, _base1;
+      var totalRecords, _base, _base1, _base2;
       totalRecords = this.collection.totalRecords || this.collection.length || 0;
       if (typeof (_base = this.ui.table).toggleClass === "function") {
         _base.toggleClass('loaded', true);
       }
-      return typeof (_base1 = this.ui.table).toggleClass === "function" ? _base1.toggleClass('populated', totalRecords > 0) : void 0;
+      if (typeof (_base1 = this.ui.table).toggleClass === "function") {
+        _base1.toggleClass('populated', totalRecords > 0);
+      }
+      return typeof (_base2 = this.ui.table).toggleClass === "function" ? _base2.toggleClass('populated-empty', totalRecords === 0) : void 0;
     };
 
     RowList.prototype.onRender = function() {
