@@ -51,8 +51,8 @@ define [
         it 'displays one row containing the empty view', ->
           expect(@list.$el.find('tbody>tr').size()).toEqual(1)
 
-        it 'does add the "populated-empty" class to the table', ->
-          expect(@list.ui.table).toHaveClass('populated-empty')
+        it 'does add the "populated" class to the table', ->
+          expect(@list.ui.table).toHaveClass('populated')
 
         it 'adds the "loaded" class to the table', ->
           expect(@list.ui.table).toHaveClass('loaded')
@@ -184,8 +184,8 @@ define [
         it 'adds the "loaded" class to the table', ->
           expect(@list.ui.table).toHaveClass('loaded')
 
-        it 'does not add the "populated" class to the table', ->
-          expect(@list.ui.table).not.toHaveClass('populated')
+        it 'does add the "populated" class to the table', ->
+          expect(@list.ui.table).toHaveClass('populated')
 
     describe 'when the collection is selectable', ->
 

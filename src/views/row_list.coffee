@@ -203,10 +203,8 @@ define [
 
     updateClasses: =>
       # Add a class to the table to signify that it's done loading. This is useful for cuke.
-      totalRecords = @collection.totalRecords || @collection.length || 0
       @ui.table.toggleClass?('loaded', true)
-      @ui.table.toggleClass?('populated', totalRecords > 0)
-      @ui.table.toggleClass?('populated-empty', totalRecords is 0)
+      @ui.table.toggleClass?('populated', true)
 
     onRender: ->
       @ui.table.resizableColumns()
