@@ -1,7 +1,7 @@
 .sublime-grunt.cache
 .DS_Store
 node_modules/
-bower_components/
+/bower_components/
 .grunt/
 SpecRunner.html
 /doc/

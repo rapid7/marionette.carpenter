@@ -1,0 +1,42 @@
+{
+  "name": "jasmine-set",
+  "version": "0.1.7",
+  "description": "Adds rspec-style let function to Jasmine",
+  "homepage": "https://github.com/jvennix-r7/jasmine-set",
+  "author": {
+    "name": "Joe Vennix",
+    "company": "Rapid7"
+  },
+  "main": "jasmine-set.js",
+  "dependencies": {
+    "underscore": "~1.6"
+  },
+  "devDependencies": {
+    "coffee-script": "~ 1.6.3",
+    "jasmine-node": "~ 1.3.1",
+    "jake": "0.7.6"
+  },
+  "keywords": [
+    "jasmine",
+    "set",
+    "spec",
+    "bdd"
+  ],
+  "bugs": {
+    "url": "https://github.com/jvennix-r7/jasmine-set/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jvennix-r7/jasmine-set.git"
+  },
+  "licenses": [
+    {
+      "name": "MIT License",
+      "url": "http://en.wikipedia.org/wiki/MIT_License"
+    }
+  ],
+  "engine": "node >= 0.8.0",
+  "scripts": {
+    "test": "./jake spec"
+  }
+}

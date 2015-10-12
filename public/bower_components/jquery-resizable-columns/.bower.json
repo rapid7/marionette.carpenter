@@ -1,0 +1,41 @@
+{
+  "name": "jquery-resizable-columns",
+  "main": "dist/jquery.resizableColumns.min.js",
+  "version": "0.1.3",
+  "homepage": "http://dobtco.github.io/jquery-resizable-columns/",
+  "authors": [
+    "Adam Becker <ad@mbecker.cc> (http://ada.mbecker.cc)",
+    "Craig Michael Thompson <craig@craigsworks.com> (http://craigsworks.com)"
+  ],
+  "description": "Resizable table columns for jQuery",
+  "keywords": [
+    "jquery",
+    "resizable-columns-table",
+    "resizable-columns",
+    "html",
+    "table resize",
+    "resizable columns",
+    "resizable",
+    "adam becker"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.0"
+  },
+  "_release": "0.1.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.1.3",
+    "commit": "92288ec0a7b0f4f8f3b3b084e51b9e8ebd6b298e"
+  },
+  "_source": "git://github.com/dobtco/jquery-resizable-columns.git",
+  "_target": "0.1.3",
+  "_originalSource": "jquery-resizable-columns"
+}

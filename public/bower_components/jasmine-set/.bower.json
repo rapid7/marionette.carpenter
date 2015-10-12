@@ -1,0 +1,13 @@
+{
+  "name": "jasmine-set",
+  "homepage": "https://github.com/jvennix-r7/jasmine-set",
+  "_release": "d33d7c5a9e",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "d33d7c5a9ec196d9d66b07415bad059e03fe82c9"
+  },
+  "_source": "git://github.com/jvennix-r7/jasmine-set.git",
+  "_target": "*",
+  "_originalSource": "jvennix-r7/jasmine-set"
+}
