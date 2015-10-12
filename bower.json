@@ -29,8 +29,8 @@
     "**/.*",
     "node_modules",
     "/bower_components",
-    "spec",
-    "src",
-    "site"
+    "/spec",
+    "/src",
+    "/site"
   ]
 }
