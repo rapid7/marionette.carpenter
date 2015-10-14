@@ -3781,7 +3781,11 @@ define('controllers/table_controller',['controllers/application_controller', 'en
     };
 
     Controller.prototype.totalPages = function() {
-      return Math.floor(this.totalRecords() / this.collection.perPage) + 1;
+      if (this.totalRecords() % this.collection.perPage === 0) {
+        return Math.floor(this.totalRecords() / this.collection.perPage);
+      } else {
+        return Math.floor(this.totalRecords() / this.collection.perPage) + 1;
+      }
     };
 
     Controller.prototype.setPerPage = function(newPerPage) {
