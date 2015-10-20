@@ -7,6 +7,11 @@ All notable changes to this project will be documented in this file. This projec
 ### Changed
 
 - [Add `escapeLabel` option for adding HTML to labels.](https://github.com/rapid7/marionette.carpenter/pull/27) (#27)
+- [Add "populated" tag when empty tables are loaded (in addition to non-empty tables that were already tagged)](https://github.com/rapid7/marionette.carpenter/pull/31) (#31)
+- [Add better almond compatibility.](https://github.com/rapid7/marionette.carpenter/pull/29) (#29)
+
+### Fixed
+- [Ensure last page button on pagination properly takes you to last table instead of empty view.](https://github.com/rapid7/marionette.carpenter/pull/30) (#30)
 
 
 ## [0.0.2](https://github.com/rapid7/marionette.carpenter/releases/0.0.2) - 8/5/2015
