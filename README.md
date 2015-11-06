@@ -193,8 +193,8 @@ class MyCustomCellView extends Marionette.ItemView
    'hover @ui.span' : onHover
   onHover: ->
    console.log("Lets do something on hover")  
-  onShow: ->
-   console.log("Lets do something special when we show the view")
+  onRender: ->
+   console.log("Lets do something special when we render the view")
 ```
 
 #### Using custom cell views
