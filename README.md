@@ -148,6 +148,55 @@ columns: [
 ]
 ```
 
+
+#### Using a custom empty view
+
+If you have a table with a collection of size 0, carpenter will render its default empty view. However, you can specify a view of your choosing to render instead.
+
+```coffeescript
+class MyCustomEmptyView extends Marionette.ItemView
+  template: (data) ->
+    """
+    <div class="custom-empty-view">
+      <span>This table is empty.<span>
+    </div>
+```
+
+```coffeescript
+new Marionette.Carpenter.Controller
+  title: 'Users'
+  region: new Backbone.Marionette.Region el: '#users-table-region'
+  collection: usersCollection # a Backbone collection
+  static: true
+  columns: [
+    { attribute: 'first_name' }
+    { attribute: 'last_name' }     
+    { attribute: 'email' }
+  ],
+  emptyView: MyCustomEmptyView
+```
+
+##### Registering Handlers for the custom view
+Since the custom view is a Marionette view, you can do things on the onRender and onShow callbacks as you would normally do in a marionette application. For Example:
+
+```coffeescript
+class MyCustomCellView extends Marionette.ItemView
+  template: (data) ->
+    """
+    <div class="custom-cell-view">
+      <span>This is a cell #{data.name}<span>
+    </div>
+    """
+  ui:
+   span : '.custom-cell-view span'
+  events:
+   'hover @ui.span' : onHover
+  onHover: ->
+   console.log("Lets do something on hover")  
+  onRender: ->
+   console.log("Lets do something special when we render the view")
+```
+
 #### Using custom cell views
 
 Time to get fancy! Let's say we want to render something more than boring old text in one of our cells. In this case, we'd like to create [a Foundation progress bar](http://foundation.zurb.com/docs/components/progress_bars.html). We'll start by defining a `Marionette.ItemView` for the cell:
@@ -193,6 +242,56 @@ It's also possible to pass options to the view's `initialize` method with the `v
   }
 ```
 
+### Action Buttons
+
+Action buttons are buttons that appear above the table. 
+
+#### Click Callback
+
+You can define a click callback handler that provides you with the state of the current table. 
+
++ selectAllState - [Boolean] - True/False that represents whether or not the select all checkbox is selected.
++ selectedIds - [Array<Integer>] - An array of row ids used when selectAllState is False representing rows with checkboxes selected
++ deselectedIds - [Array<Integer>] - An array of row ids used when selectAllState is True representing rows with checkboxes 
++ selectedVisibleCollection - [Backbone.Collection] - A collection representing the current selected row that are visible on the table.
++ tableCollection - [Backbone.Collection] - A collection representing the current visible rows on the table
+
+You may also define a "class" for the button Dom element as well as a label. The containing wrapper Dom node may also have a class defined.
+ 
+
+```coffeescript
+     actionButtons = [
+          {
+            label: 'Delete'
+            class: 'delete'
+            activateOn: 'any'
+            click: (selectAllState, selectedIDs, deselectedIDs, selectedVisibleCollection, tableCollection) ->
+              console.log("Delete")
+            containerClass: 'action-button-right-separator'
+          }
+          {
+            label: 'Tag'
+            class: 'tag-edit'
+            activateOn: 'any'
+            click: (selectAllState, selectedIDs, deselectedIDs, selectedVisibleCollection, tableCollection) ->
+              console.log("Tag")
+            containerClass: 'action-button-tag-separator'
+          }
+        ]
+```
+
+#### Enable/Disable Button
+Carpenter has built in enable/disable button functionality. You can specify the following options for the 'activateOn' option
+
+The button will be enabled if `activateOn` is set to: 
+
++ 'any' - If 1 or many rows are selected.
+
++ 'many' - If more than 1 row is selected
+
++ 'one' - If only one row is selected
+
+
 ## Development
 
 To build from source, just run:
@@ -218,4 +317,12 @@ $ grunt watch
 
 ### API Documentation
 
-The full documentation is available [on the Carpenter site](https://carpenter.coffee/doc/).
+You can generate docco docs by running the following
+
+```console
+npm install -g docco
+```
+
+```console
+docco src/**/*.coffee
+```
