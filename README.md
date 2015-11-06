@@ -156,10 +156,11 @@ Action buttons are buttons that appear above the table.
 
 You can define a click callback handler that provides you with the state of the current table. 
 
-selectAllState - Boolean - True/False that represents whether or not the select all checkbox is selected.
-selectedIds - [Integer] - An array of row ids used when selectAllState is False representing rows with checkboxes seleced
-deslectedIds - [Integer] - An array of row ids used when selectAllState is True representing rows with checkboxes selectedVisibleCollection - Backbone.Collection - A collection representing the current selected row that are visible on the table.
-tableCollection - Backbone.Collection - A collection representing the current visible rows on the table
++ selectAllState - [Boolean] - True/False that represents whether or not the select all checkbox is selected.
++ selectedIds - [Array<Integer>] - An array of row ids used when selectAllState is False representing rows with checkboxes selected
++ deselectedIds - [Array<Integer>] - An array of row ids used when selectAllState is True representing rows with checkboxes 
++ selectedVisibleCollection - [Backbone.Collection] - A collection representing the current selected row that are visible on the table.
++ tableCollection - [Backbone.Collection] - A collection representing the current visible rows on the table
 
 You may also define a "class" for the button Dom element as well as a label. The containing wrapper Dom node may also have a class defined.
  
@@ -188,13 +189,13 @@ You may also define a "class" for the button Dom element as well as a label. The
 #### Enable/Disable Button
 Carpenter has built in enable/disable button functionality. You can specify the following options for the 'activateOn' option
 
-The button will be enabled if 
+The button will be enabled if `activateOn` is set to: 
 
-'any' - If 1 or many rows are selected.
++ 'any' - If 1 or many rows are selected.
 
-'many' - If more than 1 row is selected
++ 'many' - If more than 1 row is selected
 
-'one' - If only one row is selected
++ 'one' - If only one row is selected
 
 
 #### Using a custom empty view
@@ -222,6 +223,27 @@ new Marionette.Carpenter.Controller
     { attribute: 'email' }
   ],
   emptyView: MyCustomEmptyView
+```
+
+##### Registering Handlers for the custom view
+Since the custom view is a Marionette view, you can do things on the onRender, onShow callbacks as you would normally do in a marionette application. For Example:
+
+```coffeescript
+class MyCustomCellView extends Marionette.ItemView
+  template: (data) ->
+    """
+    <div class="custom-cell-view">
+      <span>This is a cell #{data.name}<span>
+    </div>
+    """
+  ui:
+   span : '.custom-cell-view span'
+  events:
+   'hover @ui.span' : onHover
+  onHover: ->
+   console.log("Lets do something on hover")  
+  onShow: ->
+   console.log("Lets do something special when we show the view")
 ```
 
 #### Using custom cell views
@@ -294,4 +316,12 @@ $ grunt watch
 
 ### API Documentation
 
-The full documentation is available [on the Carpenter site](https://carpenter.coffee/doc/).
+You can generate docco docs by running the following
+
+```console
+npm install -g docco
+```
+
+```console
+docco src/**/*.coffee
+```
