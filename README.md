@@ -292,7 +292,7 @@ The button will be enabled if `activateOn` is set to:
 + 'one' - If only one row is selected
 
 ## Controlling Pagination
-You can control the paginaton bar programatically by using the concenience methods available on the collection.
+You can control the pagination bar programatically by using the convenience methods available on the collection.
 
 ```
 collection = this.tableController.controller
