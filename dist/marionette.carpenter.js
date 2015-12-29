@@ -741,6 +741,7 @@ define('templates/action_button',[],function(){
       return _safe(result);
     };
     (function() {
+    
       _print(_safe('<a href=\'javascript:void(0)\' '));
     
       if (this.id) {
@@ -964,6 +965,7 @@ define('templates/empty',[],function(){
       return _safe(result);
     };
     (function() {
+    
       _print(_safe('<td colspan=\'100%\'>No items were found.</td>'));
     
     }).call(this);
@@ -1034,6 +1036,7 @@ define('templates/header',[],function(){
       return _safe(result);
     };
     (function() {
+    
       if (this.title && this.title.length) {
         _print(_safe('\n  <h3\n    '));
         if (this.htmlID != null) {
@@ -1133,6 +1136,7 @@ define('templates/layout',[],function(){
       return _safe(result);
     };
     (function() {
+    
       _print(_safe('\n<div class=\'header-region\'>\n</div>\n\n'));
     
       _print(_safe('\n<div class=\'selection-indicator-region\'>\n</div>\n\n'));
@@ -1292,6 +1296,7 @@ define('templates/loading',[],function(){
       return _safe(result);
     };
     (function() {
+    
       _print(_safe('<td colspan="100%" class=\'tab-loading\'>\n</td>'));
     
     }).call(this);
@@ -1358,13 +1363,13 @@ define('templates/paginator',[],function(){
       return _safe(result);
     };
     (function() {
-      var i, j, len, ref, val;
+      var i, val, _i, _len, _ref;
     
       if (this.collection.length > 0) {
         _print(_safe('\n  <div class=\'left\'>\n    <label class=\'row_select\'>\n      <span class=\'line\'>Show</span>\n      <select class=\'rows\'>\n        '));
-        ref = this.perPageOptions;
-        for (j = 0, len = ref.length; j < len; j++) {
-          i = ref[j];
+        _ref = this.perPageOptions;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          i = _ref[_i];
           _print(_safe('\n          '));
           val = i === 'All' ? this.ALL_MAGIC : i;
           _print(_safe('\n          <option value=\''));
@@ -2605,7 +2610,7 @@ define('templates/row',[],function(){
       return _safe(result);
     };
     (function() {
-      var column, i, idx, len, ref;
+      var column, idx, _i, _len, _ref;
     
       if (this.selectable) {
         _print(_safe('\n  <td class="checkbox">\n    <input type="checkbox" data-id="'));
@@ -2623,9 +2628,9 @@ define('templates/row',[],function(){
     
       _print(_safe('\n'));
     
-      ref = this.columns;
-      for (i = 0, len = ref.length; i < len; i++) {
-        column = ref[i];
+      _ref = this.columns;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        column = _ref[_i];
         _print(_safe('\n  <td class=\''));
         _print(column["class"]);
         _print(_safe(' '));
@@ -2875,7 +2880,7 @@ define('templates/table',[],function(){
       return _safe(result);
     };
     (function() {
-      var column, i, len, ref, sorted;
+      var column, sorted, _i, _len, _ref;
     
       _print(_safe('<table '));
     
@@ -2893,9 +2898,9 @@ define('templates/table',[],function(){
     
       _print(_safe('\n\n      '));
     
-      ref = this.columns;
-      for (i = 0, len = ref.length; i < len; i++) {
-        column = ref[i];
+      _ref = this.columns;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        column = _ref[_i];
         _print(_safe('\n        '));
         sorted = column.attribute === this.sortColumn;
         _print(_safe('\n        <th unselectable="on" class="unselectable '));
@@ -3405,6 +3410,7 @@ define('templates/selection_indicator',[],function(){
       return _safe(result);
     };
     (function() {
+    
       _print(_safe('<div class="selection-indicator"><span class="num-selected">'));
     
       _print(this.numSelected);
