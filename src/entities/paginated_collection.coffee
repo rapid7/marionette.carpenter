@@ -57,7 +57,7 @@ define [], ->
 
     sort: ->
 
-    initialize: (models, options) ->
+    initialize: (models, options={}) ->
       @numSelected = 0
       @server_api.search = {}
       if options.requestData?

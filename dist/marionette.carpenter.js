@@ -588,6 +588,9 @@ define('entities/paginated_collection',[], function() {
     AjaxPaginatedCollection.prototype.sort = function() {};
 
     AjaxPaginatedCollection.prototype.initialize = function(models, options) {
+      if (options == null) {
+        options = {};
+      }
       this.numSelected = 0;
       this.server_api.search = {};
       if (options.requestData != null) {
