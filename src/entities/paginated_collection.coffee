@@ -60,6 +60,8 @@ define [], ->
     initialize: (models, options) ->
       @numSelected = 0
       @server_api.search = {}
+      if options.requestData?
+        _.extend(@server_api, options.requestData)
 
       super(models, options)
 
@@ -103,7 +105,7 @@ define [], ->
       paginator_core:
 
       # the type of the request (GET by default)
-        type: 'GET'
+        type: _.result(collection, 'requestType') || 'GET'
 
       # the type of reply (jsonp by default)
         dataType: 'json'

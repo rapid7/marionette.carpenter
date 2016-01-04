@@ -440,13 +440,13 @@ var requirejs, require, define;
 
 define("almond", function(){});
 
-var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define('controllers/application_controller',[], function() {
   var Controller;
-  return Controller = (function(superClass) {
-    extend(Controller, superClass);
+  return Controller = (function(_super) {
+    __extends(Controller, _super);
 
     function Controller(options) {
       if (options == null) {
@@ -465,7 +465,7 @@ define('controllers/application_controller',[], function() {
     };
 
     Controller.prototype.show = function(view, options) {
-      var ref;
+      var _ref;
       if (options == null) {
         options = {};
       }
@@ -475,7 +475,7 @@ define('controllers/application_controller',[], function() {
       });
       view = view.getMainView ? view.getMainView() : view;
       if (!view) {
-        throw new Error("getMainView() did not return a view instance or " + (view != null ? (ref = view.constructor) != null ? ref.name : void 0 : void 0) + " is not a view instance");
+        throw new Error("getMainView() did not return a view instance or " + (view != null ? (_ref = view.constructor) != null ? _ref.name : void 0 : void 0) + " is not a view instance");
       }
       this.setMainView(view);
       return this._manageView(view, options);
@@ -523,13 +523,13 @@ define('controllers/application_controller',[], function() {
   })(Marionette.Controller);
 });
 
-var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define('entities/paginated_collection',[], function() {
   var AjaxPaginatedCollection, CreatePaginatedCollectionClass, StaticPaginatedCollection;
-  AjaxPaginatedCollection = (function(superClass) {
-    extend(AjaxPaginatedCollection, superClass);
+  AjaxPaginatedCollection = (function(_super) {
+    __extends(AjaxPaginatedCollection, _super);
 
     function AjaxPaginatedCollection() {
       return AjaxPaginatedCollection.__super__.constructor.apply(this, arguments);
@@ -563,8 +563,8 @@ define('entities/paginated_collection',[], function() {
         reset: true,
         error: (function(_this) {
           return function(model, response, options) {
-            var ref;
-            return _this.displayErrorMessage(response != null ? (ref = response.responseJSON) != null ? ref.message : void 0 : void 0);
+            var _ref;
+            return _this.displayErrorMessage(response != null ? (_ref = response.responseJSON) != null ? _ref.message : void 0 : void 0);
           };
         })(this)
       });
@@ -577,7 +577,7 @@ define('entities/paginated_collection',[], function() {
     AjaxPaginatedCollection.prototype.updateSortKey = function() {
       var col;
       col = this.renamedSortColumn || this.sortColumn;
-      return this.server_api.sort_by = col + " " + this.sortDirection;
+      return this.server_api.sort_by = "" + col + " " + this.sortDirection;
     };
 
     AjaxPaginatedCollection.prototype.parse = function(results) {
@@ -590,14 +590,17 @@ define('entities/paginated_collection',[], function() {
     AjaxPaginatedCollection.prototype.initialize = function(models, options) {
       this.numSelected = 0;
       this.server_api.search = {};
+      if (options.requestData != null) {
+        _.extend(this.server_api, options.requestData);
+      }
       return AjaxPaginatedCollection.__super__.initialize.call(this, models, options);
     };
 
     return AjaxPaginatedCollection;
 
   })(Backbone.Paginator.requestPager);
-  StaticPaginatedCollection = (function(superClass) {
-    extend(StaticPaginatedCollection, superClass);
+  StaticPaginatedCollection = (function(_super) {
+    __extends(StaticPaginatedCollection, _super);
 
     function StaticPaginatedCollection() {
       return StaticPaginatedCollection.__super__.constructor.apply(this, arguments);
@@ -607,7 +610,7 @@ define('entities/paginated_collection',[], function() {
 
   })(Backbone.Paginator.clientPager);
   return CreatePaginatedCollectionClass = function(collection, opts) {
-    var WrappedCollection, base, k, ref, ref1, superclass, v;
+    var WrappedCollection, k, superclass, v, _base, _ref, _ref1;
     if (opts == null) {
       opts = {};
     }
@@ -616,7 +619,7 @@ define('entities/paginated_collection',[], function() {
       model: collection.constructor.prototype.model || collection.model,
       url: _.result(collection, 'url'),
       paginator_core: {
-        type: 'GET',
+        type: _.result(collection, 'requestType') || 'GET',
         dataType: 'json'
       },
       paginator_ui: {
@@ -635,14 +638,14 @@ define('entities/paginated_collection',[], function() {
         return this.trigger('remove:multiple', selectedIDs);
       }
     });
-    ref = collection.constructor.prototype;
-    for (k in ref) {
-      v = ref[k];
-      (base = WrappedCollection.prototype)[k] || (base[k] = v);
+    _ref = collection.constructor.prototype;
+    for (k in _ref) {
+      v = _ref[k];
+      (_base = WrappedCollection.prototype)[k] || (_base[k] = v);
     }
-    ref1 = WrappedCollection.prototype;
-    for (k in ref1) {
-      v = ref1[k];
+    _ref1 = WrappedCollection.prototype;
+    for (k in _ref1) {
+      v = _ref1[k];
       if (typeof v === 'object') {
         WrappedCollection.prototype[k] = _.clone(v);
       }
@@ -651,13 +654,13 @@ define('entities/paginated_collection',[], function() {
   };
 });
 
-var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define('entities/action_button',[], function() {
   var ActionButton;
-  return ActionButton = (function(superClass) {
-    extend(ActionButton, superClass);
+  return ActionButton = (function(_super) {
+    __extends(ActionButton, _super);
 
     function ActionButton() {
       return ActionButton.__super__.constructor.apply(this, arguments);
@@ -683,13 +686,13 @@ define('entities/action_button',[], function() {
   })(Backbone.Model);
 });
 
-var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define('entities/action_buttons_collection',['entities/action_button'], function(ActionButton) {
   var ActionButtonsCollection;
-  return ActionButtonsCollection = (function(superClass) {
-    extend(ActionButtonsCollection, superClass);
+  return ActionButtonsCollection = (function(_super) {
+    __extends(ActionButtonsCollection, _super);
 
     function ActionButtonsCollection() {
       return ActionButtonsCollection.__super__.constructor.apply(this, arguments);
@@ -702,13 +705,13 @@ define('entities/action_buttons_collection',['entities/action_button'], function
   })(Backbone.Collection);
 });
 
-var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define('entities/filter',[], function() {
   var Filter;
-  return Filter = (function(superClass) {
-    extend(Filter, superClass);
+  return Filter = (function(_super) {
+    __extends(Filter, _super);
 
     function Filter() {
       return Filter.__super__.constructor.apply(this, arguments);
@@ -786,14 +789,14 @@ define('templates/action_button',[],function(){
   return template;
 });
 
-var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty,
-  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 define('views/action_button',['templates/action_button'], function(template) {
   var ActionButton;
-  return ActionButton = (function(superClass) {
-    extend(ActionButton, superClass);
+  return ActionButton = (function(_super) {
+    __extends(ActionButton, _super);
 
     function ActionButton() {
       return ActionButton.__super__.constructor.apply(this, arguments);
@@ -876,8 +879,8 @@ define('views/action_button',['templates/action_button'], function(template) {
         selectedIDs = Object.keys(this.tableSelections.selectedIDs);
         deselectedIDs = Object.keys(this.tableSelections.deselectedIDs);
         selectedVisibleCollection = new Backbone.Collection(this.tableCollection.filter(function(model) {
-          var ref;
-          return ref = model.id, indexOf.call(selectedIDs, ref) >= 0;
+          var _ref;
+          return _ref = model.id, __indexOf.call(selectedIDs, _ref) >= 0;
         }));
         return this.model.get('click')(selectAllState, selectedIDs, deselectedIDs, selectedVisibleCollection, this.tableCollection);
       } else {
@@ -890,13 +893,13 @@ define('views/action_button',['templates/action_button'], function(template) {
   })(Marionette.ItemView);
 });
 
-var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define('views/control_bar',['views/action_button'], function(ActionButton) {
   var ControlBar;
-  return ControlBar = (function(superClass) {
-    extend(ControlBar, superClass);
+  return ControlBar = (function(_super) {
+    __extends(ControlBar, _super);
 
     function ControlBar() {
       return ControlBar.__super__.constructor.apply(this, arguments);
@@ -987,13 +990,13 @@ define('templates/empty',[],function(){
   return template;
 });
 
-var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define('views/empty',['templates/empty'], function(template) {
   var Empty;
-  return Empty = (function(superClass) {
-    extend(Empty, superClass);
+  return Empty = (function(_super) {
+    __extends(Empty, _super);
 
     function Empty() {
       return Empty.__super__.constructor.apply(this, arguments);
@@ -1075,13 +1078,13 @@ define('templates/header',[],function(){
   return template;
 });
 
-var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define('views/header',['templates/header'], function(template) {
   var Header;
-  return Header = (function(superClass) {
-    extend(Header, superClass);
+  return Header = (function(_super) {
+    __extends(Header, _super);
 
     function Header() {
       return Header.__super__.constructor.apply(this, arguments);
@@ -1166,20 +1169,20 @@ define('templates/layout',[],function(){
   return template;
 });
 
-var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define('views/layout',['templates/layout'], function(template) {
   var Layout;
-  return Layout = (function(superClass) {
-    extend(Layout, superClass);
+  return Layout = (function(_super) {
+    __extends(Layout, _super);
 
     function Layout() {
-      this._modelForTd = bind(this._modelForTd, this);
-      this._columnForTd = bind(this._columnForTd, this);
-      this.mouseEnteredTableCell = bind(this.mouseEnteredTableCell, this);
-      this.mouseEnteredTableHeader = bind(this.mouseEnteredTableHeader, this);
+      this._modelForTd = __bind(this._modelForTd, this);
+      this._columnForTd = __bind(this._columnForTd, this);
+      this.mouseEnteredTableCell = __bind(this.mouseEnteredTableCell, this);
+      this.mouseEnteredTableHeader = __bind(this.mouseEnteredTableHeader, this);
       return Layout.__super__.constructor.apply(this, arguments);
     }
 
@@ -1224,7 +1227,7 @@ define('views/layout',['templates/layout'], function(template) {
     };
 
     Layout.prototype.mouseEnteredTableCell = function(e) {
-      var column, hover, model, ref, tdPosition;
+      var column, hover, model, tdPosition, _ref;
       column = this._columnForTd(e.currentTarget);
       model = this._modelForTd(e.currentTarget);
       if ((column != null ? column.hoverView : void 0) != null) {
@@ -1244,7 +1247,7 @@ define('views/layout',['templates/layout'], function(template) {
         tdPosition.top += $(e.currentTarget).outerHeight() - 2;
         tdPosition.width = $(e.currentTarget).outerWidth();
         this.overlayRegion.show(hover);
-        return (ref = this.overlayRegion.$el) != null ? ref.css(tdPosition) : void 0;
+        return (_ref = this.overlayRegion.$el) != null ? _ref.css(tdPosition) : void 0;
       } else {
         return this.overlayRegion.reset();
       }
@@ -1315,13 +1318,13 @@ define('templates/loading',[],function(){
   return template;
 });
 
-var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define('views/loading',['templates/loading'], function(template) {
   var Loading;
-  return Loading = (function(superClass) {
-    extend(Loading, superClass);
+  return Loading = (function(_super) {
+    __extends(Loading, _super);
 
     function Loading() {
       return Loading.__super__.constructor.apply(this, arguments);
@@ -2494,13 +2497,13 @@ Backbone.Paginator = (function ( Backbone, _, $ ) {
 
 define("views/../../bower_components/backbone.paginator/dist/backbone.paginator.js", function(){});
 
-var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define('views/paginator',['templates/paginator', '../../bower_components/backbone.paginator/dist/backbone.paginator.js'], function(template) {
   var Paginator;
-  return Paginator = (function(superClass) {
-    extend(Paginator, superClass);
+  return Paginator = (function(_super) {
+    __extends(Paginator, _super);
 
     function Paginator() {
       return Paginator.__super__.constructor.apply(this, arguments);
@@ -2566,8 +2569,8 @@ define('views/paginator',['templates/paginator', '../../bower_components/backbon
     };
 
     Paginator.prototype.serializeData = function() {
-      var lastRow, ref, ref1, totalRecords;
-      totalRecords = this.collection.totalRecords || ((ref = this.collection) != null ? (ref1 = ref.origModels) != null ? ref1.length : void 0 : void 0) || 0;
+      var lastRow, totalRecords, _ref, _ref1;
+      totalRecords = this.collection.totalRecords || ((_ref = this.collection) != null ? (_ref1 = _ref.origModels) != null ? _ref1.length : void 0 : void 0) || 0;
       lastRow = Math.min(this.collection.currentPage * this.collection.perPage, totalRecords);
       return _.extend({}, this, this.collection, {
         totalRecords: totalRecords,
@@ -2697,18 +2700,18 @@ define('utilities/string_utils',[], function() {
   };
 });
 
-var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define('views/row',['templates/row', 'utilities/string_utils'], function(template, StringUtils) {
   var Row;
-  return Row = (function(superClass) {
-    extend(Row, superClass);
+  return Row = (function(_super) {
+    __extends(Row, _super);
 
     function Row() {
-      this.onShow = bind(this.onShow, this);
-      this.selectionStateChanged = bind(this.selectionStateChanged, this);
+      this.onShow = __bind(this.onShow, this);
+      this.selectionStateChanged = __bind(this.selectionStateChanged, this);
       return Row.__super__.constructor.apply(this, arguments);
     }
 
@@ -2814,7 +2817,7 @@ define('views/row',['templates/row', 'utilities/string_utils'], function(templat
     Row.prototype.onShow = function() {
       return _.each(this.columns, (function(_this) {
         return function(column, idx) {
-          var controller, ref, view, viewOpts;
+          var controller, view, viewOpts, _ref;
           if (column.view != null) {
             viewOpts = _.extend({}, column.viewOpts);
             _.extend(viewOpts, {
@@ -2827,7 +2830,7 @@ define('views/row',['templates/row', 'utilities/string_utils'], function(templat
             controller = view.getMainView ? view : null;
             view = view.getMainView ? view.getMainView() : view;
             if (!view) {
-              throw new Error("getMainView() did not return a view instance or " + (view != null ? (ref = view.constructor) != null ? ref.name : void 0 : void 0) + " is not a view instance");
+              throw new Error("getMainView() did not return a view instance or " + (view != null ? (_ref = view.constructor) != null ? _ref.name : void 0 : void 0) + " is not a view instance");
             }
             if (controller != null) {
               _this.listenTo(view, "destroy", controller.destroy);
@@ -3175,20 +3178,20 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 
 define("views/../../bower_components/jquery-resizable-columns/dist/jquery.resizableColumns.js", function(){});
 
-var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates/table', '../../bower_components/jquery-resizable-columns/dist/jquery.resizableColumns.js'], function(Row, Empty, Loading, template) {
   var RowList;
-  return RowList = (function(superClass) {
-    extend(RowList, superClass);
+  return RowList = (function(_super) {
+    __extends(RowList, _super);
 
     function RowList() {
-      this.updateClasses = bind(this.updateClasses, this);
-      this.fetched = bind(this.fetched, this);
-      this.setSort = bind(this.setSort, this);
-      this.sortChanged = bind(this.sortChanged, this);
+      this.updateClasses = __bind(this.updateClasses, this);
+      this.fetched = __bind(this.fetched, this);
+      this.setSort = __bind(this.setSort, this);
+      this.sortChanged = __bind(this.sortChanged, this);
       return RowList.__super__.constructor.apply(this, arguments);
     }
 
@@ -3256,18 +3259,18 @@ define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates
     };
 
     RowList.prototype.sortChanged = function(e) {
-      var ref, sortIdx;
+      var sortIdx, _ref;
       sortIdx = $(e.currentTarget).index();
       if (this.selectable) {
         sortIdx--;
       }
       return this.trigger('table:sort', {
-        attribute: (ref = this.columns[sortIdx]) != null ? ref.attribute : void 0
+        attribute: (_ref = this.columns[sortIdx]) != null ? _ref.attribute : void 0
       });
     };
 
     RowList.prototype.setSort = function(sortColumn, sortDirection, opts) {
-      var ref, sortIdx;
+      var sortIdx, _ref;
       this.sortColumn = sortColumn;
       this.sortDirection = sortDirection;
       if (opts == null) {
@@ -3284,7 +3287,7 @@ define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates
         sortIdx--;
       }
       if (!opts.noReload) {
-        return this.collection.setSort(this.sortColumn, this.sortDirection, (ref = this.columns[sortIdx]) != null ? ref.sortAttribute : void 0);
+        return this.collection.setSort(this.sortColumn, this.sortDirection, (_ref = this.columns[sortIdx]) != null ? _ref.sortAttribute : void 0);
       }
     };
 
@@ -3366,11 +3369,11 @@ define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates
     };
 
     RowList.prototype.updateClasses = function() {
-      var base, base1;
-      if (typeof (base = this.ui.table).toggleClass === "function") {
-        base.toggleClass('loaded', true);
+      var _base, _base1;
+      if (typeof (_base = this.ui.table).toggleClass === "function") {
+        _base.toggleClass('loaded', true);
       }
-      return typeof (base1 = this.ui.table).toggleClass === "function" ? base1.toggleClass('populated', true) : void 0;
+      return typeof (_base1 = this.ui.table).toggleClass === "function" ? _base1.toggleClass('populated', true) : void 0;
     };
 
     RowList.prototype.onRender = function() {
@@ -3436,13 +3439,13 @@ define('templates/selection_indicator',[],function(){
   return template;
 });
 
-var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define('views/selection_indicator',['templates/selection_indicator'], function(template) {
   var SelectionIndicator;
-  return SelectionIndicator = (function(superClass) {
-    extend(SelectionIndicator, superClass);
+  return SelectionIndicator = (function(_super) {
+    __extends(SelectionIndicator, _super);
 
     function SelectionIndicator() {
       return SelectionIndicator.__super__.constructor.apply(this, arguments);
@@ -3500,14 +3503,14 @@ define('views/selection_indicator',['templates/selection_indicator'], function(t
   })(Marionette.ItemView);
 });
 
-var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty,
-  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define('controllers/table_controller',['controllers/application_controller', 'entities/paginated_collection', 'entities/action_buttons_collection', 'entities/action_button', 'entities/filter', 'views/control_bar', 'views/empty', 'views/header', 'views/layout', 'views/loading', 'views/paginator', 'views/row', 'views/row_list', 'views/selection_indicator', 'utilities/string_utils'], function(Controller, CreatePaginatedCollectionClass, ActionButtonsCollection, ActionButton, EntityFilter, ControlBar, Empty, Header, Layout, Loading, Paginator, Row, RowList, SelectionIndicator, StringUtils) {
   Marionette.Carpenter = {};
-  Marionette.Carpenter.CellController = (function(superClass) {
-    extend(CellController, superClass);
+  Marionette.Carpenter.CellController = (function(_super) {
+    __extends(CellController, _super);
 
     function CellController() {
       return CellController.__super__.constructor.apply(this, arguments);
@@ -3516,19 +3519,19 @@ define('controllers/table_controller',['controllers/application_controller', 'en
     return CellController;
 
   })(Controller);
-  Marionette.Carpenter.Controller = (function(superClass) {
-    extend(Controller, superClass);
+  Marionette.Carpenter.Controller = (function(_super) {
+    __extends(Controller, _super);
 
     function Controller() {
-      this.toggleInteraction = bind(this.toggleInteraction, this);
-      this.setPerPage = bind(this.setPerPage, this);
-      this.totalPages = bind(this.totalPages, this);
-      this.totalRecords = bind(this.totalRecords, this);
-      this.last = bind(this.last, this);
-      this.first = bind(this.first, this);
-      this.previous = bind(this.previous, this);
-      this.next = bind(this.next, this);
-      this.refresh = bind(this.refresh, this);
+      this.toggleInteraction = __bind(this.toggleInteraction, this);
+      this.setPerPage = __bind(this.setPerPage, this);
+      this.totalPages = __bind(this.totalPages, this);
+      this.totalRecords = __bind(this.totalRecords, this);
+      this.last = __bind(this.last, this);
+      this.first = __bind(this.first, this);
+      this.previous = __bind(this.previous, this);
+      this.next = __bind(this.next, this);
+      this.refresh = __bind(this.refresh, this);
       return Controller.__super__.constructor.apply(this, arguments);
     }
 
@@ -3572,7 +3575,7 @@ define('controllers/table_controller',['controllers/application_controller', 'en
     Controller.prototype.paginator = null;
 
     Controller.prototype.initialize = function(opts) {
-      var PagerClass, base, ref;
+      var PagerClass, _base, _ref;
       if (opts == null) {
         opts = {};
       }
@@ -3587,13 +3590,13 @@ define('controllers/table_controller',['controllers/application_controller', 'en
       })(this));
       this["static"] = !!this["static"];
       PagerClass = CreatePaginatedCollectionClass(this.collection, this);
-      this.collection = new PagerClass(this.collection.models);
-      if (typeof (base = this.collection).rebind === "function") {
-        base.rebind();
+      this.collection = new PagerClass(this.collection.models, this);
+      if (typeof (_base = this.collection).rebind === "function") {
+        _base.rebind();
       }
       this.setMainView(new Layout(this));
       this.collection.perPage = this.perPage;
-      this.collection.sortColumn = (ref = this.defaultSortColumn()) != null ? ref.attribute : void 0;
+      this.collection.sortColumn = (_ref = this.defaultSortColumn()) != null ? _ref.attribute : void 0;
       this.collection.sortDirection = this.defaultSortDirection();
       if (!this["static"]) {
         this.collection.updateSortKey();
@@ -3801,8 +3804,8 @@ define('controllers/table_controller',['controllers/application_controller', 'en
     };
 
     Controller.prototype.defaultSortDirection = function() {
-      var dir, ref;
-      dir = (ref = this.defaultSortColumn()) != null ? ref.defaultDirection : void 0;
+      var dir, _ref;
+      dir = (_ref = this.defaultSortColumn()) != null ? _ref.defaultDirection : void 0;
       return (_.contains(['asc', 'desc'], dir) && dir) || 'desc';
     };
 

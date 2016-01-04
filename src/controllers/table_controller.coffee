@@ -172,7 +172,7 @@ define [
 
         # clone the collection into a relevant PaginatedCollection
         PagerClass = CreatePaginatedCollectionClass(@collection, @)
-        @collection = new PagerClass(@collection.models)
+        @collection = new PagerClass(@collection.models, @)
         @collection.rebind?() # crappy workaround to my class wrapping
 
         # container for different parts of our table
