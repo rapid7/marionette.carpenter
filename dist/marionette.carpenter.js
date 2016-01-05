@@ -635,6 +635,19 @@ define('entities/paginated_collection',[], function() {
         this.numSelected = numSelected;
         return this.trigger('change:numSelected');
       },
+      parse: function(data) {
+        if (collection.parse != null) {
+          return collection.parse.call(this, data);
+        } else {
+          return this.constructor.__super__.parse.apply(this, arguments);
+        }
+      },
+      fetch: function(options) {
+        if (collection.preFetch != null) {
+          collection.preFetch(this);
+        }
+        return this.constructor.__super__.fetch.apply(this, arguments);
+      },
       removeMultiple: function(models) {
         var selectedIDs;
         selectedIDs = models.pluck('id');

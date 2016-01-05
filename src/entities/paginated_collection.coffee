@@ -133,6 +133,27 @@ define [], ->
         @trigger 'change:numSelected'
 
     #
+    # Declare collection parse method
+    #
+    # @param data [Object] the response returned from server
+      parse: (data) ->
+        if collection.parse?
+          collection.parse.call(this, data)
+        else
+          this.constructor.__super__.parse.apply(this, arguments)
+
+    #
+    # Declare collection fetch method
+    #
+    # @param options [Object] the options to passed to fetch data
+      fetch: (options) ->
+        if collection.preFetch?
+          collection.preFetch(this)
+
+        this.constructor.__super__.fetch.apply(this, arguments)
+
+
+    #
     # Remove multiple models from this collection simultaneously, and trigger a
     # custom event. Useful when you want to bind to a 'several things have been
     # removed' event, rather than to each 'remove' event on the collection
