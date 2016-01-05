@@ -93,6 +93,10 @@ new Marionette.Carpenter.Controller
   region: new Backbone.Marionette.Region el: '#users-table-region'
   collection: usersCollection # a Backbone collection
   static: true
+  queryParameters: {
+    param1: paramValue1
+    param2: paramValue2
+  }
   columns: [
     { attribute: 'first_name' }
     { attribute: 'last_name' }     
@@ -100,7 +104,7 @@ new Marionette.Carpenter.Controller
   ]
 ```
 
-The above code creates a new table element at `#users-table-region` with pagination controls and sortable columns. We set the title of the table with `title: 'Users'`, indicate the `region` we want the table rendered to, specify that the collection is to be paginated and sorted client-side with `static: true`, and then specify the attributes to load in the table with an array at `columns`.
+The above code creates a new table element at `#users-table-region` with pagination controls and sortable columns. We set the title of the table with `title: 'Users'`, indicate the `region` we want the table rendered to, specify that the collection is to be paginated and sorted client-side with `static: true`, and then specify the attributes to load in the table with an array at `columns`. `queryParameters` optionally provides the ability to pass in additional custom parameters.
 
 ### Customizing columns
 
@@ -291,6 +295,34 @@ The button will be enabled if `activateOn` is set to:
 
 + 'one' - If only one row is selected
 
+### Collection parse
+
+Allows user to define a custom parse method for marionette carpenter's custom paginator collection.
+
+```coffeescript
+new Marionette.Carpenter.Controller
+  title: 'Users'
+  region: new Backbone.Marionette.Region el: '#users-table-region'
+  collection: new Backbone.Collection({
+    parse: (data) ->
+      this.totalRecords = data.__total_records
+      data.items
+  })
+  static: true
+  queryParameters: {
+    param1: paramValue1
+    param2: paramValue2
+  }
+  columns: [
+    { attribute: 'first_name' }
+    { attribute: 'last_name' }
+    { attribute: 'email' }
+  ]
+```
+
+### Collection prefetch
+
+Optional method allowing the user access to the marionette carpenter's custom paginator collection.
 
 ## Development
 
