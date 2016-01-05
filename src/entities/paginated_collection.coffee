@@ -57,9 +57,11 @@ define [], ->
 
     sort: ->
 
-    initialize: (models, options) ->
+    initialize: (models, options={}) ->
       @numSelected = 0
       @server_api.search = {}
+      if options.queryParameters?
+        _.extend(@server_api, options.queryParameters)
 
       super(models, options)
 
@@ -129,6 +131,26 @@ define [], ->
       updateNumSelected: (numSelected) ->
         @numSelected = numSelected
         @trigger 'change:numSelected'
+
+    #
+    # Declare collection parse method
+    #
+    # @param data [Object] the response returned from server
+      parse: (data) ->
+        if Backbone.Collection.prototype.parse != collection.parse
+          collection.parse.apply(this, arguments)
+        else 
+          this.constructor.__super__.parse.apply(this, arguments)
+    #
+    # Declare collection fetch method
+    #
+    # @param options [Object] the options to passed to fetch data
+      fetch: (options) ->
+        if collection.preFetch?
+          collection.preFetch(this)
+
+        this.constructor.__super__.fetch.apply(this, arguments)
+
 
     #
     # Remove multiple models from this collection simultaneously, and trigger a

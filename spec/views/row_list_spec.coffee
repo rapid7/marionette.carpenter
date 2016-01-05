@@ -96,10 +96,10 @@ define [
             name: 'joe'
             class: 'ashjksadkjhdsakjh'
 
-      buildCollection = ->
+      buildCollection = (collectionOptions={}) ->
         Model = buildModelClass()
-        Collection = Backbone.Collection.extend({ model: Model, url: urlRoot() })
-        collection = new Collection({})
+        Collection = Backbone.Collection.extend(_.extend({ model: Model, url: urlRoot() }, collectionOptions))
+        collection = new Collection()
         Wrapped = createPaginatedCollectionClass(collection, static: false)
         new Wrapped()
 
@@ -114,6 +114,56 @@ define [
           { attribute: 'name'  }
           { attribute: 'class' }
         ]
+
+      describe 'When collection is fetch ', ->
+        called = false
+        beforeEach ->
+          @server = sinon.fakeServer.create()
+          @server.respondWith(/\/joe.*/,
+              [200, {"Content-Type": "application/json"}, json(10)])
+          @collection = buildCollection({
+            parse: (data) ->
+              called = true
+          })
+
+        afterEach ->
+          @server.restore()
+
+        it 'data is parsed using parse method', ->
+          @list = new RowList
+            collection: @collection
+            columns: buildColumns()
+            static: false
+
+          @collection.fetch(reset: true)
+          @region.show(@list)
+          @server.respond()
+          expect(called).toEqual(true)
+
+      describe 'when the collection is fetch ', ->
+        called = false
+        beforeEach ->
+          @server = sinon.fakeServer.create()
+          @server.respondWith(/\/joe.*/,
+              [200, {"Content-Type": "application/json"}, json(10)])
+          @collection = buildCollection({
+            preFetch: (wrapCollection) ->
+              called = true
+          })
+
+        afterEach ->
+          @server.restore()
+
+        it 'preFetch is called before fetch', ->
+          @list = new RowList
+            collection: @collection
+            columns: buildColumns()
+            static: false
+
+          @collection.fetch(reset: true)
+          @region.show(@list)
+          @server.respond()
+          expect(called).toEqual(true)
 
       describe 'before the URL finishes loading', ->
         beforeEach ->
