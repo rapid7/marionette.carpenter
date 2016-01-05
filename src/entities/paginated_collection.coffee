@@ -38,7 +38,7 @@ define [], ->
     # @param filter [Filter] the table's current filter
     setSearch: (filter) ->
       @server_api.search = filter.attributes
-      this.fetch
+      this.goTo 1,
         reset: true
         error: (model, response, options) =>
           @displayErrorMessage(response?.responseJSON?.message)

@@ -559,7 +559,7 @@ define('entities/paginated_collection',[], function() {
 
     AjaxPaginatedCollection.prototype.setSearch = function(filter) {
       this.server_api.search = filter.attributes;
-      return this.fetch({
+      return this.goTo(1, {
         reset: true,
         error: (function(_this) {
           return function(model, response, options) {
