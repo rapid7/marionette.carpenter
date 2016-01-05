@@ -137,11 +137,10 @@ define [], ->
     #
     # @param data [Object] the response returned from server
       parse: (data) ->
-        if collection.parse?
-          collection.parse.call(this, data)
-        else
+        if Backbone.Collection.prototype.parse != collection.parse
+          collection.parse.apply(this, arguments)
+        else 
           this.constructor.__super__.parse.apply(this, arguments)
-
     #
     # Declare collection fetch method
     #

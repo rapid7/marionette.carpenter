@@ -593,8 +593,8 @@ define('entities/paginated_collection',[], function() {
       }
       this.numSelected = 0;
       this.server_api.search = {};
-      if (options.requestData != null) {
-        _.extend(this.server_api, options.requestData);
+      if (options.queryParameters != null) {
+        _.extend(this.server_api, options.queryParameters);
       }
       return AjaxPaginatedCollection.__super__.initialize.call(this, models, options);
     };
@@ -622,7 +622,7 @@ define('entities/paginated_collection',[], function() {
       model: collection.constructor.prototype.model || collection.model,
       url: _.result(collection, 'url'),
       paginator_core: {
-        type: _.result(collection, 'requestType') || 'GET',
+        type: 'GET',
         dataType: 'json'
       },
       paginator_ui: {
@@ -636,8 +636,8 @@ define('entities/paginated_collection',[], function() {
         return this.trigger('change:numSelected');
       },
       parse: function(data) {
-        if (collection.parse != null) {
-          return collection.parse.call(this, data);
+        if (Backbone.Collection.prototype.parse !== collection.parse) {
+          return collection.parse.apply(this, arguments);
         } else {
           return this.constructor.__super__.parse.apply(this, arguments);
         }
