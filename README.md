@@ -323,6 +323,61 @@ new Marionette.Carpenter.Controller
 ### Collection prefetch
 
 Optional method allowing the user access to the marionette carpenter's custom paginator collection.
+## Controlling Pagination
+You can control the pagination bar programatically by using the convenience methods available on the collection.
+
+```
+collection = this.tableController.controller
+collection.goTo(n)
+collection.nextPage(options)
+collection.prevPage(options)
+```
+
+### Convenience methods:
+
+
+* **Collection.goTo( n, options )** - go to a specific page
+* **Collection.nextPage( options )** - go to the next page
+* **Collection.prevPage( options )** - go to the previous page
+
+
+**The collection's methods `.goTo()`, `.nextPage()` and `.prevPage()` are all extension of the original [Backbone Collection.fetch() method](http://documentcloud.github.com/backbone/#Collection-fetch). As so, they all can take the same option object as parameter.
+
+This option object can use `success` and `error` parameters to pass a function to be executed after server answer.
+
+```javascript
+collection.goTo(n, {
+  success: function( collection, response ) {
+    // called is server request success
+  },
+  error: function( collection, response ) {
+    // called if server request fail
+  }
+});
+```
+
+To manage callback, you could also use the [jqXHR](http://api.jquery.com/jQuery.ajax/#jqXHR) returned by these methods to manage callback.
+
+```javascript
+collection
+  .requestNextPage()
+  .done(function( data, textStatus, jqXHR ) {
+    // called is server request success
+  })
+  .fail(function( data, textStatus, jqXHR ) {
+    // called if server request fail
+  })
+  .always(function( data, textStatus, jqXHR ) {
+    // do something after server request is complete
+  });
+});
+```
+
+If you'd like to add the incoming models to the current collection, instead of replacing the collection's contents, pass `{update: true, remove: false}` as options to these methods.
+
+```javascript
+collection.prevPage({ update: true, remove: false });
+```
 
 ## Development
 

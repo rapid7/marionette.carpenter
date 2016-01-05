@@ -96,7 +96,6 @@ module.exports = (grunt) ->
     uglify:
       options:
         mangle: true
-        screwIE8: true # always
       dist:
         files:
           "dist/marionette.carpenter.min.js": "dist/marionette.carpenter.js"
@@ -140,6 +139,9 @@ module.exports = (grunt) ->
         ]
         sourceMap: false
         style: 'compact'
+        functions:
+          'image-url($img)': (img) ->
+            new require('node-sass').types.String('url("/' + img.getValue() + '")')
       build:
         expand: true
         flatten: true
