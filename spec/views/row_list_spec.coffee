@@ -222,6 +222,7 @@ define [
             collection: @collection
             columns: buildColumns()
             static: false
+          @collection.fetch(reset: true)
           @region.show(@list)
           @server.respond()
 
@@ -236,6 +237,46 @@ define [
 
         it 'does add the "populated" class to the table', ->
           expect(@list.ui.table).toHaveClass('populated')
+
+      describe 'when additional fetches are made', ->
+        beforeEach ->
+          @server = sinon.fakeServer.create()
+          @server.respondWith("GET", /\/joe.*/,
+            [200, {"Content-Type": "application/json"}, json(0)])
+          @collection = buildCollection()
+          @list = new RowList
+            collection: @collection
+            columns: buildColumns()
+            static: false
+          @region.show(@list)
+          @server.respond()
+
+        afterEach ->
+          @server.restore()
+
+        describe 'when the request is started', ->
+          beforeEach ->
+            @collection.fetch(reset: true)
+
+          it 'it has the "loaded" class on the table', ->
+            expect(@list.ui.table).toHaveClass('loaded')
+
+          it 'does not have the "populated" class on the table', ->
+            expect(@list.ui.table).not.toHaveClass('populated')
+
+          describe 'when the request completes', ->
+            beforeEach ->
+              @server.respond()
+
+            describe 'should slow enough', ->
+              it 'adds the "loaded" class to the table', ->
+                expect(@list.ui.table).toHaveClass('loaded')
+
+              it 'adds the "populated" class to the table', ->
+                @list.bindUIElements()
+                debugger;
+                expect(@list.ui.table).toHaveClass('populated')
+
 
     describe 'when the collection is selectable', ->
 

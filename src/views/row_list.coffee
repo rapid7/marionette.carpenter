@@ -16,6 +16,7 @@ define [
 
     collectionEvents:
       sync: 'fetched'
+      request: 'requested'
       reset: 'fetched'
 
     ui:
@@ -175,6 +176,14 @@ define [
     # @return [void]
     handleRemoveMultiple: ->
       @ui.selectAllCheckbox.prop('checked', false) if @collection.length == 0
+
+    #
+    # When a request is started, remove the populated class since the table is reloading
+    # its contents
+    #
+    # @return [void]
+    requested: =>
+      @ui.table.removeClass?('populated')
 
     #
     # If the EmptyView was replaced with a LoadingView, revert that
