@@ -178,24 +178,32 @@ define [
       @ui.selectAllCheckbox.prop('checked', false) if @collection.length == 0
 
     #
-    # When a request is started, remove the populated class since the table is reloading
+    # When a request is started, remove the loaded class since the table is reloading
     # its contents
     #
     # @return [void]
     requested: =>
-      @ui.table.removeClass?('populated')
+      @removeLoadedClass()
 
+    # Callback executed after collection has been fetched
     #
-    # If the EmptyView was replaced with a LoadingView, revert that
-    # replacement to actually show a message on empty collection.
-    # Called after any change to the collection.
+    # @return [void]
     fetched: =>
+      # Covers the case when collection has not changed and does not trigger
+      # a view re-render
+      @addLoadedClass()
+
+      @listenToOnce @, 'render', =>
+        @addLoadedClass()
+
+
+      # If the EmptyView was replaced with a LoadingView, revert that
+      # replacement to actually show a message on empty collection.
+      # Called after any change to the collection.
       if @originalEmptyView
         @emptyView = @originalEmptyView
         @originalEmptyView = null
-        @render() # replace any necessary views!
-      else
-        @updateClasses()
+
 
     #
     # Overriden to allow passing options to the rendered ItemView
@@ -210,19 +218,15 @@ define [
 
     serializeData: -> @
 
-    updateClasses: =>
+    addLoadedClass: =>
       # Add a class to the table to signify that it's done loading. This is useful for cuke.
-      @ui.table.toggleClass?('loaded', true)
-      @ui.table.toggleClass?('populated', true)
+      @ui.table.addClass?('loaded')
+
+    removeLoadedClass: =>
+      @ui.table.removeClass?('loaded')
+
 
     onRender: ->
       @ui.table.resizableColumns()
-     #TODO: Add non-pro tooltips
-#      # Add a tooltip to the select all checkbox, if the table is selectable.
-#      if @selectable
-#        @ui.selectAllCheckbox.tooltip
-#          tooltipClass: 'select-all-tooltip'
-#          position:
-#            at: 'left+40 top-30'
-
-      @updateClasses()
+      # If we never fetch anything
+      @addLoadedClass() if @static

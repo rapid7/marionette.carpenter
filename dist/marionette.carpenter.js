@@ -3209,7 +3209,8 @@ define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates
     extend(RowList, superClass);
 
     function RowList() {
-      this.updateClasses = bind(this.updateClasses, this);
+      this.removeLoadedClass = bind(this.removeLoadedClass, this);
+      this.addLoadedClass = bind(this.addLoadedClass, this);
       this.fetched = bind(this.fetched, this);
       this.requested = bind(this.requested, this);
       this.setSort = bind(this.setSort, this);
@@ -3367,17 +3368,19 @@ define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates
     };
 
     RowList.prototype.requested = function() {
-      var base;
-      return typeof (base = this.ui.table).removeClass === "function" ? base.removeClass('populated') : void 0;
+      return this.removeLoadedClass();
     };
 
     RowList.prototype.fetched = function() {
+      this.addLoadedClass();
+      this.listenToOnce(this, 'render', (function(_this) {
+        return function() {
+          return _this.addLoadedClass();
+        };
+      })(this));
       if (this.originalEmptyView) {
         this.emptyView = this.originalEmptyView;
-        this.originalEmptyView = null;
-        return this.render();
-      } else {
-        return this.updateClasses();
+        return this.originalEmptyView = null;
       }
     };
 
@@ -3396,17 +3399,21 @@ define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates
       return this;
     };
 
-    RowList.prototype.updateClasses = function() {
-      var base, base1;
-      if (typeof (base = this.ui.table).toggleClass === "function") {
-        base.toggleClass('loaded', true);
-      }
-      return typeof (base1 = this.ui.table).toggleClass === "function" ? base1.toggleClass('populated', true) : void 0;
+    RowList.prototype.addLoadedClass = function() {
+      var base;
+      return typeof (base = this.ui.table).addClass === "function" ? base.addClass('loaded') : void 0;
+    };
+
+    RowList.prototype.removeLoadedClass = function() {
+      var base;
+      return typeof (base = this.ui.table).removeClass === "function" ? base.removeClass('loaded') : void 0;
     };
 
     RowList.prototype.onRender = function() {
       this.ui.table.resizableColumns();
-      return this.updateClasses();
+      if (this["static"]) {
+        return this.addLoadedClass();
+      }
     };
 
     return RowList;

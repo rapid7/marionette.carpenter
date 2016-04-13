@@ -51,8 +51,6 @@ define [
         it 'displays one row containing the empty view', ->
           expect(@list.$el.find('tbody>tr').size()).toEqual(1)
 
-        it 'does add the "populated" class to the table', ->
-          expect(@list.ui.table).toHaveClass('populated')
 
         it 'adds the "loaded" class to the table', ->
           expect(@list.ui.table).toHaveClass('loaded')
@@ -66,9 +64,6 @@ define [
         it 'displays one row', ->
           expect(@list.$el.find('tbody>tr').size()).toEqual(1)
 
-        it 'adds the "populated" class to the table', ->
-          expect(@list.ui.table).toHaveClass('populated')
-
         it 'adds the "loaded" class to the table', ->
           expect(@list.ui.table).toHaveClass('loaded')
 
@@ -80,9 +75,6 @@ define [
 
         it 'displays five rows', ->
           expect(@list.$el.find('tbody>tr').size()).toEqual(5)
-
-        it 'adds the "populated" class to the table', ->
-          expect(@list.ui.table).toHaveClass('populated')
 
         it 'adds the "loaded" class to the table', ->
           expect(@list.ui.table).toHaveClass('loaded')
@@ -209,13 +201,11 @@ define [
         it 'adds the "loaded" class to the table', ->
           expect(@list.ui.table).toHaveClass('loaded')
 
-        it 'adds the "populated" class to the table', ->
-          expect(@list.ui.table).toHaveClass('populated')
 
       describe 'when the URL returns 0 items', ->
         beforeEach ->
           @server = sinon.fakeServer.create()
-          @server.respondWith("GET", urlRoot(),
+          @server.respondWith("GET", /\/joe.*/,
               [200, {"Content-Type": "application/json"}, json(0)])
           @collection = buildCollection()
           @list = new RowList
@@ -235,8 +225,6 @@ define [
         it 'adds the "loaded" class to the table', ->
           expect(@list.ui.table).toHaveClass('loaded')
 
-        it 'does add the "populated" class to the table', ->
-          expect(@list.ui.table).toHaveClass('populated')
 
       describe 'when additional fetches are made', ->
         beforeEach ->
@@ -258,11 +246,8 @@ define [
           beforeEach ->
             @collection.fetch(reset: true)
 
-          it 'it has the "loaded" class on the table', ->
-            expect(@list.ui.table).toHaveClass('loaded')
-
-          it 'does not have the "populated" class on the table', ->
-            expect(@list.ui.table).not.toHaveClass('populated')
+          it 'does not have the "loaded" class on the table', ->
+            expect(@list.ui.table).not.toHaveClass('loaded')
 
           describe 'when the request completes', ->
             beforeEach ->
@@ -272,10 +257,6 @@ define [
               it 'adds the "loaded" class to the table', ->
                 expect(@list.ui.table).toHaveClass('loaded')
 
-              it 'adds the "populated" class to the table', ->
-                @list.bindUIElements()
-                debugger;
-                expect(@list.ui.table).toHaveClass('populated')
 
 
     describe 'when the collection is selectable', ->
