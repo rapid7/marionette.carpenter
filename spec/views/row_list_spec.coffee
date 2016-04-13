@@ -51,8 +51,6 @@ define [
         it 'displays one row containing the empty view', ->
           expect(@list.$el.find('tbody>tr').size()).toEqual(1)
 
-        it 'does add the "populated" class to the table', ->
-          expect(@list.ui.table).toHaveClass('populated')
 
         it 'adds the "loaded" class to the table', ->
           expect(@list.ui.table).toHaveClass('loaded')
@@ -66,9 +64,6 @@ define [
         it 'displays one row', ->
           expect(@list.$el.find('tbody>tr').size()).toEqual(1)
 
-        it 'adds the "populated" class to the table', ->
-          expect(@list.ui.table).toHaveClass('populated')
-
         it 'adds the "loaded" class to the table', ->
           expect(@list.ui.table).toHaveClass('loaded')
 
@@ -80,9 +75,6 @@ define [
 
         it 'displays five rows', ->
           expect(@list.$el.find('tbody>tr').size()).toEqual(5)
-
-        it 'adds the "populated" class to the table', ->
-          expect(@list.ui.table).toHaveClass('populated')
 
         it 'adds the "loaded" class to the table', ->
           expect(@list.ui.table).toHaveClass('loaded')
@@ -209,19 +201,18 @@ define [
         it 'adds the "loaded" class to the table', ->
           expect(@list.ui.table).toHaveClass('loaded')
 
-        it 'adds the "populated" class to the table', ->
-          expect(@list.ui.table).toHaveClass('populated')
 
       describe 'when the URL returns 0 items', ->
         beforeEach ->
           @server = sinon.fakeServer.create()
-          @server.respondWith("GET", urlRoot(),
+          @server.respondWith("GET", /\/joe.*/,
               [200, {"Content-Type": "application/json"}, json(0)])
           @collection = buildCollection()
           @list = new RowList
             collection: @collection
             columns: buildColumns()
             static: false
+          @collection.fetch(reset: true)
           @region.show(@list)
           @server.respond()
 
@@ -234,8 +225,39 @@ define [
         it 'adds the "loaded" class to the table', ->
           expect(@list.ui.table).toHaveClass('loaded')
 
-        it 'does add the "populated" class to the table', ->
-          expect(@list.ui.table).toHaveClass('populated')
+
+      describe 'when additional fetches are made', ->
+        beforeEach ->
+          @server = sinon.fakeServer.create()
+          @server.respondWith("GET", /\/joe.*/,
+            [200, {"Content-Type": "application/json"}, json(0)])
+          @collection = buildCollection()
+          @list = new RowList
+            collection: @collection
+            columns: buildColumns()
+            static: false
+          @region.show(@list)
+          @server.respond()
+
+        afterEach ->
+          @server.restore()
+
+        describe 'when the request is started', ->
+          beforeEach ->
+            @collection.fetch(reset: true)
+
+          it 'does not have the "loaded" class on the table', ->
+            expect(@list.ui.table).not.toHaveClass('loaded')
+
+          describe 'when the request completes', ->
+            beforeEach ->
+              @server.respond()
+
+            describe 'should slow enough', ->
+              it 'adds the "loaded" class to the table', ->
+                expect(@list.ui.table).toHaveClass('loaded')
+
+
 
     describe 'when the collection is selectable', ->
 
