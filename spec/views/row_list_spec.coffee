@@ -113,15 +113,17 @@ define [
           @server = sinon.fakeServer.create()
           @server.respondWith(/\/joe.*/,
               [200, {"Content-Type": "application/json"}, json(10)])
-          @collection = buildCollection({
-            parse: (data) ->
-              called = true
-          })
+
 
         afterEach ->
           @server.restore()
 
         it 'data is parsed using parse method', ->
+          @collection = buildCollection({
+            parse: (data) ->
+              called = true
+          })
+
           @list = new RowList
             collection: @collection
             columns: buildColumns()
@@ -131,6 +133,20 @@ define [
           @region.show(@list)
           @server.respond()
           expect(called).toEqual(true)
+
+        it 'shows table without parse method defined', ->
+          @collection = buildCollection()
+
+          @list = new RowList
+            collection: @collection
+            columns: buildColumns()
+            static: false
+
+          @collection.fetch(reset: true)
+          @region.show(@list)
+          @server.respond()
+          expect(@list.ui.table).toHaveClass('loaded')
+          expect(@list.$el.find('tbody>tr').size()).toEqual(10)
 
       describe 'when the collection is fetch ', ->
         called = false
