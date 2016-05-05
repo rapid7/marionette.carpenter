@@ -189,13 +189,11 @@ define [
     #
     # @return [void]
     fetched: =>
-      # Covers the case when collection has not changed and does not trigger
-      # a view re-render
-      @addLoadedClass()
-
-      @listenToOnce @, 'render', =>
+      @listenToOnce @, 'render:collection', =>
         @addLoadedClass()
 
+      @listenToOnce @, 'render:empty', =>
+        @addLoadedClass()
 
       # If the EmptyView was replaced with a LoadingView, revert that
       # replacement to actually show a message on empty collection.
