@@ -137,7 +137,7 @@ define [], ->
     #
     # @param data [Object] the response returned from server
       parse: (data) ->
-        if Backbone.Collection.prototype.parse != collection.parse
+        if collection.parse? && (Backbone.Collection.prototype.parse != collection.parse)
           collection.parse.apply(this, arguments)
         else 
           this.constructor.__super__.parse.apply(this, arguments)

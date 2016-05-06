@@ -636,7 +636,7 @@ define('entities/paginated_collection',[], function() {
         return this.trigger('change:numSelected');
       },
       parse: function(data) {
-        if (Backbone.Collection.prototype.parse !== collection.parse) {
+        if ((collection.parse != null) && (Backbone.Collection.prototype.parse !== collection.parse)) {
           return collection.parse.apply(this, arguments);
         } else {
           return this.constructor.__super__.parse.apply(this, arguments);
