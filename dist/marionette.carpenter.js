@@ -3372,8 +3372,12 @@ define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates
     };
 
     RowList.prototype.fetched = function() {
-      this.addLoadedClass();
-      this.listenToOnce(this, 'render', (function(_this) {
+      this.listenToOnce(this, 'render:collection', (function(_this) {
+        return function() {
+          return _this.addLoadedClass();
+        };
+      })(this));
+      this.listenToOnce(this, 'render:empty', (function(_this) {
         return function() {
           return _this.addLoadedClass();
         };
