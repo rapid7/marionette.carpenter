@@ -149,7 +149,18 @@ define [
           it 'does not render pagination', ->
             expect(@region.$el.find('.paginator').html().trim()).toEqual('')
 
-        
+        describe 'when removing models from a collection', ->
+
+          set 'a', -> new Backbone.Model({A: '1'})
+          set 'b', -> new Backbone.Model({B: '2'})
+          set 'collection', -> new Backbone.Collection([])
+
+          it 'removes the model', ->
+            @controller.collection.add(a,b)
+            @controller.collection.removeMultiple(new Backbone.Collection([a]))
+            expect(@region.$el.find('tbody>tr').size()).toEqual(1)
+
+
         describe 'when given a single row with attributes 1, 2, and 3', ->
           set 'columns', -> _.map(['D', 'E', 'F'], (c) -> attribute: c)
           set 'collection', -> new Backbone.Collection([{D: '1', E: '2', F: '3'}])

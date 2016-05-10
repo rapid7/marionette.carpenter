@@ -172,4 +172,5 @@ module.exports = (grunt) ->
   grunt.registerTask('style', ['clean', 'copy:cssAsScss', 'sass'])
   grunt.registerTask('build', ['clean', 'style', 'coffee', 'eco', 'requirejs', 'concat', 'copy:js', 'copy:css', 'imageEmbed', 'uglify'])
   grunt.registerTask('spec',  ['build', 'jasmine'])
+  grunt.registerTask('spec-debug',['build', 'jasmine:run:build'])
   grunt.registerTask('default', ['build'])
