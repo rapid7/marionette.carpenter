@@ -219,9 +219,8 @@ define [
           @collection.trigger 'remove:multiple:after'
           # Sync the table.
           @toggleInteraction false
-          # Fetch and reset collection so the reset event is emitted.
-          # Sync event is not emitted on a fetch
-          debugger
+          # Fetch and reset collection so the sync event is emitted.
+          # Sync event is not emitted on a fetch otherwise
           @collection.fetch(reset:true)
 
         # wire the pieces together

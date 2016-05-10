@@ -120,7 +120,8 @@ define [
           @server.restore()
 
         describe 'when models are deleted', ->
-          it "adds the loaded class", ->
+
+          beforeEach ->
             @collection = buildCollection()
 
             @list = new RowList
@@ -137,9 +138,17 @@ define [
             @server.respondWith(/\/joe.*/,
               [200, {"Content-Type": "application/json"}, json(0)])
 
+          it "shows undeleted rows", ->
+            @list.listenToOnce @collection, 'sync', =>
+              expect(@list.$el.find('tbody>tr').size()).toEqual(0)
+
+            @collection.removeMultiple(new Backbone.Collection(@collection.models))
+            @server.respond()
+
+
+          it "adds the loaded class", ->
             @list.listenToOnce @collection, 'sync', =>
               expect(@list.ui.table).toHaveClass('loaded')
-              expect(@list.$el.find('tbody>tr').size()).toEqual(0)
 
             @collection.removeMultiple(new Backbone.Collection(@collection.models))
             @server.respond()

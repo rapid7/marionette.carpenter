@@ -3683,7 +3683,6 @@ define('controllers/table_controller',['controllers/application_controller', 'en
           });
           _this.collection.trigger('remove:multiple:after');
           _this.toggleInteraction(false);
-          debugger;
           return _this.collection.fetch({
             reset: true
           });
