@@ -413,3 +413,13 @@ npm install -g docco
 ```console
 docco src/**/*.coffee
 ```
+
+### Debugging Specs
+
+You can easily debug specs without using a remote PhantomJS debugger by running the following grunt task
+
+```
+grunt spec-debug
+```
+
+It will generate '_SpecRunner.html' which you can just open up in your browser.

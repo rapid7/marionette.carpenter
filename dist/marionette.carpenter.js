@@ -3683,7 +3683,10 @@ define('controllers/table_controller',['controllers/application_controller', 'en
           });
           _this.collection.trigger('remove:multiple:after');
           _this.toggleInteraction(false);
-          return _this.tableCollection.fetch();
+          debugger;
+          return _this.collection.fetch({
+            reset: true
+          });
         };
       })(this));
       this.listenTo(this.getMainView(), 'show', (function(_this) {

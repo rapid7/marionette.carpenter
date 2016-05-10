@@ -219,7 +219,10 @@ define [
           @collection.trigger 'remove:multiple:after'
           # Sync the table.
           @toggleInteraction false
-          @tableCollection.fetch()
+          # Fetch and reset collection so the reset event is emitted.
+          # Sync event is not emitted on a fetch
+          debugger
+          @collection.fetch(reset:true)
 
         # wire the pieces together
         @listenTo @getMainView(), 'show', =>

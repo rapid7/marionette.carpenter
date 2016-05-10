@@ -107,6 +107,7 @@ define [
           { attribute: 'class' }
         ]
 
+
       describe 'When collection is fetch ', ->
         called = false
         beforeEach ->
@@ -117,6 +118,31 @@ define [
 
         afterEach ->
           @server.restore()
+
+        describe 'when models are deleted', ->
+          it "adds the loaded class", ->
+            @collection = buildCollection()
+
+            @list = new RowList
+              collection: @collection
+              columns: buildColumns()
+              static: false
+
+            @collection.fetch(reset: true)
+            @region.show(@list)
+            @server.respond()
+
+            # On model removal, we re-fetch the endpoint.
+            # We simulate model removal from endpoint
+            @server.respondWith(/\/joe.*/,
+              [200, {"Content-Type": "application/json"}, json(0)])
+
+            @list.listenToOnce @collection, 'sync', =>
+              expect(@list.ui.table).toHaveClass('loaded')
+              expect(@list.$el.find('tbody>tr').size()).toEqual(0)
+
+            @collection.removeMultiple(new Backbone.Collection(@collection.models))
+            @server.respond()
 
         it 'data is parsed using parse method', ->
           @collection = buildCollection({
