@@ -456,11 +456,11 @@ define('controllers/application_controller',[], function() {
       this._attachRadio();
       Controller.__super__.constructor.call(this, options);
       this._instance_id = _.uniqueId("controller");
-      this.carpenterRadio.command("register:instance", this, this._instance_id);
+      this.carpenterRadio.request("register:instance", this, this._instance_id);
     }
 
     Controller.prototype.destroy = function() {
-      this.carpenterRadio.command("unregister:instance", this, this._instance_id);
+      this.carpenterRadio.request("unregister:instance", this, this._instance_id);
       return Controller.__super__.destroy.apply(this, arguments);
     };
 
@@ -495,7 +495,7 @@ define('controllers/application_controller',[], function() {
 
     Controller.prototype._manageView = function(view, options) {
       if (options.loading) {
-        return this.carpenterRadio.command("show:loading", view, options);
+        return this.carpenterRadio.request("show:loading", view, options);
       } else {
         return options.region.show(view);
       }

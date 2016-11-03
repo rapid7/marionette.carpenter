@@ -13,11 +13,11 @@ define [
         @_attachRadio()
         super options
         @_instance_id = _.uniqueId("controller")
-        @carpenterRadio.command "register:instance", @, @_instance_id
+        @carpenterRadio.request "register:instance", @, @_instance_id
 
       # Unregisters the Controller from the app and closes itself
       destroy: ->
-        @carpenterRadio.command "unregister:instance", @, @_instance_id
+        @carpenterRadio.request "unregister:instance", @, @_instance_id
         super
 
       # Shows the specified view in the desired region. If a Controller
@@ -65,7 +65,7 @@ define [
       _manageView: (view, options) ->
         if options.loading
           ## show the loading view
-          @carpenterRadio.command "show:loading", view, options
+          @carpenterRadio.request "show:loading", view, options
         else
           options.region.show view
 
