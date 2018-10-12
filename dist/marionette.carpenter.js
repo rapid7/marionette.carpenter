@@ -3259,6 +3259,7 @@ define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates
       this.htmlID = opts.htmlID;
       this.columns = opts.columns;
       this["static"] = !!opts["static"];
+      this.loaded = this["static"];
       this.selectable = !!opts.selectable;
       this.tableSelections = opts.tableSelections;
       this.emptyView = opts.emptyView || opts.tableEmptyView || Empty;
@@ -3271,15 +3272,19 @@ define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates
         this.selectedIDs = {};
         this.deselectedIDs = {};
       }
-      if (!this["static"]) {
-        this.originalEmptyView = this.emptyView;
-        this.emptyView = this.loadingView;
-      }
       return this.listenTo(this.collection, 'remove:multiple:after', (function(_this) {
         return function() {
           return _this.handleRemoveMultiple();
         };
       })(this));
+    };
+
+    RowList.prototype.getEmptyView = function() {
+      if (!(this["static"] || this.loaded)) {
+        return this.loadingView;
+      } else {
+        return this.emptyView;
+      }
     };
 
     RowList.prototype.sortChanged = function(e) {
@@ -3368,6 +3373,7 @@ define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates
     };
 
     RowList.prototype.requested = function() {
+      this.loaded = false;
       return this.removeLoadedClass();
     };
 
@@ -3382,10 +3388,7 @@ define('views/row_list',['views/row', 'views/empty', 'views/loading', 'templates
           return _this.addLoadedClass();
         };
       })(this));
-      if (this.originalEmptyView) {
-        this.emptyView = this.originalEmptyView;
-        return this.originalEmptyView = null;
-      }
+      return this.loaded = true;
     };
 
     RowList.prototype.buildChildView = function(item, ItemView) {

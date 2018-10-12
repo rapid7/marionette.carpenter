@@ -56,6 +56,7 @@ define [
       @htmlID          =   opts.htmlID
       @columns         =   opts.columns
       @static          = !!opts.static
+      @loaded          =   @static
       @selectable      = !!opts.selectable
       @tableSelections =   opts.tableSelections
       @emptyView       =   opts.emptyView || opts.tableEmptyView || Empty
@@ -69,13 +70,17 @@ define [
         @selectedIDs = {}
         @deselectedIDs = {}
 
-      unless @static
-        # display the LoadingView if necessary
-        @originalEmptyView = @emptyView
-        @emptyView = @loadingView
-
       @listenTo @collection, 'remove:multiple:after', =>
         @handleRemoveMultiple()
+
+    # Callback to dynamically set the emptyView
+    # @return [Marrionette.View]
+    getEmptyView: () ->
+      unless @static || @loaded
+        # Display the loadingView if we have a non-static collection that is not loaded
+        @loadingView
+      else
+        @emptyView
 
     # Callback for when the sort direction was changed by the user. Triggers a method
     #   on the controller, which determines what to do and calls back to #setSort.
@@ -183,6 +188,7 @@ define [
     #
     # @return [void]
     requested: =>
+      @loaded = false
       @removeLoadedClass()
 
     # Callback executed after collection has been fetched
@@ -195,12 +201,7 @@ define [
       @listenToOnce @, 'render:empty', =>
         @addLoadedClass()
 
-      # If the EmptyView was replaced with a LoadingView, revert that
-      # replacement to actually show a message on empty collection.
-      # Called after any change to the collection.
-      if @originalEmptyView
-        @emptyView = @originalEmptyView
-        @originalEmptyView = null
+      @loaded = true
 
 
     #
