@@ -29,7 +29,7 @@
     "grunt-image-embed": "~0.3.3",
     "grunt-requirejs": "~0.4.0",
     "grunt-sass": "^1.1.0",
-    "node-sass": "3.4.1"
+    "node-sass": "~3.4"
   },
   "license": "BSD-3-Clause"
 }
