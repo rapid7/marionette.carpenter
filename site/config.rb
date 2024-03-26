@@ -5,6 +5,10 @@
 compass_config do |config|
   # Require any additional compass plugins here.
   config.add_import_path "bower_components/foundation/scss"
+  config.add_import_path "source/bower_components"
+  config.add_import_path "./source/bower_components/sass-hidpi"
+  config.add_import_path "./source/bower_components"
+  config.add_import_path "./source"
 
   # Set this to the root of your project when deployed:
   config.http_path = "/"
@@ -114,6 +118,8 @@ end
 # Add bower's directory to sprockets asset path
 ################################################################################
 
+activate :sprockets
+
 after_configuration do
   @bower_config = JSON.parse(IO.read("#{root}/.bowerrc"))
   sprockets.append_path File.join "#{root}", @bower_config["directory"]
@@ -132,21 +138,21 @@ set :partials_dir, 'partials'
 # Activate live reload
 ################################################################################
 
-activate :livereload
+# activate :livereload
 
 
 ################################################################################
 # GitHub pages deployment configuration
 ################################################################################
 
-activate :deploy do |deploy|
-  deploy.method = :git
-  # Optional Settings
-  # deploy.remote   = "custom-remote" # remote name or git url, default: origin
-  # deploy.branch   = "custom-branch" # default: gh-pages
-  # deploy.strategy = :submodule      # commit strategy: can be :force_push or :submodule, default: :force_push
-  # deploy.commit_message = "custom-message"      # commit message (can be empty), default: Automated commit at `timestamp` by middleman-deploy `version`
-end
+#activate :deploy do |deploy|
+#  deploy.method = :git
+#  # Optional Settings
+#  # deploy.remote   = "custom-remote" # remote name or git url, default: origin
+#  # deploy.branch   = "custom-branch" # default: gh-pages
+#  # deploy.strategy = :submodule      # commit strategy: can be :force_push or :submodule, default: :force_push
+#  # deploy.commit_message = "custom-message"      # commit message (can be empty), default: Automated commit at `timestamp` by middleman-deploy `version`
+#end
 
 ################################################################################
 # Build-specific configuration
