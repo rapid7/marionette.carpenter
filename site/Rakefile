@@ -1,8 +1,0 @@
-#!/usr/bin/env rake
-
-namespace :docs do
-  desc 'Import the generated documentation into the site'
-  task :import do
-    cp_r '../doc', 'source/doc'
-  end
-end
