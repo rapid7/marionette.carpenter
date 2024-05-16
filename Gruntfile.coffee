@@ -1,3 +1,5 @@
+path = require('path');
+
 module.exports = (grunt) ->
 
   grunt.initConfig
@@ -169,8 +171,40 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-image-embed')
   grunt.loadNpmTasks('grunt-contrib-uglify')
 
+  grunt.registerTask("applyPatches", ->
+    done = @async()
+    grunt.log.oklns("Applying patches...")
+    grunt.util.spawn({
+      cmd: "patch",
+      # -N to return code 1 when re-applying a patch we previously applied when running `grunt build`
+      args: ['-N', '-i', path.normalize('./patches/backbone_uri_decode.patch')]
+      opts: { stdio: 'inherit' },
+    }, (error, result, code) ->
+      if error
+        # Code 1: Patch already applied, OK to continue.
+        if code==1
+          grunt.log.oklns("Patch already applied with code: " + code)
+          done(true)
+        else
+          grunt.log.errorlns("Error - " + result + code)
+          done(false)
+      else
+        grunt.log.oklns("Patch applied with code: " + code)
+        done(true)
+    )
+  )
+
+  # You may need to remove the 'sass' step from the 'style' task. On my MacOS machine, I get:
+  # Running "sass:build" (sass) task
+  #
+  #
+  ##
+  ## Fatal error in ../deps/v8/src/api.cc, line 1249
+  ## Check failed: !value_obj->IsJSReceiver() || value_obj->IsTemplateInfo().
+  ##
+  #[1]    30085 illegal hardware instruction  grunt build
   grunt.registerTask('style', ['clean', 'copy:cssAsScss', 'sass'])
-  grunt.registerTask('build', ['clean', 'style', 'coffee', 'eco', 'requirejs', 'concat', 'copy:js', 'copy:css', 'imageEmbed', 'uglify'])
+  grunt.registerTask('build', ['clean', 'style', 'applyPatches', 'coffee', 'eco', 'requirejs', 'concat', 'copy:js', 'copy:css', 'imageEmbed', 'uglify'])
   grunt.registerTask('spec',  ['build', 'jasmine'])
   grunt.registerTask('spec-debug',['build', 'jasmine:run:build'])
   grunt.registerTask('default', ['build'])
