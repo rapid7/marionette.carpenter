@@ -1553,7 +1553,7 @@ Backbone.Paginator = (function ( Backbone, _, $ ) {
 
       // Create default values if no others are specified
       queryOptions = _.defaults(queryOptions, {
-        timeout: 25000,
+        timeout: 60000,
         cache: false,
         type: 'GET',
         dataType: 'jsonp'
@@ -2275,22 +2275,28 @@ Backbone.Paginator = (function ( Backbone, _, $ ) {
 
       // Create default values if no others are specified
       queryOptions = _.defaults(queryOptions, {
-        timeout: 25000,
+        timeout: 60000,
         cache: false,
         type: 'GET',
         dataType: 'jsonp',
         url: self.url
       });
 
+      // Data to be sent to the server. If the HTTP method is one that cannot have an entity body,
+      // such as GET, the data is appended to the URL. We therefore need to ensure it is still encoded to succeed.
+      var decodeURIComponentIfRequired = function (value) {
+        return queryOptions.type === 'GET' ? value : decodeURIComponent(value);
+      };
+
       // Allows the passing in of {data: {foo: 'bar'}} at request time to overwrite server_api defaults
       if( options.data ){
-        options.data = decodeURIComponent($.param(_.extend(queryAttributes,options.data)));
+        options.data = decodeURIComponentIfRequired($.param(_.extend(queryAttributes,options.data)));
       }else{
-        options.data = decodeURIComponent($.param(queryAttributes));
+        options.data = decodeURIComponentIfRequired($.param(queryAttributes));
       }
 
       queryOptions = _.extend(queryOptions, {
-        data: decodeURIComponent($.param(queryAttributes)),
+        data: decodeURIComponentIfRequired($.param(queryAttributes)),
         processData: false,
         url: _.result(queryOptions, 'url')
       }, options);
