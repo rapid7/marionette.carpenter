@@ -16,12 +16,12 @@
   </div>
 
   <div class='page_navigation'>
-    <a href='javascript:void(0)' title='First' class='first <%= 'disabled' if @isFirstPage %>'></a>
-    <a href='javascript:void(0)' title='Previous' class='previous <%= 'disabled' if @isFirstPage %>'></a>
+    <a href='#' title='First' class='first <%= 'disabled' if @isFirstPage %>'></a>
+    <a href='#' title='Previous' class='previous <%= 'disabled' if @isFirstPage %>'></a>
 
     <input class="curr" value="<%= @currentPage %>" />
 
-    <a href='javascript:void(0)' title='Next' class='next <%= 'disabled' if @isLastPage %>'></a>
-    <a href='javascript:void(0)' title='Last' class='last <%= 'disabled' if @isLastPage %>'></a>
+    <a href='#' title='Next' class='next <%= 'disabled' if @isLastPage %>'></a>
+    <a href='#' title='Last' class='last <%= 'disabled' if @isLastPage %>'></a>
   </div>
 <% end %>

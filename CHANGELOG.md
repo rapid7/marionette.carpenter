@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## [0.0.6](https://github.com/rapid7/marionette.carpenter/releases/0.0.6) - 09/03/2024
+
+### Changed
+
+- Removed usage of `javascript:void(0)`
+
+## [0.0.?](https://github.com/rapid7/marionette.carpenter/releases/)
 
 ### Changed
 
