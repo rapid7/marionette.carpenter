@@ -381,14 +381,20 @@ collection.prevPage({ update: true, remove: false });
 
 ## Development
 
-To build from source, just run:
+### Prerequisites
+* install `nodenv` and use NodeJS 5.2.0
+* install `pyenv` and install Python 2
+* install `grunt-cli@1.0.0` using `npm install -g grunt-cli@1.0.0`
+* install the dependencies of the project: `npm install`
+* install the packages with `bower install`
+
+### Build from source
 
 ```console
 $ grunt build
 ```
 
-To run tests, run:
-
+### Run Tests
 
 ```console
 $ grunt spec
