@@ -2,7 +2,33 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## [0.0.6](https://github.com/rapid7/marionette.carpenter/releases/0.0.6) - 09/03/2024
+
+### Changed
+
+- Removed usage of `javascript:void(0)`
+
+## [0.0.5](https://github.com/rapid7/marionette.carpenter/releases/0.0.5)
+
+### Changed
+
+- None
+
+### Fixed
+
+- Fixed `carpenterRadio.command` is not a function.
+
+## [0.0.4](https://github.com/rapid7/marionette.carpenter/releases/0.0.4)
+
+### Changed
+
+- [Add ability to use POST request when requesting data if needed/allow additional request parameters](https://github.com/rapid7/marionette.carpenter/pull/37)
+
+### Fixed
+
+- None
+
+## [0.0.3](https://github.com/rapid7/marionette.carpenter/releases/0.0.3)
 
 ### Changed
 
@@ -12,7 +38,6 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Fixed
 - [Ensure last page button on pagination properly takes you to last table instead of empty view.](https://github.com/rapid7/marionette.carpenter/pull/30) (#30)
-
 
 ## [0.0.2](https://github.com/rapid7/marionette.carpenter/releases/0.0.2) - 8/5/2015
 
