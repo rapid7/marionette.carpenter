@@ -761,7 +761,7 @@ define('templates/action_button',[],function(){
     };
     (function() {
     
-      _print(_safe('<a href=\'#\' '));
+      _print(_safe('<button type="button" '));
     
       if (this.id) {
         _print(_safe('id="'));
@@ -783,7 +783,7 @@ define('templates/action_button',[],function(){
     
       _print(this.label);
     
-      _print(_safe('\n</a>'));
+      _print(_safe('\n</button>\n'));
     
     }).call(this);
     

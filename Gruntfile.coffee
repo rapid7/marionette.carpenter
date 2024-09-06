@@ -177,7 +177,8 @@ module.exports = (grunt) ->
     grunt.util.spawn({
       cmd: "patch",
       # -N to return code 1 when re-applying a patch we previously applied when running `grunt build`
-      args: ['-N', '-i', path.normalize('./patches/backbone_uri_decode.patch')]
+      # Apply -p=0 to support patch on Linux
+      args: ['-N', '-i', path.normalize('./patches/backbone_uri_decode.patch'), '--strip=0']
       opts: { stdio: 'inherit' },
     }, (error, result, code) ->
       if error

@@ -44,7 +44,7 @@ define [
         @region.show controlBar
 
       it 'renders each of the action buttons', ->
-        expect(@region.$el.find('a.action-button').length).toEqual(@actionButtons.length)
+        expect(@region.$el.find('button.action-button').length).toEqual(@actionButtons.length)
 
       it "executes a button's callback function on click", ->
         @clickFunctionExecuted = false

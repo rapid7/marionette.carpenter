@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.0.7]() - 09/06/2024
+
+### Changed
+
+- ActionButton is now a `<button></button>` instead of `<a></a>` to help with onClick events
+- Adding `-p=0` to the patch command to support Linux
+- Fixed image links in the README
+
 ## [0.0.6](https://github.com/rapid7/marionette.carpenter/releases/0.0.6) - 09/03/2024
 
 ### Changed

@@ -1,6 +1,6 @@
 <h1 align="center">Marionette.Carpenter</h1>
 <p align="center">
-  <img title="backbone marionette" src='https://raw.githubusercontent.com/rapid7/marionette.carpenter/master/site/source/assets/images/logo-black.png' style='width:100%;'/>
+  <img title="backbone marionette" src='https://github.com/rapid7/marionette.carpenter/blob/update-demo-site/site/source/assets/images/logo-black.png?raw=true' style='width:100%;'/>
 </p>
 <p align="center">It builds tables.</p>
 <p align="center">
