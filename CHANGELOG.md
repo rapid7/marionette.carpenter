@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.0.7]() - 09/06/2024
+## [0.0.8](https://github.com/rapid7/marionette.carpenter/releases/0.0.8) - 09/06/2024
+
+### Changed
+
+### Fixed
+
+- Update stylesheets for buttons
+
+## [0.0.7](https://github.com/rapid7/marionette.carpenter/releases/0.0.7) - 09/06/2024
 
 ### Changed
 
