@@ -1,4 +1,4 @@
-.table-component .buttons-region ul li a.action-button.add, .table-component .buttons-region ul li a.action-button {
+.table-component .buttons-region ul li button.action-button.add, .table-component .buttons-region ul li button.action-button {
   display: inline-block;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -19,7 +19,7 @@
   background-image: -webkit-linear-gradient(bottom, #FCFCFC 0%, #E7E7E7 100%);
   background-image: -ms-linear-gradient(bottom, #FCFCFC 0%, #E7E7E7 100%);
   background-image: linear-gradient(to bottom, #FCFCFC 0%, #E7E7E7 100%); }
-  .table-component .buttons-region ul li a.action-button:hover {
+  .table-component .buttons-region ul li button.action-button:hover {
     text-decoration: none;
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #F0F0F0), color-stop(1, #E6E6E6));
     background-image: -o-linear-gradient(bottom, #F0F0F0 0%, #E6E6E6 100%);
@@ -28,11 +28,11 @@
     background-image: -ms-linear-gradient(bottom, #F0F0F0 0%, #E6E6E6 100%);
     background-image: linear-gradient(to bottom, #F0F0F0 0%, #E6E6E6 100%);
     cursor: pointer; }
-  .table-component .buttons-region ul li a.disabled.action-button {
+  .table-component .buttons-region ul li button.disabled.action-button {
     pointer-events: none;
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);
     opacity: 0.4; }
-  .table-component .buttons-region ul li a.disabled.action-button:hover {
+  .table-component .buttons-region ul li button.disabled.action-button:hover {
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #FCFCFC), color-stop(1, #E7E7E7));
     background-image: -o-linear-gradient(bottom, #FCFCFC 0%, #E7E7E7 100%);
     background-image: -moz-linear-gradient(bottom, #FCFCFC 0%, #E7E7E7 100%);
@@ -41,14 +41,14 @@
     background-image: linear-gradient(to bottom, #FCFCFC 0%, #E7E7E7 100%);
     cursor: default; }
 
-.table-component .buttons-region ul li a.action-button.add {
+.table-component .buttons-region ul li button.action-button.add {
   padding: 0 10px;
   color: #e8e8e8;
   background-image: -moz-linear-gradient(90deg, #5d9a29 0%, #65b201 100%);
   background-image: -webkit-linear-gradient(90deg, #5d9a29 0%, #65b201 100%);
   background-image: -ms-linear-gradient(90deg, #5d9a29 0%, #65b201 100%); }
 
-.table-component .buttons-region ul li a.action-button.tag:after {
+.table-component .buttons-region ul li button.action-button.tag:after {
   padding: 0 5px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -60,10 +60,10 @@
   font-weight: 100;
   font-weight: 600;
   margin-left: 3px; }
-  .table-component .buttons-region ul li a.action-button.tag:after:hover {
+  .table-component .buttons-region ul li button.action-button.tag:after:hover {
     text-decoration: none; }
 
-.table-component .buttons-region ul li a.action-button.tag {
+.table-component .buttons-region ul li button.action-button.tag {
   padding: 4px 7px;
   color: #777;
   text-transform: none;
@@ -73,27 +73,27 @@
   -ms-border-radius: 5px;
   -o-border-radius: 5px;
   border-radius: 5px; }
-  .table-component .buttons-region ul li a.action-button.tag:hover {
+  .table-component .buttons-region ul li button.action-button.tag:hover {
     text-decoration: none;
     background: #f3f3f3; }
-  .table-component .buttons-region ul li a.action-button.tag:active {
+  .table-component .buttons-region ul li button.action-button.tag:active {
     background: #eee; }
 
-.table-component .buttons-region ul li a.action-button.tag:after {
+.table-component .buttons-region ul li button.action-button.tag:after {
   background-color: #90da2c;
   content: '+'; }
 
-.table-component .buttons-region ul li a.action-button.tag:hover {
+.table-component .buttons-region ul li button.action-button.tag:hover {
   text-decoration: none;
   background-color: inherit;
   color: #666; }
-  .table-component .buttons-region ul li a.action-button.tag:hover:after {
+  .table-component .buttons-region ul li button.action-button.tag:hover:after {
     background-color: #83c923; }
 
-.table-component .buttons-region ul li a.action-button.tag:active {
+.table-component .buttons-region ul li button.action-button.tag:active {
   background-color: inherit;
   color: #333; }
-  .table-component .buttons-region ul li a.action-button.tag:active:after {
+  .table-component .buttons-region ul li button.action-button.tag:active:after {
     background-color: #7abc21; }
 
 .table-component {
@@ -109,7 +109,7 @@
     margin-bottom: 5px; }
     .table-component .buttons-region ul li {
       display: inline-block; }
-      .table-component .buttons-region ul li a.action-button.tag {
+      .table-component .buttons-region ul li button.action-button.tag {
         padding-bottom: 2px;
         background-image: none;
         border: none;

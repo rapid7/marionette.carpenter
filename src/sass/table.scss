@@ -31,10 +31,11 @@ $table-row-hover-color: #efefef;
     ul {
       list-style-type: none;
       margin-bottom: 5px;
+
       li {
         display: inline-block;
 
-        a.action-button {
+        button.action-button {
           @extend %button;
 
           &.add {
@@ -56,9 +57,11 @@ $table-row-hover-color: #efefef;
       }
     }
   }
+
   .table-container {
     position: relative;
     clear: both;
+
     .overlay-region {
       position: absolute;
       top: 0;
