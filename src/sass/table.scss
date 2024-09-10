@@ -35,7 +35,7 @@ $table-row-hover-color: #efefef;
       li {
         display: inline-block;
 
-        button.action-button {
+        a.action-button {
           @extend %button;
 
           &.add {
