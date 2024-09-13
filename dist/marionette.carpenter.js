@@ -761,7 +761,7 @@ define('templates/action_button',[],function(){
     };
     (function() {
     
-      _print(_safe('<button type="button" '));
+      _print(_safe('<a href=\'javascript:void(0)\' '));
     
       if (this.id) {
         _print(_safe('id="'));
@@ -783,7 +783,7 @@ define('templates/action_button',[],function(){
     
       _print(this.label);
     
-      _print(_safe('\n</button>\n'));
+      _print(_safe('\n</a>'));
     
     }).call(this);
     
@@ -1405,21 +1405,21 @@ define('templates/paginator',[],function(){
         _print(this.lastRow);
         _print(_safe(' of '));
         _print(this.totalRecords);
-        _print(_safe('\n    </span>\n  </div>\n\n  <div class=\'page_navigation\'>\n    <a href=\'#\' title=\'First\' class=\'first '));
+        _print(_safe('\n    </span>\n  </div>\n\n  <div class=\'page_navigation\'>\n    <a href=\'javascript:void(0)\' title=\'First\' class=\'first '));
         if (this.isFirstPage) {
           _print('disabled');
         }
-        _print(_safe('\'></a>\n    <a href=\'#\' title=\'Previous\' class=\'previous '));
+        _print(_safe('\'></a>\n    <a href=\'javascript:void(0)\' title=\'Previous\' class=\'previous '));
         if (this.isFirstPage) {
           _print('disabled');
         }
         _print(_safe('\'></a>\n\n    <input class="curr" value="'));
         _print(this.currentPage);
-        _print(_safe('" />\n\n    <a href=\'#\' title=\'Next\' class=\'next '));
+        _print(_safe('" />\n\n    <a href=\'javascript:void(0)\' title=\'Next\' class=\'next '));
         if (this.isLastPage) {
           _print('disabled');
         }
-        _print(_safe('\'></a>\n    <a href=\'#\' title=\'Last\' class=\'last '));
+        _print(_safe('\'></a>\n    <a href=\'javascript:void(0)\' title=\'Last\' class=\'last '));
         if (this.isLastPage) {
           _print('disabled');
         }
