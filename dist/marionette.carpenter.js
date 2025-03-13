@@ -650,7 +650,9 @@ define('entities/paginated_collection',[], function() {
       },
       removeMultiple: function(models) {
         var selectedIDs;
-        selectedIDs = models.pluck('id');
+        selectedIDs = models.map(function(model) {
+          return model.id;
+        });
         return this.trigger('remove:multiple', selectedIDs);
       }
     });
