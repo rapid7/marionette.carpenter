@@ -163,7 +163,7 @@ define [], ->
     #
     # @return [void]
       removeMultiple: (models) ->
-        selectedIDs = models.pluck 'id'
+        selectedIDs = models.map (model) -> model.id
         @trigger 'remove:multiple', selectedIDs
 
     # mix in methods from the original collection instance's class
