@@ -382,16 +382,22 @@ collection.prevPage({ update: true, remove: false });
 ## Development
 
 ### Prerequisites
-* install `nodenv` and use NodeJS 5.2.0
-* install `pyenv` and install Python 2
-* install `grunt-cli@1.0.0` using `npm install -g grunt-cli@1.0.0`
-* install the dependencies of the project: `npm install`
-* install the packages with `bower install`
+
+Create a development environment with Docker:
+
+```
+docker build -t marionette.carpenter:latest .
+docker run --rm -it -w $(pwd) -v $(pwd):$(pwd) marionette.carpenter:latest /bin/bash
+npm install -g bower && \
+    bower install marionette.carpenter && \
+    npm install -g grunt-cli@1.1.0
+```
 
 ### Build from source
 
 ```console
-$ grunt build
+npm install
+grunt build
 ```
 
 ### Run Tests
